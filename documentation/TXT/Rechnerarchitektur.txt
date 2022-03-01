@@ -1,0 +1,18 @@
+-Einlesen lst-Datei (15-16 Stck) (Anzahl von Befehlen)
+	:	Am Ende ist ein carrieage return.
+	:	int-Array Hex-Werte als int-Wert abspeichern
+	:	6 feste Befehlsbit (Maske 3f00), 4 feste Befehlsbit (Maske 3c00), 3bit-Befehle -> 3 Unterschiedliche Maskierungen (Maske 3800)Ergebnis 2000:Call; Ergebnis 2800:GOTO
+	:	Codes in Excel-Tabelle und fest oder variabel einteilen
+	:	14 Tage ab 25.03.2021
+
+	->	Pflichtenheft erstellen, Vorgehen, Oberfläche, Variablen Organisation, Bennennung RAM & EPROM
+
+
+
+-Definieren der entsprechenden Arrays und globalen Variablen
+
+-Definieren der Funktionsköpfe und Anlegen der Funktionsrümpfe
+
+-Grundstruktur Switch Case
+
+-Grafik gestalten visuelle Komponenten Ein- und Ausgabe
