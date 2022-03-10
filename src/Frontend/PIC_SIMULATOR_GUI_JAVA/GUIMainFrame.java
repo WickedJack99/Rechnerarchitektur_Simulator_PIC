@@ -32,7 +32,7 @@ public class GUIMainFrame extends JFrame {
         this.setJMenuBar(new GUIMenuBar(this));
 
         this.setVisible(true); //make frame visible
-
+        this.setBackground(new Color(76, 78, 82));
         ImageIcon guiLogo = new ImageIcon("./images/gui_logo.png"); // create an ImageIcon
         this.setIconImage(guiLogo.getImage()); // change icon of frame
 

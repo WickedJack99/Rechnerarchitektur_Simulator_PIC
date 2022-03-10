@@ -1,12 +1,14 @@
 package Frontend.PIC_SIMULATOR_GUI_JAVA;
 
+import java.awt.Color;
 import java.awt.event.*;
 
+import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class GUIMenuBar extends JMenuBar  implements ActionListener{
+public class GUIMenuBar extends JMenuBar  implements ActionListener {
     GUIMainFrame oMainFrame;
 
     //File
@@ -154,8 +156,10 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener{
     private void buildMenubar() {
         //File
         oFileMenu.add(oLoadTestFile);
+        oFileMenu.addSeparator();
         oFileMenu.add(oLoadProgStateItem);
         oFileMenu.add(oSaveProgStateItem);
+        oFileMenu.addSeparator();
         oFileMenu.add(oExitItem);
 
         //View
@@ -168,6 +172,7 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener{
         oMicrocontroller.add(oPauseProg);
         oMicrocontroller.add(oResetProg);
         oMicrocontroller.add(oStepProg);
+        oMicrocontroller.addSeparator();
         oChangeWorkInterval.add(oIntervalASAP);
         oChangeWorkInterval.add(oInterval1Sec);
         oChangeWorkInterval.add(oInterval2Sec);
@@ -177,6 +182,7 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener{
         oChangeLanguageMenu.add(oGerLangItem);
         oChangeLanguageMenu.add(oEngLangItem);
         oHelpMenu.add(oChangeLanguageMenu);
+        oHelpMenu.addSeparator();
         oHelpMenu.add(oManual);
         oHelpMenu.add(oAbout);
 
@@ -247,6 +253,7 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener{
         //Change to dark theme
         if (e.getSource() == oDarkTheme) {
             System.out.println("It's gettin dark brooo"); //TODO
+            setDarkTheme();
         }
         //Change to light theme
         if (e.getSource() == oLightTheme) {
@@ -294,5 +301,94 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener{
         if (e.getSource() == oAbout) {
             //TODO
         }
+    }
+
+    private void setDarkTheme() {
+        Color oWhite = new Color(255, 253, 250);
+        Color oDarkGray = new Color(76, 78, 82);
+        this.setBackground(oDarkGray);
+        this.setOpaque(true);
+
+        //File
+        oFileMenu.setForeground(oWhite);
+        oLoadTestFile.setForeground(oWhite);
+        oLoadProgStateItem.setForeground(oWhite);
+        oSaveProgStateItem.setForeground(oWhite);
+        oExitItem.setForeground(oWhite);
+
+        //View
+        oViewMenu.setForeground(oWhite);
+        oChangeColors.setForeground(oWhite);
+        oDarkTheme.setForeground(oWhite);
+        oLightTheme.setForeground(oWhite);
+
+        //Microcontroller
+        oMicrocontroller.setForeground(oWhite);
+        oStartProg.setForeground(oWhite);
+        oPauseProg.setForeground(oWhite);
+        oResetProg.setForeground(oWhite);
+        oStepProg.setForeground(oWhite);
+        oChangeWorkInterval.setForeground(oWhite);
+        oIntervalASAP.setForeground(oWhite);
+        oInterval1Sec.setForeground(oWhite);
+        oInterval2Sec.setForeground(oWhite);
+
+        //Help
+        oHelpMenu.setForeground(oWhite);
+        oChangeLanguageMenu.setForeground(oWhite);
+        oGerLangItem.setForeground(oWhite);
+        oEngLangItem.setForeground(oWhite);
+        oManual.setForeground(oWhite);
+        oAbout.setForeground(oWhite);
+
+        //File
+        oFileMenu.setBackground(oDarkGray);
+        oLoadTestFile.setBackground(oDarkGray);
+        oLoadProgStateItem.setBackground(oDarkGray);
+        oSaveProgStateItem.setBackground(oDarkGray);
+        oExitItem.setBackground(oDarkGray);
+
+        //View
+        oViewMenu.setBackground(oDarkGray);
+        oChangeColors.setBackground(oDarkGray);
+        oDarkTheme.setBackground(oDarkGray);
+        oLightTheme.setBackground(oDarkGray);
+
+        //Microcontroller
+        oMicrocontroller.setBackground(oDarkGray);
+        oStartProg.setBackground(oDarkGray);
+        oPauseProg.setBackground(oDarkGray);
+        oResetProg.setBackground(oDarkGray);
+        oStepProg.setBackground(oDarkGray);
+        oChangeWorkInterval.setBackground(oDarkGray);
+        oIntervalASAP.setBackground(oDarkGray);
+        oInterval1Sec.setBackground(oDarkGray);
+        oInterval2Sec.setBackground(oDarkGray);
+
+        //Help
+        oHelpMenu.setBackground(oDarkGray);
+        oChangeLanguageMenu.setBackground(oDarkGray);
+        oGerLangItem.setBackground(oDarkGray);
+        oEngLangItem.setBackground(oDarkGray);
+        oManual.setBackground(oDarkGray);
+        oAbout.setBackground(oDarkGray);
+
+        //File
+        oFileMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray)); //TODO white lines at menus
+        oFileMenu.getPopupMenu().setOpaque(true);
+        //View
+        oViewMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oChangeColors.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oChangeColors.setOpaque(true);
+        //Microcontroller
+        oMicrocontroller.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oChangeWorkInterval.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oChangeWorkInterval.setOpaque(true);
+        //Help
+        oHelpMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oChangeLanguageMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oChangeLanguageMenu.setOpaque(true);
+
+        this.setBorder(BorderFactory.createLineBorder(oDarkGray, 2));
     }
 }
