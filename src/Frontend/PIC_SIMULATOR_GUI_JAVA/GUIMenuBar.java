@@ -1,15 +1,24 @@
 package Frontend.PIC_SIMULATOR_GUI_JAVA;
 
 import java.awt.Color;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class GUIMenuBar extends JMenuBar  implements ActionListener {
+public class GUIMenuBar extends JMenuBar implements ActionListener {
     GUIMainFrame oMainFrame;
+
+    //Custom separators because addSeparator(default) looks not nice.
+    JMenuItem oSeparator0;
+    JMenuItem oSeparator1;
+    JMenuItem oSeparator2;
+    JMenuItem oSeparator3;
 
     //File
     JMenu oFileMenu;
@@ -43,18 +52,53 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
     JMenuItem oManual;
     JMenuItem oAbout;
 
+    //German language array
     String[] sGermanLang = {"Datei", "Testdatei laden", "Programmzustand laden", "Programmzustand speichern", "Simulation beenden",
                             "Ansicht", "Thema", "Dunkler Modus", "Heller Modus",
-                            "Microcontroller", "Programm starten", "Programm stoppen", "Programm zuruecksetzen", "Schritt fuer Schritt", "Bearbeitungsintervall", "Sofort", "1 Sekunde", "2 Sekunden", 
+                            "Microcontroller", "Programm starten", "Programm pausieren", "Programm zuruecksetzen", "Schritt fuer Schritt", "Bearbeitungsintervall", "Sofort", "1 Sekunde", "2 Sekunden", 
                             "Hilfe", "Sprache", "Deutsch", "Englisch", "Anleitung", "Ueber"};
     
+    //English language array
     String[] sEnglishLang = {"File", "Load Testfile", "Load Programstate", "Save Programstate", "Exit simulation",
                              "View", "Theme", "Dark Theme", "Light Theme",
-                             "Microcontroller", "Start program", "Stop program", "Reset program", "Step by Step", "Workinterval", "Instant", "1 second", "2 seconds", 
+                             "Microcontroller", "Start program", "Pause program", "Reset program", "Step by Step", "Workinterval", "Instant", "1 second", "2 seconds", 
                              "Help", "Language", "German", "English", "Manual", "About"};
 
-    public GUIMenuBar(GUIMainFrame frame) {
+    /**
+     * Color oWhite = new Color(255, 253, 250);
+     * Color oDarkGray = new Color(76, 78, 82);
+     * First Color == TextColor
+     * Second Color == BackgroundColor
+     */
+    Color[] aoDarkTheme = {new Color(255, 253, 250), new Color(76, 78, 82)};
+    Color[] aoLightTheme = {new Color(76, 78, 82), new Color(255, 253, 250)};
+
+    //Color for separators is always the same.
+    Color oColorSeparators = new Color(47, 47, 47);
+
+    /**
+     * Constructor initializes menubar.
+     * @param frame
+     */
+    public GUIMenuBar(GUIMainFrame frame) { //TODO maybe single components, with methods, of frame to set theme
+
+        //Custom Separators since default is not able to change background.
+        oSeparator0 = new JMenuItem();
+        oSeparator0.setEnabled(false);
+        oSeparator0.setPreferredSize(new Dimension(0,1));
+        oSeparator1 = new JMenuItem();
+        oSeparator1.setEnabled(false);
+        oSeparator1.setPreferredSize(new Dimension(0,1));
+        oSeparator2 = new JMenuItem();
+        oSeparator2.setEnabled(false);
+        oSeparator2.setPreferredSize(new Dimension(0,1));
+        oSeparator3 = new JMenuItem();
+        oSeparator3.setEnabled(false);
+        oSeparator3.setPreferredSize(new Dimension(0,1));
+
+        //Referrence to change different parts of gui for theme.
         oMainFrame = frame;
+
         //File
         oFileMenu = new JMenu(sGermanLang[0]);
         oLoadTestFile = new JMenuItem(sGermanLang[1]);
@@ -88,10 +132,14 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         oAbout = new JMenuItem(sGermanLang[23]);
 
         setActionListeners();
-        setMnemonics();
+        setGerMnemonics();
         buildMenubar();
+        setTheme(aoLightTheme[0], aoLightTheme[1]);
     }
 
+    /**
+     * Sets ActionListeners to all items.
+     */
     private void setActionListeners() {
         //File
         oLoadTestFile.addActionListener(this);
@@ -119,7 +167,10 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         oAbout.addActionListener(this);
     }
 
-    private void setMnemonics() {
+    /**
+     * Sets english mnemonics.
+     */
+    private void setEngMnemonics() {
         //File
         oFileMenu.setMnemonic(KeyEvent.VK_F); //alt + f for file
         oLoadTestFile.setMnemonic(KeyEvent.VK_T); //t for test
@@ -153,13 +204,53 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         oAbout.setMnemonic(KeyEvent.VK_A); //a for about
     }
 
+    /**
+     * Sets german mnemonics.
+     */
+    private void setGerMnemonics() {
+        //File
+        oFileMenu.setMnemonic(KeyEvent.VK_D); //alt + d for datei
+        oLoadTestFile.setMnemonic(KeyEvent.VK_T); //t for testdatei
+        oLoadProgStateItem.setMnemonic(KeyEvent.VK_L); //l for laden
+        oSaveProgStateItem.setMnemonic(KeyEvent.VK_S); //s for speichern
+        oExitItem.setMnemonic(KeyEvent.VK_B); //b for beenden 
+
+        //View
+        oViewMenu.setMnemonic(KeyEvent.VK_A); //alt + a for ansicht
+        oChangeColors.setMnemonic(KeyEvent.VK_T); //t for thema
+        oDarkTheme.setMnemonic(KeyEvent.VK_D); //d for dunkel
+        oLightTheme.setMnemonic(KeyEvent.VK_L); //l for hell
+
+        //Microcontroller
+        oMicrocontroller.setMnemonic(KeyEvent.VK_M); //alt + m for microcontroller
+        oStartProg.setMnemonic(KeyEvent.VK_S); //s for starten
+        oPauseProg.setMnemonic(KeyEvent.VK_P); //p for pausieren
+        oResetProg.setMnemonic(KeyEvent.VK_R); //r for zuruecksetzen
+        oStepProg.setMnemonic(KeyEvent.VK_T); // t for schritt
+        oChangeWorkInterval.setMnemonic(KeyEvent.VK_I); //i for intervall
+        oIntervalASAP.setMnemonic(KeyEvent.VK_0); //0 for sofort
+        oInterval1Sec.setMnemonic(KeyEvent.VK_1); //1 for 1 sekunde
+        oInterval2Sec.setMnemonic(KeyEvent.VK_2); //2 for 2 sekunden
+
+        //Help
+        oHelpMenu.setMnemonic(KeyEvent.VK_H); //alt + h for hilfe
+        oChangeLanguageMenu.setMnemonic(KeyEvent.VK_L); //s for sprache
+        oGerLangItem.setMnemonic(KeyEvent.VK_D); //d for deutsch
+        oEngLangItem.setMnemonic(KeyEvent.VK_E); //e for englisch
+        oManual.setMnemonic(KeyEvent.VK_A); //a for anleitung
+        oAbout.setMnemonic(KeyEvent.VK_U); //u for ueber
+    }
+
+    /**
+     * Builds menubar.
+     */
     private void buildMenubar() {
         //File
         oFileMenu.add(oLoadTestFile);
-        oFileMenu.addSeparator();
+        oFileMenu.add(oSeparator0);
         oFileMenu.add(oLoadProgStateItem);
         oFileMenu.add(oSaveProgStateItem);
-        oFileMenu.addSeparator();
+        oFileMenu.add(oSeparator1);
         oFileMenu.add(oExitItem);
 
         //View
@@ -172,7 +263,7 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         oMicrocontroller.add(oPauseProg);
         oMicrocontroller.add(oResetProg);
         oMicrocontroller.add(oStepProg);
-        oMicrocontroller.addSeparator();
+        oMicrocontroller.add(oSeparator2);
         oChangeWorkInterval.add(oIntervalASAP);
         oChangeWorkInterval.add(oInterval1Sec);
         oChangeWorkInterval.add(oInterval2Sec);
@@ -182,7 +273,7 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         oChangeLanguageMenu.add(oGerLangItem);
         oChangeLanguageMenu.add(oEngLangItem);
         oHelpMenu.add(oChangeLanguageMenu);
-        oHelpMenu.addSeparator();
+        oHelpMenu.add(oSeparator3);
         oHelpMenu.add(oManual);
         oHelpMenu.add(oAbout);
 
@@ -193,6 +284,10 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         this.add(oHelpMenu);
     }
 
+    /**
+     * Change language to overhanded language array.
+     * @param lang = language to change to.
+     */
     private void changeLangMenuBar(String[] lang) {
         //File
         oFileMenu.setText(lang[0]);
@@ -253,11 +348,12 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         //Change to dark theme
         if (e.getSource() == oDarkTheme) {
             System.out.println("It's gettin dark brooo"); //TODO
-            setDarkTheme();
+            setTheme(aoDarkTheme[0], aoDarkTheme[1]);
         }
         //Change to light theme
         if (e.getSource() == oLightTheme) {
             System.out.println("It burns, it burnnnnnnssssss"); //TODO
+            setTheme(aoLightTheme[0], aoLightTheme[1]);
         }
 
         //Microcontroller
@@ -287,10 +383,12 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         //Change language at gui.
         if (e.getSource() == oGerLangItem) {
             changeLangMenuBar(sGermanLang);
+            setGerMnemonics();
             //TODO rest of gui
         }
         if (e.getSource() == oEngLangItem) {
             changeLangMenuBar(sEnglishLang);
+            setEngMnemonics();
             //TODO rest of gui
         }
         //Show manual
@@ -303,92 +401,107 @@ public class GUIMenuBar extends JMenuBar  implements ActionListener {
         }
     }
 
-    private void setDarkTheme() {
-        Color oWhite = new Color(255, 253, 250);
-        Color oDarkGray = new Color(76, 78, 82);
-        this.setBackground(oDarkGray);
+    /**
+     * Changes Color of text and background of menubar.
+     * @param oText = Color of text
+     * @param oBackground = Color of background
+     */
+    private void setTheme(Color oText, Color oBackground) {
+        this.setBackground(oBackground);
+        this.setBorder(BorderFactory.createLineBorder(oBackground, 2));
         this.setOpaque(true);
 
         //File
-        oFileMenu.setForeground(oWhite);
-        oLoadTestFile.setForeground(oWhite);
-        oLoadProgStateItem.setForeground(oWhite);
-        oSaveProgStateItem.setForeground(oWhite);
-        oExitItem.setForeground(oWhite);
+        oFileMenu.setForeground(oText);
+        oLoadTestFile.setForeground(oText);
+        oLoadProgStateItem.setForeground(oText);
+        oSaveProgStateItem.setForeground(oText);
+        oExitItem.setForeground(oText);
 
         //View
-        oViewMenu.setForeground(oWhite);
-        oChangeColors.setForeground(oWhite);
-        oDarkTheme.setForeground(oWhite);
-        oLightTheme.setForeground(oWhite);
+        oViewMenu.setForeground(oText);
+        oChangeColors.setForeground(oText);
+        oDarkTheme.setForeground(oText);
+        oLightTheme.setForeground(oText);
 
         //Microcontroller
-        oMicrocontroller.setForeground(oWhite);
-        oStartProg.setForeground(oWhite);
-        oPauseProg.setForeground(oWhite);
-        oResetProg.setForeground(oWhite);
-        oStepProg.setForeground(oWhite);
-        oChangeWorkInterval.setForeground(oWhite);
-        oIntervalASAP.setForeground(oWhite);
-        oInterval1Sec.setForeground(oWhite);
-        oInterval2Sec.setForeground(oWhite);
+        oMicrocontroller.setForeground(oText);
+        oStartProg.setForeground(oText);
+        oPauseProg.setForeground(oText);
+        oResetProg.setForeground(oText);
+        oStepProg.setForeground(oText);
+        oChangeWorkInterval.setForeground(oText);
+        oIntervalASAP.setForeground(oText);
+        oInterval1Sec.setForeground(oText);
+        oInterval2Sec.setForeground(oText);
 
         //Help
-        oHelpMenu.setForeground(oWhite);
-        oChangeLanguageMenu.setForeground(oWhite);
-        oGerLangItem.setForeground(oWhite);
-        oEngLangItem.setForeground(oWhite);
-        oManual.setForeground(oWhite);
-        oAbout.setForeground(oWhite);
+        oHelpMenu.setForeground(oText);
+        oChangeLanguageMenu.setForeground(oText);
+        oGerLangItem.setForeground(oText);
+        oEngLangItem.setForeground(oText);
+        oManual.setForeground(oText);
+        oAbout.setForeground(oText);
 
         //File
-        oFileMenu.setBackground(oDarkGray);
-        oLoadTestFile.setBackground(oDarkGray);
-        oLoadProgStateItem.setBackground(oDarkGray);
-        oSaveProgStateItem.setBackground(oDarkGray);
-        oExitItem.setBackground(oDarkGray);
+        oFileMenu.setBackground(oBackground);
+        oLoadTestFile.setBackground(oBackground);
+        oLoadProgStateItem.setBackground(oBackground);
+        oSaveProgStateItem.setBackground(oBackground);
+        oExitItem.setBackground(oBackground);
 
         //View
-        oViewMenu.setBackground(oDarkGray);
-        oChangeColors.setBackground(oDarkGray);
-        oDarkTheme.setBackground(oDarkGray);
-        oLightTheme.setBackground(oDarkGray);
+        oViewMenu.setBackground(oBackground);
+        oChangeColors.setBackground(oBackground);
+        oDarkTheme.setBackground(oBackground);
+        oLightTheme.setBackground(oBackground);
 
         //Microcontroller
-        oMicrocontroller.setBackground(oDarkGray);
-        oStartProg.setBackground(oDarkGray);
-        oPauseProg.setBackground(oDarkGray);
-        oResetProg.setBackground(oDarkGray);
-        oStepProg.setBackground(oDarkGray);
-        oChangeWorkInterval.setBackground(oDarkGray);
-        oIntervalASAP.setBackground(oDarkGray);
-        oInterval1Sec.setBackground(oDarkGray);
-        oInterval2Sec.setBackground(oDarkGray);
+        oMicrocontroller.setBackground(oBackground);
+        oStartProg.setBackground(oBackground);
+        oPauseProg.setBackground(oBackground);
+        oResetProg.setBackground(oBackground);
+        oStepProg.setBackground(oBackground);
+        oChangeWorkInterval.setBackground(oBackground);
+        oIntervalASAP.setBackground(oBackground);
+        oInterval1Sec.setBackground(oBackground);
+        oInterval2Sec.setBackground(oBackground);
 
         //Help
-        oHelpMenu.setBackground(oDarkGray);
-        oChangeLanguageMenu.setBackground(oDarkGray);
-        oGerLangItem.setBackground(oDarkGray);
-        oEngLangItem.setBackground(oDarkGray);
-        oManual.setBackground(oDarkGray);
-        oAbout.setBackground(oDarkGray);
+        oHelpMenu.setBackground(oBackground);
+        oChangeLanguageMenu.setBackground(oBackground);
+        oGerLangItem.setBackground(oBackground);
+        oEngLangItem.setBackground(oBackground);
+        oManual.setBackground(oBackground);
+        oAbout.setBackground(oBackground);
 
         //File
-        oFileMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray)); //TODO white lines at menus
+        oFileMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oBackground)); //TODO white lines at menus
         oFileMenu.getPopupMenu().setOpaque(true);
+
         //View
-        oViewMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
-        oChangeColors.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oViewMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oBackground));
+        oChangeColors.getPopupMenu().setBorder(BorderFactory.createLineBorder(oBackground));
         oChangeColors.setOpaque(true);
+
         //Microcontroller
-        oMicrocontroller.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
-        oChangeWorkInterval.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oMicrocontroller.getPopupMenu().setBorder(BorderFactory.createLineBorder(oBackground));
+        oChangeWorkInterval.getPopupMenu().setBorder(BorderFactory.createLineBorder(oBackground));
         oChangeWorkInterval.setOpaque(true);
+
         //Help
-        oHelpMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
-        oChangeLanguageMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oDarkGray));
+        oHelpMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oBackground));
+        oChangeLanguageMenu.getPopupMenu().setBorder(BorderFactory.createLineBorder(oBackground));
         oChangeLanguageMenu.setOpaque(true);
 
-        this.setBorder(BorderFactory.createLineBorder(oDarkGray, 2));
+        //Separators
+        oSeparator0.setBackground(oColorSeparators);
+        oSeparator0.setBorder(BorderFactory.createLineBorder(oColorSeparators, 2));
+        oSeparator1.setBackground(oColorSeparators);
+        oSeparator1.setBorder(BorderFactory.createLineBorder(oColorSeparators, 2));
+        oSeparator2.setBackground(oColorSeparators);
+        oSeparator2.setBorder(BorderFactory.createLineBorder(oColorSeparators, 2));
+        oSeparator3.setBackground(oColorSeparators);
+        oSeparator3.setBorder(BorderFactory.createLineBorder(oColorSeparators, 2));
     }
 }

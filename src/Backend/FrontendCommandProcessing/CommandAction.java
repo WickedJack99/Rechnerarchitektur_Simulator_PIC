@@ -167,7 +167,7 @@ public class CommandAction {
         ReadEepromFile readEepromFile = new ReadEepromFile();
         env.getPIC().resetPIC();
         readEepromFile.readFileAndWriteToEEPROM(new File(sValue), env.getPIC());
-        env.getMainToFrontendQueue().add(informationConnecter.connectInformation(env.getPIC(), env.getActualLine(), env.getLastLine(), -2, -2, env.getRuntime(), env.getWatchdog().getTime()));
+        //env.getMainToFrontendQueue().add(informationConnecter.connectInformation(env.getPIC(), env.getActualLine(), env.getLastLine(), -2, -2, env.getRuntime(), env.getWatchdog().getTime()));
         //TODO sent message to thread, to change value in file
         return 0;
     }
@@ -180,7 +180,7 @@ public class CommandAction {
 
     private int setBreakpoint() {
         env.changeListBreakpoints(Integer.parseInt(sValue), true);
-        env.getMainToFrontendQueue().add(informationConnecter.connectInformation(env.getPIC(), env.getActualLine(), env.getLastLine(), Integer.parseInt(sValue), -2, env.getRuntime(), env.getWatchdog().getTime()));
+        //env.getMainToFrontendQueue().add(informationConnecter.connectInformation(env.getPIC(), env.getActualLine(), env.getLastLine(), Integer.parseInt(sValue), -2, env.getRuntime(), env.getWatchdog().getTime()));
         //TODO sent message to thread, to change value in file
         return 0;
     }

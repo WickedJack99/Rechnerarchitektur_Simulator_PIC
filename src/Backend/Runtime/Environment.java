@@ -8,12 +8,8 @@ package Backend.Runtime;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-import Backend.BackendCommandProcessing.BackendInformationTransferThread;
-import Backend.BackendCommandProcessing.InformationConnecter;
 import Backend.FrontendCommandProcessing.CommandDecoder;
-import Backend.FrontendCommandProcessing.FrontendCommandProcessingThread;
 import Backend.Microcontroller.PIC;
 import Backend.Microcontroller.WATCHDOG;
 import Frontend.PIC_SIMULATOR_GUI_JAVA.GUIMainFrame;
@@ -33,56 +29,25 @@ public class Environment {
 
     private long liRuntime;
 
-    private ConcurrentLinkedQueue<String> frontendToMainQueue;
-    private ConcurrentLinkedQueue<String> mainToFrontendQueue;
-
     private WATCHDOG watchdog;
     
     public Environment() {
 
-        GUIMainFrame frame = new GUIMainFrame();
-
-        frontendToMainQueue = new ConcurrentLinkedQueue<String>();
-        mainToFrontendQueue = new ConcurrentLinkedQueue<String>();
-
-        FrontendCommandProcessingThread frontendCommandProcessingThread = new FrontendCommandProcessingThread(frontendToMainQueue);
-        BackendInformationTransferThread backendInformationTransferThread = new BackendInformationTransferThread(mainToFrontendQueue);
-
-        InformationConnecter informationConnecter = new InformationConnecter();
+        GUIMainFrame oMainFrame = new GUIMainFrame();
 
         watchdog = new WATCHDOG();
 
-        CommandDecoder commandDecoder;
 
         oPIC = new PIC();
 
         sEepromDataFile = "";
         sActualCommand = "";
 
-        //Start Threads
-        frontendCommandProcessingThread.start();
-        backendInformationTransferThread.start();
-
         iEnvironmentState = 0;
 
         while (iEnvironmentState > -1) {
-            //Check if frontend sent new command.
-            if (!frontendToMainQueue.isEmpty()) {
-                sActualCommand = frontendToMainQueue.poll();
-                commandDecoder = new CommandDecoder(sActualCommand);
-                commandDecoder.executeAction(this);
-            }
-
+        
             // loadfile command readEepromFile.readFileAndWriteToEEPROM(new File(sEepromDataFile), oPIC);
-        }
-
-        //Stop Threads
-        try {
-            frontendCommandProcessingThread.join();
-            backendInformationTransferThread.join();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 
@@ -92,14 +57,6 @@ public class Environment {
 
     public ArrayList<Integer> getBreakpoints() {
         return listBreakpoints;
-    }
-
-    public ConcurrentLinkedQueue<String> getMainToFrontendQueue() {
-        return mainToFrontendQueue;
-    }
-
-    public ConcurrentLinkedQueue<String> getFrontendToMainQueue() {
-        return frontendToMainQueue;
     }
 
     /**
