@@ -16,6 +16,7 @@ import Backend.FrontendCommandProcessing.CommandDecoder;
 import Backend.FrontendCommandProcessing.FrontendCommandProcessingThread;
 import Backend.Microcontroller.PIC;
 import Backend.Microcontroller.WATCHDOG;
+import Frontend.PIC_SIMULATOR_GUI_JAVA.GUIMainFrame;
 
 public class Environment {
 
@@ -38,6 +39,8 @@ public class Environment {
     private WATCHDOG watchdog;
     
     public Environment() {
+
+        GUIMainFrame frame = new GUIMainFrame();
 
         frontendToMainQueue = new ConcurrentLinkedQueue<String>();
         mainToFrontendQueue = new ConcurrentLinkedQueue<String>();
