@@ -5,14 +5,26 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import Backend.EepromLoader.ReadEepromFile;
+import Backend.Runtime.Environment;
+
 public class GUIMenuBar extends JMenuBar implements ActionListener {
-    GUIMainFrame oMainFrame;
+    Environment oEnv;
+    GUIMainFrame oGUIMainFrame;
+    GUITestFileTable oGUITestFileTable;
+    ArrayList<JCheckBox> oCheckBoxes;
+    ReadEepromFile oRef;
+    boolean[] bBreakpointSet;
 
     //Custom separators because addSeparator(default) looks not nice.
     JMenuItem oSeparator0;
@@ -80,7 +92,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
      * Constructor initializes menubar.
      * @param frame
      */
-    public GUIMenuBar(GUIMainFrame frame) { //TODO maybe single components, with methods, of frame to set theme
+    public GUIMenuBar(Environment env, GUIMainFrame mainframe, GUITestFileTable guitft) { //TODO maybe single components, with methods, of frame to set theme
 
         //Custom Separators since default is not able to change background.
         oSeparator0 = new JMenuItem();
@@ -97,7 +109,9 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         oSeparator3.setPreferredSize(new Dimension(0,1));
 
         //Referrence to change different parts of gui for theme.
-        oMainFrame = frame;
+        oEnv = env;
+        oGUIMainFrame = mainframe;
+        oGUITestFileTable = guitft;
 
         //File
         oFileMenu = new JMenu(sGermanLang[0]);
@@ -326,8 +340,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         //File
         if (e.getSource() == oLoadTestFile) {
-            System.out.println("Bro do you even code? test");
-            //TODO
+            loadTestFile();
         }
         if (e.getSource() == oLoadProgStateItem) {
             System.out.println("Bro do you even code? load");
@@ -352,7 +365,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         }
         //Change to light theme
         if (e.getSource() == oLightTheme) {
-            System.out.println("It burns, it burnnnnnnssssss"); //TODO
+            System.out.println("Death to all vampires!"); //TODO
             setTheme(aoLightTheme[0], aoLightTheme[1]);
         }
 
@@ -367,7 +380,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             System.out.println("oResetProg"); //TODO
         }
         if (e.getSource() == oStepProg) {
-            System.out.println("oStepProg"); //TODO
+            oEnv.step();
         }
         if (e.getSource() == oIntervalASAP) {
             System.out.println("oIntervalASAP"); //TODO
@@ -399,6 +412,8 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         if (e.getSource() == oAbout) {
             //TODO
         }
+
+        controlBreakpoints(e);
     }
 
     /**
@@ -503,5 +518,60 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         oSeparator2.setBorder(BorderFactory.createLineBorder(oColorSeparators, 2));
         oSeparator3.setBackground(oColorSeparators);
         oSeparator3.setBorder(BorderFactory.createLineBorder(oColorSeparators, 2));
+    }
+
+    private void loadTestFile() {
+        File oFile;
+        //select file to open
+        JFileChooser oFileChooser = new JFileChooser();
+        int iResponse = oFileChooser.showOpenDialog(null);
+        if (iResponse == JFileChooser.APPROVE_OPTION) {
+            oFile = new File(oFileChooser.getSelectedFile().getAbsolutePath());
+            System.out.println(oFile);
+            oRef = new ReadEepromFile();
+            oRef.setData(oFile);
+            oRef.setOPCode(oRef.getData());
+            oGUITestFileTable.setData(oRef.getData());
+            ArrayList<String> data = oRef.getData();
+            int iDataSize = data.size();
+            ArrayList<String> opcode = oRef.getOPCode();
+            int iOPCodeSize = opcode.size();
+            for (int i = 0; i < iDataSize; i++) {
+                for (int j = 0; j < iOPCodeSize; j++) {
+                    if (data.get(i).equals(opcode.get(j))) {
+                        oCheckBoxes = oGUITestFileTable.getCheckboxes();
+                        oCheckBoxes.get(i).setEnabled(true);
+                        oCheckBoxes.get(i).addActionListener(this);
+                    }
+                }
+            }
+            bBreakpointSet = new boolean[iOPCodeSize];
+            oRef.readFileAndWriteToEEPROM(oEnv.getPIC());
+            oGUIMainFrame.updateWindow();
+        }
+    }
+
+    private void controlBreakpoints(ActionEvent e) {
+        int iOPCode = oRef.getOPCode().size();
+
+        if (iOPCode > 0) {
+            for (int i = 0; i < oCheckBoxes.size(); i++) {
+                if (e.getSource() == oCheckBoxes.get(i)) {
+                    for (int j = 0; j < iOPCode; j++) {
+                        if (oRef.getOPCode().get(j).equals(oRef.getData().get(i))) {                            
+                            bBreakpointSet[j] = !bBreakpointSet[j];
+                            if (bBreakpointSet[j])
+                                System.out.println("Breakpoint " + j + " got set.");
+                            else
+                                System.out.println("Breakpoint " + j + " got reset.");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean[] getBreakpoints() {
+        return bBreakpointSet;
     }
 }

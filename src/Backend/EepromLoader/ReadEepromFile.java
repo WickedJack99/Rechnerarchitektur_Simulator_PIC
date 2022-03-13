@@ -10,14 +10,16 @@ import Backend.Microcontroller.PIC;
 
 public class ReadEepromFile {
 
+    ArrayList<String> dataLines;
+    ArrayList<String> oPCode;
     /**
      * Get OP-Code out of String-data-array.
      * @param dataArray String-array where OP-Code is.
      * @return String-array with only OP-Code.
      */
-    public ArrayList<String> getOPCode(ArrayList<String> data) {
+    public void setOPCode(ArrayList<String> data) {
 
-        ArrayList<String> oPCode = new ArrayList<String>();
+        oPCode = new ArrayList<String>();
 
         for (int i = 0; i < data.size(); i++) {
             //If element in dataArray at position i is null or a space, this element is not added into the new oPCode-Array.
@@ -25,26 +27,28 @@ public class ReadEepromFile {
                 oPCode.add(data.get(i));
             }
         }
+    }
 
+    public ArrayList<String> getOPCode() {
         return oPCode;
     }
 
     /**
      * Gets whole data of the file.
      * @param file
-     * @return ArrayList<String>
      * @throws IOException
      */
-    public ArrayList<String> getData(File file) {
+    public void setData(File file) {
+        //Creates String-arraylist with whole data.
+        dataLines = new ArrayList<String>();
 
-        ArrayList<String> list = new ArrayList<String>();
         try {
             FileReader fR = new FileReader(file);
             BufferedReader br = new BufferedReader(fR);
 
             String sLine;
             while ((sLine = br.readLine()) != null) {
-                list.add(sLine);
+                dataLines.add(sLine);
             }
 
             br.close();
@@ -52,7 +56,13 @@ public class ReadEepromFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return list;
+    }
+
+    /**
+     * @return ArrayList<String> dataLines from current this object.
+     */
+    public ArrayList<String> getData() {
+        return dataLines;
     }
 
     /**
@@ -188,33 +198,28 @@ public class ReadEepromFile {
      * @param k index of file in String-Array "files".
      * @param oPIC of the main-function.
      */
-    public void readFileAndWriteToEEPROM(File file, PIC oPIC) {
+    public void readFileAndWriteToEEPROM(PIC oPIC) {
+        if (oPCode.size() > 0) {
+            //Integer-array which will contain oPCode as int-values.
+            //Get an twodimensional array with int-values.
+            int[][] oPCodeAsInt = getOPCodeArrayCommandAsInt(oPCode);
 
-        //Creates String-arraylist with whole data.
-        ArrayList<String> dataLines = getData(file);
-
-        //Creates String-arraylist with oPCode.
-        ArrayList<String> oPCode = getOPCode(dataLines);
-        
-        //Integer-array which will contain oPCode as int-values.
-        //Get an twodimensional array with int-values.
-        int[][] oPCodeAsInt = getOPCodeArrayCommandAsInt(oPCode);
-
-        //Set length of eeprom for programend.
-        oPIC.getEeprom().setLengthEEPROM(oPCodeAsInt.length);
-
-        //asCommands are written into EEPROM
-        for (int i = 0; i < oPCodeAsInt.length; i++) {
-            //The adress where the command will be written in the EEPROM
-            int memoryAdress = oPCodeAsInt[i][0];
-            //System.out.println(memoryAdress);
-
-            //Command that will be written into the EEPROM
-            int command = oPCodeAsInt[i][1];
-            //System.out.println(command);
+            //Set length of eeprom for programend.
+            oPIC.getEeprom().setLengthEEPROM(oPCodeAsInt.length);
 
             //asCommands are written into EEPROM
-            oPIC.getEeprom().setElementXToValueY(memoryAdress, command);
-        }
+            for (int i = 0; i < oPCodeAsInt.length; i++) {
+                //The adress where the command will be written in the EEPROM
+                int memoryAdress = oPCodeAsInt[i][0];
+                //System.out.println(memoryAdress);
+
+                //Command that will be written into the EEPROM
+                int command = oPCodeAsInt[i][1];
+                //System.out.println(command);
+
+                //asCommands are written into EEPROM
+                oPIC.getEeprom().setElementXToValueY(memoryAdress, command);
+            }
+        } 
     }
 }

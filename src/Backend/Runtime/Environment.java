@@ -6,10 +6,8 @@
 
 package Backend.Runtime;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import Backend.FrontendCommandProcessing.CommandDecoder;
 import Backend.Microcontroller.PIC;
 import Backend.Microcontroller.WATCHDOG;
 import Frontend.PIC_SIMULATOR_GUI_JAVA.GUIMainFrame;
@@ -33,9 +31,10 @@ public class Environment {
     
     public Environment() {
 
-        GUIMainFrame oMainFrame = new GUIMainFrame();
+        GUIMainFrame oMainFrame = new GUIMainFrame(this);
 
         watchdog = new WATCHDOG();
+
 
 
         oPIC = new PIC();

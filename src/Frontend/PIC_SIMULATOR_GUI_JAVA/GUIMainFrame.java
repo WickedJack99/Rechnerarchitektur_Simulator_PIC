@@ -1,43 +1,43 @@
 package Frontend.PIC_SIMULATOR_GUI_JAVA;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.*;
-import java.awt.FlowLayout;
-
-import java.util.ArrayList;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.border.Border;
+
+import Backend.EepromLoader.ReadEepromFile;
+import Backend.Runtime.Environment;
 
 public class GUIMainFrame extends JFrame {
 
+    GUITestFileTable oGUITestFileTable;
+    GUIMenuBar oGUIMenuBar;
     /**
      * Constructor
      */
-    public GUIMainFrame() {
+    public GUIMainFrame(Environment env) {
 
         this.setTitle("PIC-Simulator GUI"); // sets title of frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // if x is pressed, exit application (HIDE_ON_CLOSE-hides application, DO_NOTHING_ON_CLOSE-prevents user from closing application)
         //this.setResizable(false); // prevent frame from beeing resized
-        this.setSize(420, 420); //sets x and y dimension of frame
-        this.setLayout(new FlowLayout());
+        this.setSize(1200, 840); //sets x and y dimension of frame
+        this.setLayout(new GridBagLayout());
 
-        this.setJMenuBar(new GUIMenuBar(this));
+        oGUITestFileTable = new GUITestFileTable();
+
+        this.setJMenuBar(new GUIMenuBar(env, this, oGUITestFileTable));
 
         this.setVisible(true); //make frame visible
         this.setBackground(new Color(76, 78, 82));
         ImageIcon guiLogo = new ImageIcon("./images/gui_logo.png"); // create an ImageIcon
         this.setIconImage(guiLogo.getImage()); // change icon of frame
-
+        
         Color guiBackgroundColor = new Color(255, 255, 255); // 0xFFFFFF || 0, 0, 0
-        //this.getContentPane().setBackground(guiBackgroundColor); //change color of background
+        //this.getContentPane().setBackground(Color.green); //change color of background
 
         //JLabel text = new JLabel(); // create label, passing of text at constructor possible
         //text.setText("Bro do you even code?"); // set text of label
@@ -57,7 +57,21 @@ public class GUIMainFrame extends JFrame {
         //text.setHorizontalAlignment(JLabel.CENTER); // horizontally aligns label "text" (JLabel.LEFT, JLabel.CENTER, JLabel.RIGHT)
 
         //this.add(text); // add label to frame
+
+        //getContentPane().setLayout(new BorderLayout());
+        //this.add(new GUITestFileTable("./testfiles/TPicSim1.LST"));
+        GridBagConstraints oGridBagConstraints = new GridBagConstraints();
+        oGridBagConstraints.gridx = 10;
+        oGridBagConstraints.gridy = 10;
+        oGridBagConstraints.gridheight = 10;
+        oGridBagConstraints.gridwidth = 500;
+        oGridBagConstraints.anchor = GridBagConstraints.PAGE_START;
+        this.add(oGUITestFileTable, oGridBagConstraints);
+        updateWindow();
     }
 
-    
+    public void updateWindow() {
+        this.revalidate();
+        this.repaint();
+    }
 }
