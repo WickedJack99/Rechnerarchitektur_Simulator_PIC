@@ -8,8 +8,7 @@ package Backend.Microcontroller;
 /** 
  * Microcontrollerclass that contains all other partclasses
  */
-public class PIC 
-{
+public class PIC {
     /**
      * Parts of PIC.
      * Objects are written with a large starting letter.
@@ -19,8 +18,7 @@ public class PIC
     private STACK Stack;
     private int WRegister;
 
-    public PIC()
-    {
+    public PIC() {
         //Initialising objects of PIC.
         Eeprom = new EEPROM();
         Ram = new RAM();
@@ -28,7 +26,7 @@ public class PIC
         WRegister = 0;
     }
 
-    public void resetPIC()
+    public synchronized void resetPIC()
     {
         Ram = new RAM();
         Stack = new STACK();
@@ -61,25 +59,25 @@ public class PIC
     int bitMaskClearBitArray[] = { bitMaskClearBit0, bitMaskClearBit1, bitMaskClearBit2, bitMaskClearBit3, bitMaskClearBit4, bitMaskClearBit5,
                                    bitMaskClearBit6, bitMaskClearBit7};
 
-    public void setWRegister(int value)
+    public synchronized void setWRegister(int value)
     {
         WRegister = value;
     }
 
-    public int get_WRegister()
+    public synchronized int get_WRegister()
     {
         return WRegister;
     }
 
-    public RAM getRam() {
+    public synchronized RAM getRam() {
         return Ram;
     }
 
-    public EEPROM getEeprom() {
+    public synchronized EEPROM getEeprom() {
         return Eeprom;
     }
 
-    public STACK getStack() {
+    public synchronized STACK getStack() {
         return Stack;
     }
 

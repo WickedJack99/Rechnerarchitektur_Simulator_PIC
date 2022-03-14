@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-
+import java.awt.Insets;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 
 public class GUITestFileTable extends JPanel {
@@ -22,64 +23,77 @@ public class GUITestFileTable extends JPanel {
     ArrayList<JCheckBox> oCheckboxes = new ArrayList<JCheckBox>();
 
     public GUITestFileTable() {
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints oGridBagConstraints = new GridBagConstraints();
-        oGridBagConstraints.gridx = 0;
-        oGridBagConstraints.gridy = 0;
-        oGridBagConstraints.gridheight = 20;
-        oGridBagConstraints.gridwidth = 20; //500, 10, 10, 480
         JTextField oFill = new JTextField("19");
         oFill.setEditable(false);
-        this.add(oFill, oGridBagConstraints);
-        oGridBagConstraints.gridx = 20;
-        this.add(new JCheckBox(), oGridBagConstraints);
-        oGridBagConstraints.gridx = 40;
-        oGridBagConstraints.gridwidth = 460;
+        this.setLayout(new GridLayout(1, 3));
+        this.add(oFill);
+        this.add(new JCheckBox());
         oFill = new JTextField("Test");
         oFill.setEditable(false);
-        this.add(oFill, oGridBagConstraints);
+        this.add(oFill);
     }
 
     public void setData(ArrayList<String> data) {
         this.removeAll();
-
+        JScrollBar oScrollBar = new JScrollBar(JScrollBar.VERTICAL, 30, 1, 0, 100);
         int iNumberOfLines = data.size() + 1;
+        JPanel oLines = new JPanel();
+        oLines.add(oScrollBar);//TODO
+        oLines.setLayout(new GridBagLayout());
+        int iHorizontalCount = 0;
+        int iVerticalCount = 0;
+        System.out.println(1);
+        GridBagConstraints l = new GridBagConstraints();
+        l.gridx = iHorizontalCount;
 
-        this.setLayout(new GridBagLayout());
-
-        JPanel oLineNumbers = new JPanel();
-        oLineNumbers.setLayout(new GridLayout(iNumberOfLines, 1));
-        GridBagConstraints oGridBagConstraints = new GridBagConstraints();
-        oGridBagConstraints.gridx = 0;
-        oGridBagConstraints.gridy = 0;
-        oGridBagConstraints.gridwidth = 500;
-        oGridBagConstraints.gridheight = 600;
-
-        JPanel oBreakpoints = new JPanel();
-        oBreakpoints.setLayout(new GridLayout(iNumberOfLines, 1));
-
-        JPanel oFileLines = new JPanel();
-        oFileLines.setLayout(new GridLayout(iNumberOfLines, 1));
+        int iMaxLength = getMaxLen(data);
 
         for (int i = 1; i < iNumberOfLines; i++) {
-            JTextField oTestLine = new JTextField(data.get(i - 1));
-            oTestLine.setEditable(false);
-            oFileLines.add(oTestLine);
-            JCheckBox oCheckbox = new JCheckBox();
-            oCheckbox.setEnabled(false);
-            oCheckboxes.add(oCheckbox);
-            oBreakpoints.add(oCheckbox);
-            JTextField oNumber = new JTextField(i + "");
-            oNumber.setEditable(false);
-            oLineNumbers.add(oNumber);
-        }
+            JPanel oPanel = new JPanel();
+            oPanel.setLayout(new GridBagLayout());
 
-        this.add(oLineNumbers, oGridBagConstraints);
-        this.add(oBreakpoints);
-        this.add(oFileLines);
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 0;
+
+            JTextField oNumber = new JTextField(i + "", 3);
+            oNumber.setEditable(false);
+            oPanel.add(oNumber, c);
+
+            c.gridx = 1;
+
+            JCheckBox oCheckbox = new JCheckBox();
+            oCheckbox.setEnabled(false);      
+            oCheckboxes.add(oCheckbox);
+            oPanel.add(oCheckbox, c);
+
+            c.gridx = 2;
+
+            JTextField oTestLine = new JTextField(data.get(i - 1), iMaxLength);
+            oTestLine.setEditable(false);
+            oPanel.add(oTestLine, c);
+            
+            l.gridy = iVerticalCount;
+            l.anchor = GridBagConstraints.WEST;
+            oLines.add(oPanel, l);
+            iVerticalCount++;
+        }
+        System.out.println(iMaxLength);
+        this.add(oLines);
     }
 
     public ArrayList<JCheckBox> getCheckboxes() {
         return oCheckboxes;
+    }
+
+    private int getMaxLen(ArrayList<String> data) {
+        int iSize = data.size();
+        int iMaxLength = 0;
+        for (int i = 0; i < iSize; i++) {
+            if (data.get(i).length() > iMaxLength) {
+                iMaxLength = data.get(i).length();
+            }
+        }
+        return iMaxLength;
     }
 }

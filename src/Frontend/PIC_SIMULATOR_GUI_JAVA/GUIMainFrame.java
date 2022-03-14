@@ -1,11 +1,14 @@
 package Frontend.PIC_SIMULATOR_GUI_JAVA;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.border.Border;
 
@@ -24,13 +27,11 @@ public class GUIMainFrame extends JFrame {
         this.setTitle("PIC-Simulator GUI"); // sets title of frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // if x is pressed, exit application (HIDE_ON_CLOSE-hides application, DO_NOTHING_ON_CLOSE-prevents user from closing application)
         //this.setResizable(false); // prevent frame from beeing resized
-        this.setSize(1200, 840); //sets x and y dimension of frame
+        this.setSize(1400, 800); //sets x and y dimension of frame
+        //this.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         this.setLayout(new GridBagLayout());
-
         oGUITestFileTable = new GUITestFileTable();
-
         this.setJMenuBar(new GUIMenuBar(env, this, oGUITestFileTable));
-
         this.setVisible(true); //make frame visible
         this.setBackground(new Color(76, 78, 82));
         ImageIcon guiLogo = new ImageIcon("./images/gui_logo.png"); // create an ImageIcon
@@ -50,7 +51,7 @@ public class GUIMainFrame extends JFrame {
         //text.setBackground(Color.BLUE); // set background color
         //text.setOpaque(true); // display background color
 
-        Border border = BorderFactory.createLineBorder(Color.green, 3); // creates border for label, color and size of border
+        //Border border = BorderFactory.createLineBorder(Color.green, 3); // creates border for label, color and size of border
 
         //text.setBorder(border); // sets border of label to "border"
         //text.setVerticalAlignment(JLabel.TOP); // vertically alligns label "text" (JLabel.TOP, JLabel.CENTER, JLabel.BOTTOM)
@@ -60,13 +61,11 @@ public class GUIMainFrame extends JFrame {
 
         //getContentPane().setLayout(new BorderLayout());
         //this.add(new GUITestFileTable("./testfiles/TPicSim1.LST"));
-        GridBagConstraints oGridBagConstraints = new GridBagConstraints();
-        oGridBagConstraints.gridx = 10;
-        oGridBagConstraints.gridy = 10;
-        oGridBagConstraints.gridheight = 10;
-        oGridBagConstraints.gridwidth = 500;
-        oGridBagConstraints.anchor = GridBagConstraints.PAGE_START;
-        this.add(oGUITestFileTable, oGridBagConstraints);
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0; //next added element will be in column 1
+        c.gridy = 0; //next added element will be in row 1
+        c.insets = new Insets(1,1,1,1);
+        this.add(oGUITestFileTable, c);
         updateWindow();
     }
 
