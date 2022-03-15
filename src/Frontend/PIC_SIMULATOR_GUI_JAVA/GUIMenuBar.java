@@ -25,6 +25,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     ArrayList<JCheckBox> oCheckBoxes;
     ReadEepromFile oRef;
     boolean[] bBreakpointSet;
+    int iTestFileLoaded = 0;
 
     //Custom separators because addSeparator(default) looks not nice.
     JMenuItem oSeparator0;
@@ -527,7 +528,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         int iResponse = oFileChooser.showOpenDialog(null);
         if (iResponse == JFileChooser.APPROVE_OPTION) {
             oFile = new File(oFileChooser.getSelectedFile().getAbsolutePath());
-            System.out.println(oFile);
+            //System.out.println(oFile);
             oRef = new ReadEepromFile();
             oRef.setData(oFile);
             oRef.setOPCode(oRef.getData());
@@ -536,6 +537,12 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             int iDataSize = data.size();
             ArrayList<String> opcode = oRef.getOPCode();
             int iOPCodeSize = opcode.size();
+            if (iTestFileLoaded > 0) {
+                oCheckBoxes = oGUITestFileTable.getCheckboxes();
+                for (int i = 0; i < iDataSize; i++) {                    
+                    oCheckBoxes.get(i).setEnabled(false);
+                }
+            }
             for (int i = 0; i < iDataSize; i++) {
                 for (int j = 0; j < iOPCodeSize; j++) {
                     if (data.get(i).equals(opcode.get(j))) {
@@ -548,6 +555,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             bBreakpointSet = new boolean[iOPCodeSize];
             oRef.readFileAndWriteToEEPROM(oEnv.getPIC());
             oGUIMainFrame.updateWindow();
+            iTestFileLoaded = 1;
         }
     }
 
