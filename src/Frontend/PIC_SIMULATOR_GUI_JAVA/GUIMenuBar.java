@@ -363,11 +363,13 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         if (e.getSource() == oDarkTheme) {
             System.out.println("It's gettin dark brooo"); //TODO
             setTheme(aoDarkTheme[0], aoDarkTheme[1]);
+            oGUITestFileTable.setTheme(1);
         }
         //Change to light theme
         if (e.getSource() == oLightTheme) {
             System.out.println("Death to all vampires!"); //TODO
             setTheme(aoLightTheme[0], aoLightTheme[1]);
+            oGUITestFileTable.setTheme(0);
         }
 
         //Microcontroller
@@ -560,18 +562,19 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     }
 
     private void controlBreakpoints(ActionEvent e) {
-        int iOPCode = oRef.getOPCode().size();
-
-        if (iOPCode > 0) {
-            for (int i = 0; i < oCheckBoxes.size(); i++) {
-                if (e.getSource() == oCheckBoxes.get(i)) {
-                    for (int j = 0; j < iOPCode; j++) {
-                        if (oRef.getOPCode().get(j).equals(oRef.getData().get(i))) {                            
-                            bBreakpointSet[j] = !bBreakpointSet[j];
-                            if (bBreakpointSet[j])
-                                System.out.println("Breakpoint " + j + " got set.");
-                            else
-                                System.out.println("Breakpoint " + j + " got reset.");
+        if (oRef != null) {
+            int iOPCode = oRef.getOPCode().size();
+            if (iOPCode > 0) {
+                for (int i = 0; i < oCheckBoxes.size(); i++) {
+                    if (e.getSource() == oCheckBoxes.get(i)) {
+                        for (int j = 0; j < iOPCode; j++) {
+                            if (oRef.getOPCode().get(j).equals(oRef.getData().get(i))) {                            
+                                bBreakpointSet[j] = !bBreakpointSet[j];
+                                if (bBreakpointSet[j])
+                                    System.out.println("Breakpoint " + j + " got set.");
+                                else
+                                    System.out.println("Breakpoint " + j + " got reset.");
+                            }
                         }
                     }
                 }

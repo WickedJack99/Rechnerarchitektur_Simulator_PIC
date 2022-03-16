@@ -37,7 +37,6 @@ public class GUIMainFrame extends JFrame {
         ImageIcon guiLogo = new ImageIcon("./images/gui_logo.png"); // create an ImageIcon
         this.setIconImage(guiLogo.getImage()); // change icon of frame
         
-        Color guiBackgroundColor = new Color(255, 255, 255); // 0xFFFFFF || 0, 0, 0
         //this.getContentPane().setBackground(Color.green); //change color of background
 
         //JLabel text = new JLabel(); // create label, passing of text at constructor possible
@@ -64,8 +63,16 @@ public class GUIMainFrame extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0; //next added element will be in column 1
         c.gridy = 0; //next added element will be in row 1
-        c.insets = new Insets(1,1,1,1);
+        c.insets = new Insets(10,10,10,10);
         this.add(oGUITestFileTable, c);
+
+        int[] aiRegisters = {1, 2, 3, 4, 5, 6, 7, 8 ,9};
+
+        GUIRegisters oGUIRegisters = new GUIRegisters();
+
+        c.gridx = 1;
+        this.add(oGUIRegisters);
+
         updateWindow();
     }
 
