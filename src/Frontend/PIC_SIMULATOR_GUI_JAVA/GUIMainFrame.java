@@ -31,7 +31,10 @@ public class GUIMainFrame extends JFrame {
         //this.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         this.setLayout(new GridBagLayout());
         oGUITestFileTable = new GUITestFileTable();
-        this.setJMenuBar(new GUIMenuBar(env, this, oGUITestFileTable));
+
+        int[] aiTestRegisters = {1, 2, 3, 4, 5, 6, 7, 8 ,9};
+        GUIRegisters oGUIRegisters = new GUIRegisters();
+        this.setJMenuBar(new GUIMenuBar(env, this, oGUITestFileTable, oGUIRegisters));
         this.setVisible(true); //make frame visible
         this.setBackground(new Color(76, 78, 82));
         ImageIcon guiLogo = new ImageIcon("./images/gui_logo.png"); // create an ImageIcon
@@ -65,10 +68,6 @@ public class GUIMainFrame extends JFrame {
         c.gridy = 0; //next added element will be in row 1
         c.insets = new Insets(10,10,10,10);
         this.add(oGUITestFileTable, c);
-
-        int[] aiRegisters = {1, 2, 3, 4, 5, 6, 7, 8 ,9};
-
-        GUIRegisters oGUIRegisters = new GUIRegisters();
 
         c.gridx = 1;
         this.add(oGUIRegisters);

@@ -23,12 +23,9 @@ public class RAM {
     //Last programmcounter for function getLastLine in main.
     private int lastProgramcounter;
 
-    //Prescaler counters Timer0.
-    private int Timer0Prescaled;
-    private int Timer0PrescaledRA4;
-
     /**
      * Constructor of RAM
+     * Initializes two banks as two int arrays of size 128.
      */
     public RAM() {
         //Bank0 of the PIC-RAM
@@ -69,6 +66,7 @@ public class RAM {
     }
 
     /**
+     * Sets bank x to values of overhanded array.
      * @param x shows if bank 0 or 1 will be set.
      * @param array an array which will represent bank x.
      */
@@ -83,9 +81,10 @@ public class RAM {
     }
 
     /**
-     * @param element between 0 and 127.
-     * @param bank where the value will be changed.
-     * @param value that will be written into the element.
+     * Sets element x of bank y to z.
+     * @param element between 0 and 127. (x)
+     * @param rp0Bit bank where the value will be changed. (y)
+     * @param value that will be written into the element. (z)
      */
     public synchronized void set_Element_X_Of_Bank_Y_To_Z(int element, boolean rp0Bit, int value) {
         if (element < 0 || element > 127) {
@@ -100,127 +99,85 @@ public class RAM {
                 if (rp0Bit == true) {
                     bank1[element] = value;
                 }
-            }
-
-            else {
+            } else {
                 //Bank0 Registers
                 if (rp0Bit == false) {
                     switch (element) {
                         case 0: {
                             bank0[bank0[4]] = value;
                         }break;
-
                         case 1: {
                             set_TMR0(value);
                         }break;
-                            
                         case 2: {
                             set_PCL(value);
                         }break;
-    
                         case 3: {
                             set_STATUS(value);
                         }break;
-    
                         case 4: {
                             set_FSR(value);
                         }break;
-    
                         case 5: {
                             set_PORTA(value);
                         }break;
-    
                         case 6: {
                             set_PORTB(value);
                         }break;
-    
                         case 7: {
                             bank0[7] = value;
                         }break;
-
                         case 8: {
                             set_EEDATA(value);
                         }break;
-    
-                        case 9:
-                        {
+                        case 9: {
                             set_EEADR(value);
                         }break;
-    
-                        case 10:
-                        {
+                        case 10: {
                             set_PCLATH(value);
                         }break;
-    
-                        case 11:
-                        {
+                        case 11: {
                             set_INTCON(value);
                         }break;
                     }
                 }
-
                 //Bank1 Registers
-                else
-                {
-                    switch (element)
-                    {
-                        case 0:
-                        {
+                else {
+                    switch (element) {
+                        case 0: {
                             bank1[bank0[4]] = value;
                         }break;
-
-                        case 1:
-                        {
+                        case 1: {
                             set_OPTION(value);
                         }break;
-
-                        case 2:
-                        {
+                        case 2: {
                             bank1[2] = value;
                         }break;
-
-                        case 3:
-                        {
+                        case 3: {
                             bank1[3] = value;
                         }break;
-
-                        case 4:
-                        {
+                        case 4: {
                             bank1[4] = value;
                         }break;
-
-                        case 5:
-                        {
+                        case 5: {
                             set_TRISA(value);
                         }break;
-
-                        case 6:
-                        {
+                        case 6: {
                             set_TRISB(value);
                         }break;
-
-                        case 7:
-                        {
+                        case 7: {
                             set_EECON1(value);
                         }break;
-
-                        case 8:
-                        {
+                        case 8: {
                             set_EECON2(value);
                         }break;
-
-                        case 9:
-                        {
+                        case 9: {
                             bank1[9] = value;
                         }break;
-
-                        case 10:
-                        {
+                        case 10: {
                             bank1[10] = value;
                         }break;
-
-                        case 11:
-                        {
+                        case 11: {
                             bank1[11] = value;
                         }break;
                     }
@@ -230,126 +187,143 @@ public class RAM {
     }
 
     //Bank0 Registers
-    public synchronized void set_TMR0(int value)
-    {
+
+    /**
+     * Set TMR0 to value & 255.
+     * @param value to set TMR0 to.
+     */
+    public synchronized void set_TMR0(int value) {
         value &= 255;
         bank0[1] = value;
     }
 
-    public synchronized void increment_TMR0()
-    {
-        Timer0Prescaled++;
+    /**
+     * Increment TMR0 by 1 if PSA == 1 or by prescaler rate if PSA == 0.
+     */
+    public synchronized void increment_TMR0() {
+        int iValTMR0 = get_TMR0();
+        int iValIncr;
 
-        if (Timer0Prescaled == get_TMR0_PrescalerRate())
-        {
-            if (bank0[1] == 255)
-            {
-                set_T0IF(true);
-                bank0[1] = 0;
-            }
-    
-            else
-            {
-                set_T0IF(false);
-                bank0[1]++;
-            }
-            Timer0Prescaled = 0;
+        //Check assignment of prescaler (PSA == 0) => TMR0; (PSA == 1) => WDT
+        if (get_PSA()) {
+            iValIncr = 1;
+        } else {
+            iValIncr = get_TMR0_PrescalerRate();
+        }
+
+        //Check for overflow and set bit and timer
+        if ((iValTMR0 + iValIncr) > 255) {
+            set_T0IF(true);
+            set_TMR0((iValTMR0 + iValIncr) & 255); //TODO 0 or &255
+        } else {
+            set_T0IF(false);
+            set_TMR0(iValTMR0 + iValIncr);
         }
     }
 
-    public synchronized int get_TMR0()
-    {
+    /**
+     * @returns value of TMR0.
+     */
+    public synchronized int get_TMR0() {
         return bank0[1];
     }
 
-    public synchronized void set_PCL(int value)
-    {
+    /**
+     * Sets PCL to value.
+     * @param value PCL is set to.
+     */
+    public synchronized void set_PCL(int value) {
         bank0[2] = value;
         bank1[2] = value;
     }
 
-    public synchronized int get_PCL()
-    {
+    /**
+     * @returns value of PCL
+     */
+    public synchronized int get_PCL() {
         return bank0[2];
     }
 
-    public synchronized void set_STATUS(int value)
-    {
+    /**
+     * Sets STATUS-register to value.
+     * @param value STATUS-register is set to.
+     */
+    public synchronized void set_STATUS(int value) {
         bank0[3] = value;
         bank1[3] = value;
     }
 
-    public synchronized int get_STATUS()
-    {
+    /**
+     * @returns STATUS-register.
+     */
+    public synchronized int get_STATUS() {
         return bank0[3];
     }
 
-    public synchronized void set_FSR(int value)
-    {
+    /**
+     * Sets file-search-register to value.
+     * @param value file-search-register is set to.
+     */
+    public synchronized void set_FSR(int value) {
         bank0[4] = value;
         bank1[4] = value;
     }
 
-    public synchronized int get_FSR()
-    {
+    /**
+     * @returns value of file search register.
+     */
+    public synchronized int get_FSR() {
         return bank0[4];
     }
 
-    public synchronized void set_PORTA(int value)
-    {
-        if (((value & 0b00010000) == 0b00010000) && get_T0CS())
-        {
-            Timer0PrescaledRA4++;
-            if (Timer0PrescaledRA4 == get_TMR0_PrescalerRate())
-            {
-                if (bank0[1] == 255)
-                {
-                    set_T0IF(true);
-                    bank0[1] = 0;
+    /**
+     * Sets PORT A and checks whether TMR0 has to be incremented or not.
+     * @param value
+     */
+    public synchronized void set_PORTA(int value) {
+        //Check if PORT A RA4 was set/cleared
+        boolean bActualRA4 = get_RA4_T0CKI();
+        boolean bNewRA4 = ((value & 0b00010000) == 0b00010000);
+
+        //Increment TMR0 if RA4 was set/cleared
+        if (bActualRA4 != bNewRA4) {
+            if (bNewRA4) { //rising edge
+                if (!get_T0SE()) { //rising edge increments TMR0
+                    increment_TMR0();
                 }
-    
-                else
-                {
-                    set_T0IF(false);
-                    bank0[1]++;
+            } else { //falling edge
+                if (get_T0SE()) { //falling edge increments TMR0
+                    increment_TMR0();
                 }
-                Timer0PrescaledRA4 = 0;
             }
         }
-
+        //Set PORT A
         bank0[5] = value;
     }
 
-    public synchronized void set_PORTA_Bit_X_To_Y(int x, int y)
-    {
-        if ((x == 4))
-        {
+    public synchronized void set_PORTA_Bit_X_To_Y(int x, int y) { //TODO
+        //Increment TMR0 if RA4 was set/cleared
+        if ((x == 4)) {
+            boolean bActualRA4 = get_RA4_T0CKI();
+            boolean bNewRA4 = false;
             if (y == 1)
-            {
-                if (get_T0CS())
-                {
-                    Timer0PrescaledRA4++;
-                    if (Timer0PrescaledRA4 == get_TMR0_PrescalerRate())
-                    {
-                        if (bank0[1] == 255)
-                        {
-                            set_T0IF(true);
-                            bank0[1] = 0;
-                        }
+                bNewRA4 = true;
             
-                        else
-                        {
-                            set_T0IF(false);
-                            bank0[1]++;
-                        }
-                        Timer0PrescaledRA4 = 0;
+            if (bActualRA4 != bNewRA4) {
+                if (bNewRA4) { //rising edge
+                    if (!get_T0SE()) { //rising edge increments TMR0
+                        increment_TMR0();
+                    }
+                } else { //falling edge
+                    if (get_T0SE()) { //falling edge increments TMR0
+                        increment_TMR0();
                     }
                 }
             }
         }
 
-        if (y == 0)
-        {
+        //Clear bit x
+        if (y == 0) {
             int[] array = new int[8];
             array[0] = 0b11111110;
             array[1] = 0b11111101;
@@ -363,27 +337,35 @@ public class RAM {
             bank0[5] &= array[x];
         }
 
-        //if (y == 1)
-        else
-        {
+        //if (y == 1) set bit x
+        else {
             bank0[5] |= ((0b00000001) << x);
         }
     }
 
-    public synchronized int get_PORTA()
-    {
+    /**
+     * @returns value of PORT A.
+     */
+    public synchronized int get_PORTA() {
         return bank0[5];
     }
 
-    public synchronized void set_PORTB(int value)
-    {
+    /**
+     * Sets PORT B to value.
+     * @param value to set PORT B to.
+     */
+    public synchronized void set_PORTB(int value) {
         bank0[6] = value;
     }
 
-    public synchronized void set_PORTB_Bit_X_To_Y(int x, int y)
-    {
-        if (y == 0)
-        {
+    /**
+     * Sets PORT B bit x to y. (y == 0) => false; (y == 1) => true
+     * @param x indicates the position of the bit which will be set/cleared.
+     * @param y indicates whether the bit will be set/cleared.
+     */
+    public synchronized void set_PORTB_Bit_X_To_Y(int x, int y) {
+        //Clear bit x
+        if (y == 0) {
             int[] array = new int[8];
             array[0] = 0b11111110;
             array[1] = 0b11111101;
@@ -397,269 +379,216 @@ public class RAM {
             bank0[6] &= array[x];
         }
 
-        //if (y == 1)
-        else
-        {
+        //if (y == 1) set bit x
+        else {
             bank0[6] |= ((0b00000001) << x);
         }
     }
 
-    public synchronized int get_PORTB()
-    {
+    /**
+     * @returns value of PORT B.
+     */
+    public synchronized int get_PORTB() {
         return bank0[6];
     }
 
-    public synchronized void set_EEDATA(int value)
-    {
+    /**
+     * Sets EEDATA to value.
+     * @param value to set EEDATA to.
+     */
+    public synchronized void set_EEDATA(int value) {
         bank0[8] = value;
     }
 
-    public synchronized int get_EEDATA()
-    {
+    /**
+     * @returns value of EEDATA.
+     */
+    public synchronized int get_EEDATA() {
         return bank0[8];
     }
 
-    public synchronized void set_EEADR(int value)
-    {
+    /**
+     * Sets EEADR to value.
+     * @param value to set EEADR to.
+     */
+    public synchronized void set_EEADR(int value) {
         bank0[9] = value;
     }
 
-    public synchronized int get_EEADR()
-    {
+    public synchronized int get_EEADR() {
         return bank0[9];
     }
 
-    public synchronized void set_PCLATH(int value)
-    {
+    public synchronized void set_PCLATH(int value) {
         bank0[10] = value;
         bank1[10] = value;
     }
 
-    public synchronized int get_PCLATH()
-    {
+    public synchronized int get_PCLATH() {
         return bank0[10];
     }
 
-    public synchronized void set_INTCON(int value)
-    {
+    public synchronized void set_INTCON(int value) {
         bank0[11] = value;
         bank1[11] = value;
     }
 
-    public synchronized int get_INTCON()
-    {
+    public synchronized int get_INTCON() {
         return bank0[11];
     }
 
     //Bank1 Registers
-    public synchronized void set_OPTION(int value)
-    {
+    public synchronized void set_OPTION(int value) {
         bank1[1] = value;
     }
 
-    public synchronized int get_OPTION()
-    {
+    public synchronized int get_OPTION() {
         return bank1[1];
     }
 
-    public synchronized void set_TRISA(int value)
-    {
+    public synchronized void set_TRISA(int value) {
         bank1[5] = value;
     }
 
-    public synchronized int get_TRISA()
-    {
+    public synchronized int get_TRISA() {
         return bank1[5];
     }
 
-    public synchronized void set_TRISB(int value)
-    {
+    public synchronized void set_TRISB(int value) {
         bank1[6] = value;
     }
 
-    public synchronized int get_TRISB()
-    {
+    public synchronized int get_TRISB() {
         return bank1[6];
     }
 
-    public synchronized void set_EECON1(int value)
-    {
+    public synchronized void set_EECON1(int value) {
         bank1[7] = value;
     }
 
-    public synchronized int get_EECON1()
-    {
+    public synchronized int get_EECON1() {
         return bank1[7];
     }
 
-    public synchronized void set_EECON2(int value)
-    {
+    public synchronized void set_EECON2(int value) {
         bank1[8] = value;
     }
 
-    public synchronized int get_EECON2()
-    {
+    public synchronized int get_EECON2() {
         return bank1[8];
     }
 
     //Bank0 & Bank1 Statusflags
-    public synchronized void set_Carryflag(boolean value)
-    {
+    public synchronized void set_Carryflag(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b00000001;
-        }
-
-        else
-        {
+        } else {
             status &= 0b11111110;
         }
 
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Carryflag()
-    {
+    public synchronized boolean get_Carryflag() {
         return (get_STATUS() & 0b00000001) == 1;
     }
 
-    public synchronized void set_Digitcarryflag(boolean value)
-    {
+    public synchronized void set_Digitcarryflag(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b00000010;
-        }
-
-        else
-        {
+        } else {
             status &= 0b11111101;
         }
 
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Digitcarryflag()
-    {
+    public synchronized boolean get_Digitcarryflag() {
         return (get_STATUS() & 0b00000010) == 2;
     }
 
-    public synchronized void set_Zeroflag(boolean value)
-    {
+    public synchronized void set_Zeroflag(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b00000100;
-        }
-
-        else
-        {
+        } else {
             status &= 0b11111011;
         }
 
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Zeroflag()
-    {
+    public synchronized boolean get_Zeroflag() {
         return (get_STATUS() & 0b00000100) == 4;
     }
 
-    public synchronized void set_TimeOutFlag(boolean value)
-    {
+    public synchronized void set_TimeOutFlag(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b00001000;
-        }
-
-        else
-        {
+        } else {
             status &= 0b11110111;
         }
 
         set_STATUS(status);
     }
 
-    public synchronized boolean get_TimeOutFlag()
-    {
+    public synchronized boolean get_TimeOutFlag() {
         return (get_STATUS() & 0b00001000) == 8;
     }
 
-    public synchronized void set_PowerDownFlag(boolean value)
-    {
+    public synchronized void set_PowerDownFlag(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b00010000;
-        }
-
-        else
-        {
+        } else {
             status &= 0b11101111;
         }
 
         set_STATUS(status);
     }
 
-    public synchronized boolean get_PowerDownFlag()
-    {
+    public synchronized boolean get_PowerDownFlag() {
         return (get_STATUS() & 0b00010000) == 16;
     }
 
-    public synchronized void set_RP0Bit(boolean value)
-    {
+    public synchronized void set_RP0Bit(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b00100000;
-        }
-
-        else
-        {
+        } else {
             status &= 0b11011111;
         }
 
         set_STATUS(status);
     }
 
-    public synchronized boolean get_RP0Bit()
-    {
+    public synchronized boolean get_RP0Bit() {
         return (get_STATUS() & 0b00100000) == 32;
     }
 
-    public synchronized void set_RP1Bit(boolean value)
-    {
+    public synchronized void set_RP1Bit(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b01000000;
-        }
-
-        else
-        {
+        } else {
             status &= 0b10111111;
         }
 
         set_STATUS(status);
     }
 
-    public synchronized boolean get_RP1Bit()
-    {
+    public synchronized boolean get_RP1Bit() {
         return (get_STATUS() & 0b01000000) == 64;
     }
 
-    public synchronized void set_Interruptflag(boolean value)
-    {
+    public synchronized void set_Interruptflag(boolean value) {
         int status = get_STATUS();
-        if (value)
-        {
+        if (value) {
             status |= 0b10000000;
-        }
-
-        else
-        {
+        } else {
             status &= 0b01111111;
         }
 
@@ -1107,16 +1036,11 @@ public class RAM {
         }
     }
 
-    public synchronized void set_RBIE(boolean value)
-    {
+    public synchronized void set_RBIE(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b00001000;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b11110111;
         }
 
@@ -1313,19 +1237,13 @@ public class RAM {
                 case 4: {
                     returnValue = 32;
                 }break;
-    
-                case 5:
-                {
+                case 5: {
                     returnValue = 64;
                 }break;
-    
-                case 6:
-                {
+                case 6: {
                     returnValue = 128;
                 }break;
-    
-                case 7:
-                {
+                case 7: {
                     returnValue = 256;
                 }break;
             }
@@ -1445,11 +1363,8 @@ public class RAM {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_T0CS()
-    {
-        {
-            return (get_OPTION() & 0b00100000) == 32;
-        }
+    public synchronized boolean get_T0CS() {
+        return (get_OPTION() & 0b00100000) == 32;
     }
 
     public synchronized void set_INTEDG(boolean value)

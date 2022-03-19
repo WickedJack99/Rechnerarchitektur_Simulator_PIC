@@ -22,6 +22,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     Environment oEnv;
     GUIMainFrame oGUIMainFrame;
     GUITestFileTable oGUITestFileTable;
+    GUIRegisters oGUIRegisters;
     ArrayList<JCheckBox> oCheckBoxes;
     ReadEepromFile oRef;
     boolean[] bBreakpointSet;
@@ -93,7 +94,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
      * Constructor initializes menubar.
      * @param frame
      */
-    public GUIMenuBar(Environment env, GUIMainFrame mainframe, GUITestFileTable guitft) { //TODO maybe single components, with methods, of frame to set theme
+    public GUIMenuBar(Environment env, GUIMainFrame mainframe, GUITestFileTable guitft, GUIRegisters guiregs) { //TODO maybe single components, with methods, of frame to set theme
 
         //Custom Separators since default is not able to change background.
         oSeparator0 = new JMenuItem();
@@ -113,6 +114,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         oEnv = env;
         oGUIMainFrame = mainframe;
         oGUITestFileTable = guitft;
+        oGUIRegisters = guiregs;
 
         //File
         oFileMenu = new JMenu(sGermanLang[0]);
@@ -364,12 +366,16 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             System.out.println("It's gettin dark brooo"); //TODO
             setTheme(aoDarkTheme[0], aoDarkTheme[1]);
             oGUITestFileTable.setTheme(1);
+            oGUIRegisters.setTheme(1);
+            oGUIMainFrame.setBackground(aoDarkTheme[1]);
         }
         //Change to light theme
         if (e.getSource() == oLightTheme) {
             System.out.println("Death to all vampires!"); //TODO
             setTheme(aoLightTheme[0], aoLightTheme[1]);
             oGUITestFileTable.setTheme(0);
+            oGUIRegisters.setTheme(0);
+            oGUIMainFrame.setBackground(aoLightTheme[1]);
         }
 
         //Microcontroller
