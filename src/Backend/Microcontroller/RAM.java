@@ -214,7 +214,7 @@ public class RAM {
         //Check for overflow and set bit and timer
         if ((iValTMR0 + iValIncr) > 255) {
             set_T0IF(true);
-            set_TMR0((iValTMR0 + iValIncr) & 255); //TODO 0 or &255
+            set_TMR0((iValTMR0 + iValIncr) & 255); //TODO 0 or &255 (Question to Prof)
         } else {
             set_T0IF(false);
             set_TMR0(iValTMR0 + iValIncr);
@@ -281,34 +281,12 @@ public class RAM {
      * @param value
      */
     public synchronized void set_PORTA(int value) {
-        //Check if PORT A RA4 was set/cleared
-        boolean bActualRA4 = get_RA4_T0CKI();
-        boolean bNewRA4 = ((value & 0b00010000) == 0b00010000);
-
-        //Increment TMR0 if RA4 was set/cleared
-        if (bActualRA4 != bNewRA4) {
-            if (bNewRA4) { //rising edge
-                if (!get_T0SE()) { //rising edge increments TMR0
-                    increment_TMR0();
-                }
-            } else { //falling edge
-                if (get_T0SE()) { //falling edge increments TMR0
-                    increment_TMR0();
-                }
-            }
-        }
-        //Set PORT A
-        bank0[5] = value;
-    }
-
-    public synchronized void set_PORTA_Bit_X_To_Y(int x, int y) { //TODO
-        //Increment TMR0 if RA4 was set/cleared
-        if ((x == 4)) {
+        if (get_T0CS()) {
+            //Check if PORT A RA4 was set/cleared
             boolean bActualRA4 = get_RA4_T0CKI();
-            boolean bNewRA4 = false;
-            if (y == 1)
-                bNewRA4 = true;
-            
+            boolean bNewRA4 = ((value & 0b00010000) == 0b00010000);
+
+            //Increment TMR0 if RA4 was set/cleared
             if (bActualRA4 != bNewRA4) {
                 if (bNewRA4) { //rising edge
                     if (!get_T0SE()) { //rising edge increments TMR0
@@ -317,6 +295,35 @@ public class RAM {
                 } else { //falling edge
                     if (get_T0SE()) { //falling edge increments TMR0
                         increment_TMR0();
+                    }
+                }
+            }
+        }
+        
+        //Set PORT A
+        bank0[5] = value;
+    }
+
+    public synchronized void set_PORTA_Bit_X_To_Y(int x, int y) {
+        
+        //Increment TMR0 if RA4 was set/cleared
+        if ((x == 4)) {
+            //Check T0CS
+            if (get_T0CS()) {
+                boolean bActualRA4 = get_RA4_T0CKI();
+                boolean bNewRA4 = false;
+                if (y == 1)
+                    bNewRA4 = true;
+                
+                if (bActualRA4 != bNewRA4) {
+                    if (bNewRA4) { //rising edge
+                        if (!get_T0SE()) { //rising edge increments TMR0
+                            increment_TMR0();
+                        }
+                    } else { //falling edge
+                        if (get_T0SE()) { //falling edge increments TMR0
+                            increment_TMR0();
+                        }
                     }
                 }
             }
@@ -595,71 +602,65 @@ public class RAM {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Interruptflag()
-    {
+    public synchronized boolean get_Interruptflag() {
         return (get_STATUS() & 0b10000000) == 128;
     }
 
     //Bank0 PCL
-    public synchronized int get_Programcounter()
-    {
+    public synchronized int get_Programcounter() {
         return (bank0[2]);
     }
 
-    public synchronized int get_LastProgramcounter()
-    {
+    public synchronized int get_LastProgramcounter() {
         return lastProgramcounter;
     }
 
-    public synchronized void inkrement_Programcounter(int value, int kindOfCall) //0 at Fetchzycle, 1 at Jumpcommand, 2 at ...
-    {
-        if (bank0[2] >= 0 && bank0[2] <= 255)
-        {
+    /**
+     * 
+     * @param value
+     * @param kindOfCall 0 at normal instruction, 1 at Fetchzycle,... 2 at Jumpcommand, 3 at ...
+     */
+    public synchronized void inkrement_Programcounter(int value, int kindOfCall) {
+        if (bank0[2] >= 0 && bank0[2] <= 255) {
             lastProgramcounter = bank0[2];
             bank0[2] += value;
-        }
-        
-        else
-        {
-            if (kindOfCall == 0)
-            {
+        } else {
+            if (kindOfCall == 0) {
                 //Nothing happens
             }
 
-            if (kindOfCall == 1)
-            {
+            if (kindOfCall == 1) {
                 bank0[2] = 0; //Wrap-Around at fetchcycle
             }
         }
     }
 
-    public synchronized void dekrement_Programcounter(int value)
-    {
-        if (bank0[2] > 0 && bank0[2] <= 255)
-        {
+    /**
+     * Decrements PC by value.
+     * @param value to decrement PC by.
+     */
+    public synchronized void dekrement_Programcounter(int value) {
+        if (bank0[2] > 0 && bank0[2] <= 255) {
             lastProgramcounter = bank0[2];
             bank0[2] -= value;
-        }
-        
-        else
-        {
+        } else {
             throw new IndexOutOfBoundsException();
         }
     }
 
-    public synchronized boolean set_Programcounter(int value)
-    {
+    /**
+     * Sets PC to value.
+     * @param value to set PC to.
+     * @returns true if set worked, else false if set didn't work.
+     */
+    public synchronized boolean set_Programcounter(int value) {
         boolean setWorked = false;
 
-        if (value >= 0 && value <= 255)
-        {
+        if (value >= 0 && value <= 255) {
             lastProgramcounter = bank0[2];
             bank0[2] = value;
             setWorked = true;
-        }
-        
-        else
-        {
+        } else {
             throw new IndexOutOfBoundsException();
         }
 
@@ -667,85 +668,84 @@ public class RAM {
     }
 
     //Bank0 PORTA
-    public synchronized void set_RA0(boolean value)
-    {
+    /**
+     * 
+     * @param value
+     */
+    public synchronized void set_RA0(boolean value) {
         int portA = get_PORTA();
-        if (value)
-        {
+        if (value) {
             portA |= 0b00000001;
-        }
-
-        else
-        {
+        } else {
             portA &= 0b11111110;
         }
 
         set_PORTA(portA);
     }
     
-    public synchronized boolean get_RA0()
-    {
-        {
-            return (get_PORTA() & 0b00000001) == 1;
-        }
+    /**
+     * 
+     * @return
+     */
+    public synchronized boolean get_RA0() {
+        return (get_PORTA() & 0b00000001) == 1;
     }
 
-    public synchronized void set_RA1(boolean value)
-    {
+    /**
+     * 
+     * @param value
+     */
+    public synchronized void set_RA1(boolean value) {
         int portA = get_PORTA();
-        if (value)
-        {
+        if (value) {
             portA |= 0b00000010;
-        }
-
-        else
-        {
+        } else {
             portA &= 0b11111101;
         }
 
         set_PORTA(portA);
     }
     
-    public synchronized boolean get_RA1()
-    {
-        {
-            return (get_PORTA() & 0b00000010) == 2;
-        }
+    /**
+     * 
+     * @return
+     */
+    public synchronized boolean get_RA1() {
+        return (get_PORTA() & 0b00000010) == 2;
     }
 
-    public synchronized void set_RA2(boolean value)
-    {
+    /**
+     * 
+     * @param value
+     */
+    public synchronized void set_RA2(boolean value) {
         int portA = get_PORTA();
-        if (value)
-        {
+        if (value) {
             portA |= 0b00000100;
-        }
-
-        else
-        {
+        } else {
             portA &= 0b11111011;
         }
 
         set_PORTA(portA);
     }
     
-    public synchronized boolean get_RA2()
-    {
-        {
-            return (get_PORTA() & 0b00000100) == 4;
-        }
+    /**
+     * 
+     * @return
+     */
+    public synchronized boolean get_RA2() {
+        return (get_PORTA() & 0b00000100) == 4;
     }
 
-    public synchronized void set_RA3(boolean value)
-    {
+    /**
+     * 
+     * @param value
+     */
+    public synchronized void set_RA3(boolean value) {
         int portA = get_PORTA();
-        if (value)
-        {
+        if (value) {
             portA |= 0b00001000;
-        }
-
-        else
-        {
+        } else {
             portA &= 0b11110111;
         }
 

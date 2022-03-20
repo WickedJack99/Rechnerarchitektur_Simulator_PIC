@@ -26,8 +26,7 @@ public class PIC {
         WRegister = 0;
     }
 
-    public synchronized void resetPIC()
-    {
+    public synchronized void resetPIC() {
         Ram = new RAM();
         Stack = new STACK();
         WRegister = 0;
@@ -59,13 +58,11 @@ public class PIC {
     int bitMaskClearBitArray[] = { bitMaskClearBit0, bitMaskClearBit1, bitMaskClearBit2, bitMaskClearBit3, bitMaskClearBit4, bitMaskClearBit5,
                                    bitMaskClearBit6, bitMaskClearBit7};
 
-    public synchronized void setWRegister(int value)
-    {
+    public synchronized void setWRegister(int value) {
         WRegister = value;
     }
 
-    public synchronized int get_WRegister()
-    {
+    public synchronized int get_WRegister() {
         return WRegister;
     }
 
@@ -88,40 +85,34 @@ public class PIC {
      * added to the eight bit literal ’k’ and the
      * result is placed in the W register.
      */
-    public void ADDLW(int eightK)
-    {
+    public void ADDLW(int eightK) {
         int wRegValue = get_WRegister();
         int result = wRegValue + eightK;
 
         //If result is zero.
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
         
         //If result is not zero.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         //If result is greater than 255.
-        if (result > 255)
-        {
+        if (result > 255) {
             result = result & 255;
             Ram.set_Carryflag(true);
         }
 
         //If result is smaller than 0.
-        else if (result < 0)
-        {
+        else if (result < 0) {
             result = result & 255;
             Ram.set_Carryflag(true);
         }
 
         //If result is greater than or equal to 0 and smaller than or equal to 255.  
-        else
-        {
+        else {
             Ram.set_Carryflag(false);
         }
 
@@ -129,21 +120,22 @@ public class PIC {
         int dcResult = (wRegValue & 15) + (eightK & 15);
 
         //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15)
-        {
+        if (dcResult > 15) {
             Ram.set_Digitcarryflag(true);
         }
 
         //If the result is smaller or equal to 15, DC-Flag is set false.
-        else
-        {
+        else {
             Ram.set_Digitcarryflag(false);
         }
 
         setWRegister(result);
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
+        //Each Instruction has to split Programmcounter to PCL and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
     }
 
@@ -174,8 +166,10 @@ public class PIC {
         //Write result into 
         setWRegister(result);
 
-        //Increment programcounter
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -257,8 +251,10 @@ public class PIC {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        //Increment programcounter
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -306,8 +302,10 @@ public class PIC {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        //Increment programcounter
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -332,8 +330,10 @@ public class PIC {
         //Write result back into fileregister.
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
 
-        //Increment programcounter
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -359,15 +359,19 @@ public class PIC {
         //If bit at bitaddress is 1, next instruction is executed.
         if ((bitMask & regFileAddrValue) == bitMask)
         {
-            //Increment programcounter by one.
+            //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
         }
 
         //If bit at bitaddress is 0, next instruction will be replaced by a NOP.
         else
         {
-            //Increment programcounter by one.
+            //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
             //Execute NOP.
             NOP();
         }
@@ -381,8 +385,7 @@ public class PIC {
      * 
      * Bit ’b’ in register ’f’ is set.
      */
-    public void BSF(int bitaddress, int registerFileAddress)
-    {
+    public void BSF(int bitaddress, int registerFileAddress) {
         //Get bitmask to OR with fileaddress to set bit.
         int bitMask = bitMaskSetBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
@@ -394,8 +397,10 @@ public class PIC {
         //Write result into file-register.
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
 
-        //Increment programcounter
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -410,25 +415,26 @@ public class PIC {
      * discarded and a NOP is executed
      * instead, making this a 2TCY instruction.
      */
-    public void BTFSS(int bitaddress, int registerFileAddress)
-    {
+    public void BTFSS(int bitaddress, int registerFileAddress) {
         //Get bitmask to AND with fileaddress to get bit.
         int bitMask = bitMaskSetBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
 
         //If bit at bitaddress is 0, next instruction is executed.
-        if ((bitMask & regFileAddrValue) != bitMask)
-        {
-            //Increment programcounter by one.
+        if ((bitMask & regFileAddrValue) != bitMask) {
+            //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
         }
 
         //If bit at bitaddress is 1, next instruction will be replaced by a NOP.
-        else
-        {
-            //Increment programcounter by one.
+        else {
+            //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
             //Execute NOP.
             NOP();
         }
@@ -447,8 +453,7 @@ public class PIC {
      * the PC are loaded from PCLATH. CALL
      * is a two cycle instruction.
      */
-    public void CALL(int elevenK)
-    {
+    public void CALL(int elevenK) {
         //Push next instruction on STACK.
         Stack.pushReturnAdressOnStack(Ram.get_Programcounter() + 1);
         
@@ -460,6 +465,9 @@ public class PIC {
 
         //Set Programmcounter to new address.
         Ram.set_Programcounter(newPC);
+        //Increment TMR0 if interbnal instruction cycle assigned to TMR0.
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
@@ -472,14 +480,15 @@ public class PIC {
      * The contents of register ’f’ are cleared
      * and the Z bit is set.
      */
-    public void CLRF(int registerFileAddress)
-    {
+    public void CLRF(int registerFileAddress) {
         //Value at fileregisteraddress is set to zero.
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), 0);
         //Zeroflag is set.
         Ram.set_Zeroflag(true);
-        //Increment programcounter by 1.
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -491,14 +500,15 @@ public class PIC {
      * W register is cleared. Zero bit (Z) is
      * set.
      */
-    public void CLRW()
-    {
+    public void CLRW() {
         //Set to zero.
         setWRegister(0);
         //Zeroflag is set.
         Ram.set_Zeroflag(true);
-        //Increment programcounter by 1.
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -512,8 +522,7 @@ public class PIC {
      * of the WDT. Status bits TO and PD are
      * set.
      */
-    public void CLRWDT()
-    {
+    public void CLRWDT() {
         Ram.set_TimeOutFlag(true);
         Ram.set_PowerDownFlag(true);
         Ram.set_PS0(false);
@@ -521,8 +530,10 @@ public class PIC {
         Ram.set_PS2(false);
         //Programcounter will be incremented by 1.
 
-        //Increment programcounter by 1.
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -536,8 +547,7 @@ public class PIC {
      * W. If ’d’ is 1 the result is stored back in
      * register ’f’.
      */
-    public void COMF(int destinationBit, int registerFileAddress)
-    {
+    public void COMF(int destinationBit, int registerFileAddress) {
         //Get value at registerFileAddress
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
         
@@ -545,33 +555,31 @@ public class PIC {
         int result = (~regFileAddrValue);
 
         //If result is zero, zeroflag is set true.
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
 
         //If result is not zero, zeroflag is set false.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         result &= 255;
 
         //If destinationbit is zero, result will be written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If destinationbit is one, result will be written into fileRegister.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        //Increment programcounter by 1.
+        //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -589,35 +597,36 @@ public class PIC {
      * executed instead making it a 2T CY instruc-
      * tion.
      */
-    public void DECFSZ(int destinationBit, int registerFileAddress)
-    {
+    public void DECFSZ(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
         //Decrement value by one.
         regFileAddrValue--;
 
         //If the destinationbit is 0, the decremented value is written into the 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(regFileAddrValue);
         }
 
         //If the destinationbit is 1, the decremented value is written bach into the fileregister.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
         }
 
         //If the dekremented value doesn't equal zero, the next instruction is executed.
-        if (regFileAddrValue != 0)
-        {
-            Ram.inkrement_Programcounter(1, 0);
+        if (regFileAddrValue != 0) {
+            //Increment programcounter and TMR0 if assigned to TMR0.
+            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
         }
 
         //If the dekremented value equals zero, a NOP is executed and the other instruction will be dismissed.
-        else
-        {
-            Ram.inkrement_Programcounter(1, 0);
+        else {
+            //Increment programcounter and TMR0 if assigned to TMR0.
+            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
             NOP();
         }
 
@@ -632,45 +641,41 @@ public class PIC {
      * result is stored in the W register. If ’d’ is
      * 1 the result is stored back in register ’f’ .
      */
-    public void DECF(int destinationBit, int registerFileAddress)
-    {
+    public void DECF(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
         //Decrement value by one.
         regFileAddrValue--;
 
         //If dekremented value equals zero, zeroflag is set true.
-        if (regFileAddrValue == 0)
-        {
+        if (regFileAddrValue == 0) {
             Ram.set_Zeroflag(true);
         }
 
         //If dekremented value doesn't equal zero, zeroflag is set false.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         //If value gets smaller than zero it is AND with 255 to become positive, because only values between 0 and 255 are allowed.
-        if (regFileAddrValue < 0)
-        {
+        if (regFileAddrValue < 0) {
             regFileAddrValue = regFileAddrValue & 255;
         }
 
         //If destinationbit equals zero, value is written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(regFileAddrValue);
         }
 
         //If destinationbit doesn't equal zero, value is written into fileregister.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
         }
 
-        //Inkrement Ram by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -685,12 +690,14 @@ public class PIC {
      * PC are loaded from PCLATH<4:3>.
      * GOTO is a two cycle instruction.
      */
-    public void GOTO(int elevenK)
-    {
+    public void GOTO(int elevenK) {
         //elevenK OR ((PCLATH AND 0b11000) << 8)
         int result = elevenK | ((Ram.get_PCLATH() & 0b11000) << 8);
 
         Ram.set_Programcounter(result);
+        //Increment TMR0 if internal instruction cycle assigned to TMR0.
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -704,45 +711,41 @@ public class PIC {
      * the W register. If ’d’ is 1 the result is
      * placed back in register ’f’.
      */
-    public void INCF(int destinationBit, int registerFileAddress)
-    {
+    public void INCF(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
         //Increment value by one.
         regFileAddrValue++;
 
         //If value becomes zero, zeroflag is set true.
-        if (regFileAddrValue == 0)
-        {
+        if (regFileAddrValue == 0) {
             Ram.set_Zeroflag(true);
         }
 
         //If value doesn't become zero, zeroflag is set false.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         //If value becomes greater than 255, it will be set to a value between 0 and 255.
-        if (regFileAddrValue > 255)
-        {
+        if (regFileAddrValue > 255) {
             regFileAddrValue &= 255;
         }
 
         //If destinationbit is set 0, value will be written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(regFileAddrValue);
         }
 
         //If destinationbit is not 0, value will be written back to RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
         }
 
-        //Increment programcounter by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -760,43 +763,41 @@ public class PIC {
      * cuted instead making it a 2TCY instruc-
      * tion .
      */
-    public void INCFSZ(int destinationBit, int registerFileAddress)
-    {
+    public void INCFSZ(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
         //Increment value by one.
         regFileAddrValue++;
 
         //If value increases over uper line, it is set to a value between 0 and 255.
-        if (regFileAddrValue > 255)
-        {
+        if (regFileAddrValue > 255) {
             regFileAddrValue &= 255;
         }
 
         //If destinationbit is zero, the value is written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(regFileAddrValue);
         }
 
         //If destinationbit is one, the value is written into RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
         }
 
         //If value is not zero, next instruction will be executed.
-        if (regFileAddrValue != 0)
-        {
-            //Increment programcounter by one.
-            Ram.inkrement_Programcounter(1, 0);
+        if (regFileAddrValue != 0) {
+            //Increment programcounter and TMR0 if assigned to TMR0.
+            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
         }
 
         //If value is zero, next instruction will not be executed and NOP is executed instead.
-        else
-        {
-            //Increment programcounter by one.
-            Ram.inkrement_Programcounter(1, 0);
+        else {
+            ///Increment programcounter and TMR0 if assigned to TMR0.
+            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            if (Ram.get_T0CS() == false)
+                Ram.increment_TMR0();
 
             //Call NOP.
             NOP();
@@ -813,28 +814,27 @@ public class PIC {
      * OR’ed with the eight bit literal 'k'. The
      * result is placed in the W register .
      */
-    public void IORLW(int eightK)
-    {
+    public void IORLW(int eightK) {
         //and eightK are OR'ed and result is written into result.
         int result = get_WRegister() | eightK;
 
         //If result is zero, zeroflag is set true.
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
 
         //If result is not zero, zeroflag is set false.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         //Set to result.
         setWRegister(result);
 
-        //Increment programcounter.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -848,37 +848,34 @@ public class PIC {
      * W register. If ’d’ is 1 the result is placed
      * back in register ’f’.
      */
-    public void IORWF(int destinationBit, int registerFileAddress)
-    {
+    public void IORWF(int destinationBit, int registerFileAddress) {
         //Result is value OR fileregister-value.
         int result = get_WRegister() | Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(),
                                                                                                    registerFileAddress);
         //If result is zero, zeroflag is set true.
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
 
         //If result is not zero, zeroflag is set false.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
         
         //If destinationbit is zero, result is written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If destinationbit is not zero, result is written into fileregister.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        //Increment programcounter by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -891,13 +888,14 @@ public class PIC {
      * register . The don’t cares will assemble
      * as 0’s.
      */
-    public void MOVLW(int eightK)
-    {
+    public void MOVLW(int eightK) {
         //is set to eightK bit literal.
         setWRegister(eightK);
 
-        //Increment programcounter by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -914,30 +912,28 @@ public class PIC {
      * itself. d = 1 is useful to test a file regis-
      * ter since status flag Z is affected.
      */
-    public void MOVF(int destinationBit, int registerFileAddress)
-    {
+    public void MOVF(int destinationBit, int registerFileAddress) {
         //If destinationbit is zero, the value from fileregister is written to 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress));
         }
 
         //If destinationbit is one, value will still be in fileregister.
 
         //If value in fileregister is zero, zeroflag is set true.
-        if (Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress) == 0)
-        {
+        if (Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress) == 0) {
             Ram.set_Zeroflag(true);
         }
 
         //If value in fileregister is not zero, zeroflag is set false.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
-        //Increment programcounter by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -948,13 +944,14 @@ public class PIC {
      * 
      * Move data from W register to file register
      */
-    public void MOVWF(int registerFileAddress)
-    {
+    public void MOVWF(int registerFileAddress) {
         //Data from is moved to fileregister.
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), get_WRegister());
 
-        //Increment programcounter by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -965,10 +962,11 @@ public class PIC {
      * 
      * No operation
      */
-    public void NOP()
-    {
-        //Increment programcounter by one.
-        Ram.inkrement_Programcounter(1, 0);
+    public void NOP() {
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -984,8 +982,7 @@ public class PIC {
      * (INTCON<7>). This is a two cycle
      * instruction.
      */
-    public void RETFIE()
-    {
+    public void RETFIE() {
         //Set Global Interrupt Enable Bit true.
         Ram.set_GIE(true);
 
@@ -994,6 +991,9 @@ public class PIC {
 
         //Write returnAddress into programcounter.
         Ram.set_Programcounter(returnAddress);
+        //Increment TMR0 if assigned to TMR0.
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1002,11 +1002,13 @@ public class PIC {
     /**OPTION
      * Datasheet Page 65
      */
-    public void OPTION()
-    {
+    public void OPTION() {
         //Nothing happens, only programmcounter gets incremented by 1.
 
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1022,8 +1024,7 @@ public class PIC {
      * return address). This is a two cycle
      * instruction.
      */
-    public void RETLW(int eightK)
-    {
+    public void RETLW(int eightK) {
         //Load with eight bit literal.
         setWRegister(eightK);
 
@@ -1032,6 +1033,9 @@ public class PIC {
 
         //Write returnAddress into programcounter.
         Ram.set_Programcounter(returnAddress);
+        //Increment TMR0 if assigned to TMR0.
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1045,13 +1049,15 @@ public class PIC {
      * is loaded into the program counter. This
      * is a two cycle instruction.
      */
-    public void RETURN()
-    {
+    public void RETURN() {
         //Pop address from STACK.
         int returnAddress = Stack.popReturnAdressFromStack();
 
         //Write returnAddress into programcounter.
         Ram.set_Programcounter(returnAddress);
+        //Increment TMR0 if assigned to TMR0.
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1066,8 +1072,7 @@ public class PIC {
      * W register. If ’d’ is 1 the result is stored
      * back in register ’f’.
      */
-    public void RLF(int destinationBit, int registerFileAddress)
-    {
+    public void RLF(int destinationBit, int registerFileAddress) {
         //Get value at fileaddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
         //Shift result to left by one bit.
@@ -1076,42 +1081,39 @@ public class PIC {
         boolean set_Carryflag = false;
 
         //If the first bit which will be shifted is 1, the Carryflag will be set at the end to true.
-        if ((0b10000000 & regFileAddrValue) == 0b10000000)
-        {
+        if ((0b10000000 & regFileAddrValue) == 0b10000000) {
             set_Carryflag = true;
         }
 
         //If carryflag is true, last bit is set 1.
-        if (Ram.get_Carryflag() == true)
-        {
+        if (Ram.get_Carryflag() == true) {
             result |= 0b00000001;
         }
 
         //If carryflag is false, last bit is set 0. 
-        else
-        {
+        else {
             result &= 0b11111110;
         }
 
         result &= 255;
 
         //If destinationbit is zero, result will be written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If destinationbit is one, result will be written into RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
         //Set value of carryflag.
         Ram.set_Carryflag(set_Carryflag);
 
-        //Increment Ram by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1136,20 +1138,17 @@ public class PIC {
         boolean set_Carryflag = false;
 
         //If the first bit which will be shifted is 1, the Carryflag will be set at the end to true.
-        if ((0b00000001 & regFileAddrValue) == 0b00000001)
-        {
+        if ((0b00000001 & regFileAddrValue) == 0b00000001) {
             set_Carryflag = true;
         }
 
         //If carryflag is true, first bit is set 1.
-        if (Ram.get_Carryflag() == true)
-        {
+        if (Ram.get_Carryflag() == true) {
             result |= 0b10000000;
         }
 
         //If carryflag is false, first bit is set 0. 
-        else
-        {
+        else {
             result &= 0b01111111;
         }
 
@@ -1157,19 +1156,19 @@ public class PIC {
         Ram.set_Carryflag(set_Carryflag);
 
         //If destinationbit is zero, result will be written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If destinationbit is one, result will be written into RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        //Increment Ram by one.
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1177,7 +1176,7 @@ public class PIC {
 
     /**
      * Datasheet Page 68
-     * 
+     * TODO
      * The power-down status bit, PD is
      * cleared. Time-out status bit, TO is
      * set. Watchdog Timer and its pres-
@@ -1186,10 +1185,13 @@ public class PIC {
      * mode with the oscillator stopped. See
      * Section 14.8 for more details.
      */
-    public void SLEEP()
-    {
-        //Not implemented
-        Ram.inkrement_Programcounter(1, 0);
+    public void SLEEP() {
+        //TODO pause running (no Thread.sleep()!!!)
+        //Not implemented 
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1202,8 +1204,7 @@ public class PIC {
      * ment method) from the eight bit literal 'k'.
      * The result is placed in the W register.
      */
-    public void SUBLW(int eightK)
-    {
+    public void SUBLW(int eightK) {
         int wRegValue = get_WRegister();
 
         //Build Two's complement
@@ -1221,34 +1222,24 @@ public class PIC {
         int dcResult = (eightK & 15) + (wRegValue & 15) + 1;
 
         //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15)
-        {
+        if (dcResult > 15) {
             Ram.set_Digitcarryflag(true);
         }
 
         //If the result is smaller or equal to 15, DC-Flag is set false.
-        else
-        {
+        else {
             Ram.set_Digitcarryflag(false);
         }
 
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
-        }
-
-        else
-        {
+        } else {
             Ram.set_Zeroflag(false);
         }
 
-        if (carry == 1)
-        {
+        if (carry == 1) {
             Ram.set_Carryflag(true);
-        }
-
-        else
-        {
+        } else {
             Ram.set_Carryflag(false);
         }
 
@@ -1256,7 +1247,10 @@ public class PIC {
 
         setWRegister(result);
 
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1270,8 +1264,8 @@ public class PIC {
      * result is stored in the W register. If 'd' is 1 the
      * result is stored back in register 'f'.
      */
-    public void SUBWF(int destinationBit, int registerFileAddress)
-    {
+    public void SUBWF(int destinationBit, int registerFileAddress) {
+
         int wRegValue = get_WRegister();
 
         //Get value at fileaddress.
@@ -1298,46 +1292,40 @@ public class PIC {
         }
 
         //If the result is smaller or equal to 15, DC-Flag is set false.
-        else
-        {
+        else {
             Ram.set_Digitcarryflag(false);
         }
 
-        if (result == 0)
-        {
+        //Set/clear zeroflag
+        if (result == 0) {
             Ram.set_Zeroflag(true);
-        }
-
-        else
-        {
+        } else {
             Ram.set_Zeroflag(false);
         }
 
-        if (carry == 1)
-        {
+        //Set/clear carryflag
+        if (carry == 1) {
             Ram.set_Carryflag(true);
-        }
-
-        else
-        {
+        } else {
             Ram.set_Carryflag(false);
         }
 
         result &= 255;
 
         //If destinationbit is zero, result will be written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If destinationbit is one, result will be written into RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1351,8 +1339,7 @@ public class PIC {
      * is placed in W register. If 'd' is 1 the result
      * is placed in register 'f'.
      */
-    public void SWAPF(int destinationBit, int registerFileAddress)
-    {
+    public void SWAPF(int destinationBit, int registerFileAddress) {
         //Get value at fileaddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
 
@@ -1363,18 +1350,19 @@ public class PIC {
         int result = (lowerNibble << 4) | higherNibble;
 
         //If destinationbit is zero, result will be written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If destinationbit is one, result will be written into RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1393,11 +1381,13 @@ public class PIC {
      * with future PIC16CXX products,
      * do not use this instruction!
      */
-    public void TRIS()
-    {
+    public void TRIS() {
         //Nothing happens, only programcounter will be incremented by 1.
 
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1410,25 +1400,25 @@ public class PIC {
      * XOR’ed with the eight bit literal 'k'.
      * The result is placed in the W register.
      */
-    public void XORLW(int eightK)
-    {
+    public void XORLW(int eightK) {
         int wRegValue = get_WRegister();
 
         int result = wRegValue ^ eightK;
 
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
 
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         setWRegister(result);
 
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1442,8 +1432,7 @@ public class PIC {
      * 0 the result is stored in the W register. If 'd' is
      * 1 the result is stored back in register 'f'.
      */
-    public void XORWF(int destinationBit, int registerFileAddress)
-    {
+    public void XORWF(int destinationBit, int registerFileAddress) {
         int wRegValue = get_WRegister();
 
         //Get value at fileaddress.
@@ -1451,29 +1440,28 @@ public class PIC {
 
         int result = wRegValue ^ regFileAddrValue;
 
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
 
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         //If destinationbit is zero, result will be written into 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If destinationbit is one, result will be written into RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
-        Ram.inkrement_Programcounter(1, 0);
+        //Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        if (Ram.get_T0CS() == false)
+            Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);

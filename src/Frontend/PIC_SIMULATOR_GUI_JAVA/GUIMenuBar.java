@@ -14,6 +14,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+
 
 import Backend.EepromLoader.ReadEepromFile;
 import Backend.Runtime.Environment;
@@ -367,7 +369,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             setTheme(aoDarkTheme[0], aoDarkTheme[1]);
             oGUITestFileTable.setTheme(1);
             oGUIRegisters.setTheme(1);
-            oGUIMainFrame.setBackground(aoDarkTheme[1]);
+            oGUIMainFrame.setTheme(1);
         }
         //Change to light theme
         if (e.getSource() == oLightTheme) {
@@ -375,7 +377,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             setTheme(aoLightTheme[0], aoLightTheme[1]);
             oGUITestFileTable.setTheme(0);
             oGUIRegisters.setTheme(0);
-            oGUIMainFrame.setBackground(aoLightTheme[1]);
+            oGUIMainFrame.setTheme(0);
         }
 
         //Microcontroller

@@ -31,13 +31,15 @@ public class Environment {
     
     public Environment() {
 
+        oPIC = new PIC();
+        oPIC.setWRegister(4);
         GUIMainFrame oMainFrame = new GUIMainFrame(this);
 
         watchdog = new WATCHDOG();
 
 
 
-        oPIC = new PIC();
+        
 
         sEepromDataFile = "";
         sActualCommand = "";

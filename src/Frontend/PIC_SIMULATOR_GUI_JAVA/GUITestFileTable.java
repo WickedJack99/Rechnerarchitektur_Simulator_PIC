@@ -46,13 +46,13 @@ public class GUITestFileTable extends JScrollPane {
      */
     public GUITestFileTable() {
         oTable = new JPanel();
-        oPanels.add(oTable);
+        
+        JPanel oTestPanel = new JPanel();
+
         JTextField oFill = new JTextField("0");
         oLineInformation.add(oFill);
         oFill.setEditable(false);
 
-        JPanel oTestPanel = new JPanel();
-        oPanels.add(oTestPanel);
         oTestPanel.setLayout(new GridLayout(1, 3));
         oTestPanel.add(oFill);
 
@@ -170,19 +170,19 @@ public class GUITestFileTable extends JScrollPane {
     public void setTheme(int iThemeNr) {
         iTheme = iThemeNr;
         
-        for (int i = 0; i < oLineInformation.size(); i++) {
-            oLineInformation.get(i).setForeground(getThemeColor()[0]);
-            oLineInformation.get(i).setBackground(getThemeColor()[1]);
-            oLineInformation.get(i).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+        for (JTextField oTextfield : oLineInformation) {
+            oTextfield.setForeground(getThemeColor()[0]);
+            oTextfield.setBackground(getThemeColor()[1]);
+            oTextfield.setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
         }
-        for (int i = 0; i < oCheckboxes.size(); i++) {
-            oCheckboxes.get(i).setForeground(getThemeColor()[0]);
-            oCheckboxes.get(i).setBackground(getThemeColor()[1]);
-            oCheckboxes.get(i).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+        for (JCheckBox oCheckbox : oCheckboxes) {
+            oCheckbox.setForeground(getThemeColor()[0]);
+            oCheckbox.setBackground(getThemeColor()[1]);
+            oCheckbox.setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
         }
-        for (int i = 0; i < oPanels.size(); i++) {
-            oPanels.get(i).setForeground(getThemeColor()[0]);
-            oPanels.get(i).setBackground(getThemeColor()[1]);
+        for (JPanel oPanel : oPanels) {
+            oPanel.setForeground(getThemeColor()[0]);
+            oPanel.setBackground(getThemeColor()[1]);
         }
             
         oTable.setForeground(getThemeColor()[0]);
