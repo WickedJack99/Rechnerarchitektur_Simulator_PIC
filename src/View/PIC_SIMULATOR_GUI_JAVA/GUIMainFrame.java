@@ -1,7 +1,6 @@
 package View.PIC_SIMULATOR_GUI_JAVA;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.GridBagLayout;
@@ -9,12 +8,9 @@ import java.awt.GridBagConstraints;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
-import Model.Backend.EepromLoader.ReadEepromFile;
 import Model.Backend.Runtime.Environment;
 
 public class GUIMainFrame extends JFrame {
@@ -65,23 +61,24 @@ public class GUIMainFrame extends JFrame {
             iPrescaler = env.getPIC().getRam().get_WDT_PrescalerRate();
         else
             iPrescaler = env.getPIC().getRam().get_TMR0_PrescalerRate();
-        int[] aiRegisters = {env.getPIC().getRam().get_PCL(), env.getPIC().getRam().get_PCLATH(), 
+        /*int[] aiRegisters = {env.getPIC().getRam().get_PCL(), env.getPIC().getRam().get_PCLATH(), 
                              env.getPIC().getRam().get_Programcounter(), env.getPIC().getRam().get_STATUS(),
                              env.getPIC().getRam().get_FSR(), env.getPIC().getRam().get_OPTION(),
                              iPrescaler, env.getPIC().getRam().get_TMR0(),
-                             env.getPIC().get_WRegister()};
-        GUIRegisters oGUIRegisters = new GUIRegisters();
-        oGUIRegisters.setRegisters(aiRegisters);
+                             env.getPIC().get_WRegister()};*/
+        GUIRegister oGUIRegister = new GUIRegister();
+        //oGUIRegisters.setRegisters(aiRegisters);
         GUIRegistersDetailed oGUIRegistersDetailed = new GUIRegistersDetailed();
-        oConstraintsRegisterInformation.anchor = GridBagConstraints.WEST;
+        oConstraintsRegisterInformation.anchor = GridBagConstraints.NORTHWEST;
         oConstraintsRegisterInformation.gridx = 0;
         oConstraintsRegisterInformation.gridy = 0;
-        oPanelRegisterInformation.add(oGUIRegisters, oConstraintsRegisterInformation);
+        oConstraintsRegisterInformation.insets = new Insets(10, 0, 10, 0);
+        oPanelRegisterInformation.add(oGUIRegister, oConstraintsRegisterInformation);
         oConstraintsRegisterInformation.gridy = 1;
         oConstraintsRegisterInformation.anchor = GridBagConstraints.WEST;
         oPanelRegisterInformation.add(oGUIRegistersDetailed, oConstraintsRegisterInformation);
 
-        this.setJMenuBar(new GUIMenuBar(env, this, oGUITestFileTable, oGUIRegisters, oGUIRegistersDetailed));
+        this.setJMenuBar(new GUIMenuBar(env, this, oGUITestFileTable, oGUIRegister, oGUIRegistersDetailed));
         this.setVisible(true); //make frame visible
 
         ImageIcon guiLogo = new ImageIcon("./pictures/gui_logo.png"); // create an ImageIcon

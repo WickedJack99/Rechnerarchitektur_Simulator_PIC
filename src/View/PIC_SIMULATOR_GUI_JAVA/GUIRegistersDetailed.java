@@ -32,8 +32,8 @@ public class GUIRegistersDetailed extends JPanel {
     Color[] aoLightTheme = {new Color(76, 78, 82), new Color(255, 253, 250), new Color(173, 216, 230), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
 
     JTable oStatusTable;
-    JTable oOptionTable = new JTable();
-    JTable oIntconTable = new JTable();
+    JTable oOptionTable;
+    JTable oIntconTable;
 
     JPanel oStatusPanel = new JPanel();
     JPanel oOptionPanel = new JPanel();
@@ -74,7 +74,7 @@ public class GUIRegistersDetailed extends JPanel {
         oStatusPanel.add(oStatusTable, oConstraintsStatus);
 
         for (int i = 0; i < 8; i++) {
-            oStatusTable.getColumn(i + "").setMaxWidth(50);
+            oStatusTable.getColumn(i + "").setPreferredWidth(50);
         }
         oStatusTable.setEnabled(false);
 
@@ -92,7 +92,7 @@ public class GUIRegistersDetailed extends JPanel {
         oOptionPanel.add(oOptionTable, oConstraintsOption);
 
         for (int i = 0; i < 8; i++) {
-            oOptionTable.getColumn(i + "").setMaxWidth(50);
+            oOptionTable.getColumn(i + "").setPreferredWidth(50);
         }
         oOptionTable.setEnabled(false);
 

@@ -14,7 +14,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 import Model.Backend.EepromLoader.ReadEepromFile;
 import Model.Backend.Runtime.Environment;
@@ -23,7 +22,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     Environment oEnv;
     GUIMainFrame oGUIMainFrame;
     GUITestFileTable oGUITestFileTable;
-    GUIRegisters oGUIRegisters;
+    GUIRegister oGUIRegister;
     GUIRegistersDetailed oGUIRegistersDetailed;
 
     ArrayList<JCheckBox> oCheckBoxes;
@@ -97,7 +96,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
      * Constructor initializes menubar.
      * @param frame
      */
-    public GUIMenuBar(Environment env, GUIMainFrame mainframe, GUITestFileTable guitft, GUIRegisters guiregs, GUIRegistersDetailed guiregsdet) { //TODO maybe single components, with methods, of frame to set theme
+    public GUIMenuBar(Environment env, GUIMainFrame mainframe, GUITestFileTable guitft, GUIRegister guiregs, GUIRegistersDetailed guiregsdet) { //TODO maybe single components, with methods, of frame to set theme
 
         //Custom Separators since default is not able to change background.
         oSeparator0 = new JMenuItem();
@@ -117,7 +116,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         oEnv = env;
         oGUIMainFrame = mainframe;
         oGUITestFileTable = guitft;
-        oGUIRegisters = guiregs;
+        oGUIRegister = guiregs;
         oGUIRegistersDetailed = guiregsdet;
 
         //File
@@ -370,7 +369,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             System.out.println("It's gettin dark brooo"); //TODO
             setTheme(aoDarkTheme[0], aoDarkTheme[1]);
             oGUITestFileTable.setTheme(1);
-            oGUIRegisters.setTheme(1);
+            oGUIRegister.setTheme(1);
             oGUIMainFrame.setTheme(1);
             oGUIRegistersDetailed.setTheme(1);
         }
@@ -379,7 +378,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             System.out.println("Death to all vampires!"); //TODO
             setTheme(aoLightTheme[0], aoLightTheme[1]);
             oGUITestFileTable.setTheme(0);
-            oGUIRegisters.setTheme(0);
+            oGUIRegister.setTheme(0);
             oGUIMainFrame.setTheme(0);
             oGUIRegistersDetailed.setTheme(0);
         }
