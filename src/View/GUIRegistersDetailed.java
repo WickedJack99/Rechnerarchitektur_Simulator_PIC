@@ -1,6 +1,5 @@
-package View.PIC_SIMULATOR_GUI_JAVA;
+package View;
 
-import javax.sound.sampled.AudioSystem;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

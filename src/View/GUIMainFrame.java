@@ -1,4 +1,4 @@
-package View.PIC_SIMULATOR_GUI_JAVA;
+package View;
 
 import java.awt.Color;
 import java.awt.Insets;
@@ -117,6 +117,7 @@ public class GUIMainFrame extends JFrame {
         oMainPanel.add(oPanelRegisterInformation, c);
         oPanels.add(oPanelRegisterInformation);
         oPanels.add(oMainPanel);
+        oMainPanel.add(new GUIPorts());
         this.add(oMainPanel);
         updateWindow();
     }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import Model.Backend.Microcontroller.PIC;
 import Model.Backend.Microcontroller.WATCHDOG;
-import View.PIC_SIMULATOR_GUI_JAVA.GUIMainFrame;
+import View.GUIMainFrame;
 
 public class Environment {
 

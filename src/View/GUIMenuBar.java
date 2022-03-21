@@ -1,4 +1,4 @@
-package View.PIC_SIMULATOR_GUI_JAVA;
+package View;
 
 import java.awt.Color;
 import java.awt.Dimension;
