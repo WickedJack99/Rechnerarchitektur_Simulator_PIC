@@ -25,7 +25,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     GUIRegister oGUIRegister;
     GUIRegistersDetailed oGUIRegistersDetailed;
 
-    ArrayList<JCheckBox> oCheckBoxes;
+    ArrayList<JCheckBox> oBreakpoints;
     ReadEepromFile oRef;
     boolean[] bBreakpointSet;
     int iTestFileLoaded = 0;
@@ -546,22 +546,23 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             oRef.setData(oFile);
             oRef.setOPCode(oRef.getData());
             oGUITestFileTable.setData(oRef.getData());
+
             ArrayList<String> data = oRef.getData();
             int iDataSize = data.size();
             ArrayList<String> opcode = oRef.getOPCode();
             int iOPCodeSize = opcode.size();
             if (iTestFileLoaded > 0) {
-                oCheckBoxes = oGUITestFileTable.getCheckboxes();
+                oBreakpoints = oGUITestFileTable.getCheckboxes();
                 for (int i = 0; i < iDataSize; i++) {                    
-                    oCheckBoxes.get(i).setEnabled(false);
+                    oBreakpoints.get(i).setEnabled(false);
                 }
             }
             for (int i = 0; i < iDataSize; i++) {
                 for (int j = 0; j < iOPCodeSize; j++) {
                     if (data.get(i).equals(opcode.get(j))) {
-                        oCheckBoxes = oGUITestFileTable.getCheckboxes();
-                        oCheckBoxes.get(i).setEnabled(true);
-                        oCheckBoxes.get(i).addActionListener(this);
+                        oBreakpoints = oGUITestFileTable.getCheckboxes();
+                        oBreakpoints.get(i).setEnabled(true);
+                        oBreakpoints.get(i).addActionListener(this);
                     }
                 }
             }
@@ -576,8 +577,8 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         if (oRef != null) {
             int iOPCode = oRef.getOPCode().size();
             if (iOPCode > 0) {
-                for (int i = 0; i < oCheckBoxes.size(); i++) {
-                    if (e.getSource() == oCheckBoxes.get(i)) {
+                for (int i = 0; i < oBreakpoints.size(); i++) {
+                    if (e.getSource() == oBreakpoints.get(i)) {
                         for (int j = 0; j < iOPCode; j++) {
                             if (oRef.getOPCode().get(j).equals(oRef.getData().get(i))) {                            
                                 bBreakpointSet[j] = !bBreakpointSet[j];

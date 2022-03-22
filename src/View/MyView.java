@@ -14,6 +14,6 @@ public class MyView {
     JPanel oGUIMainPanel;
 
     public MyView() {
-
+        
     }
 }

@@ -19,7 +19,7 @@ public class GUITestFileTable extends JScrollPane {
     ArrayList<JTextField> oLineInformation = new ArrayList<JTextField>();
     ArrayList<JCheckBox> oCheckboxes = new ArrayList<JCheckBox>();
     ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
-    JPanel oTable;
+    JPanel oTable = new JPanel();
     int iTheme = 0;
     boolean bFileLoaded = false;
 
@@ -45,29 +45,18 @@ public class GUITestFileTable extends JScrollPane {
      * Constructor which initializes a filler.
      */
     public GUITestFileTable() {
-        oTable = new JPanel();
         
-        JPanel oTestPanel = new JPanel();
-
-        JTextField oFill = new JTextField("0");
-        oLineInformation.add(oFill);
+        JTextField oFill = new JTextField("Please load testfile!");
         oFill.setEditable(false);
+        oLineInformation.add(oFill);
 
+        JPanel oTestPanel = new JPanel();
         oTestPanel.setLayout(new GridLayout(1, 3));
         oTestPanel.add(oFill);
 
-        JCheckBox oCheckbox = new JCheckBox();
-        JPanel oCheckBoxPanel = new JPanel();
-        oCheckBoxPanel.add(oCheckbox);
-        oPanels.add(oCheckBoxPanel);
-        oTestPanel.add(oCheckBoxPanel);
-        oCheckboxes.add(oCheckbox);
-        oFill = new JTextField("Please load testfile!");
-        oFill.setEditable(false);
-        oLineInformation.add(oFill);
-        oTestPanel.add(oFill);
-
+        this.setPreferredSize(new Dimension(600, 700));
         this.setViewportView(oTestPanel);
+        setTheme(0);
     }
 
     /**

@@ -99,6 +99,47 @@ public class GUIRegister extends JPanel {
         this.add(oPanelSFR, oConstraints);
         oConstraints.gridy = 1;
         this.add(oPanelW, oConstraints);
+
+        oSFRRegisters.setEnabled(false);
+        oWRegister.setEnabled(false);
+    }
+
+    public void setRegisters(int[] aiRegisters) {
+        /*  TMR0
+            PC intern
+            STATUS
+            PCLATH
+            FSR
+            PCL
+            OPTION
+            Prescaler
+            W-Register
+            Size of array has to be 9.
+        */
+        //String[][] asDataSFR = {{"TMR0", "0", "PC intern", "0"}, {"STATUS", "0", "PCLATH", "0"}, {"FSR", "0", "PCL", "0"}, {"OPTION", "0", "Prescaler", "0"}};
+        //String[][] asDataW = {{"W-Register", "0", "", ""}};
+
+        String sTMR0 = aiRegisters[0] + "";
+        String sPCIntern = aiRegisters[1] + "";
+        String sSTATUS = aiRegisters[2] + "";
+        String sPCLATH = aiRegisters[3] + "";
+        String sFSR = aiRegisters[4] + "";
+        String sPCL = aiRegisters[5] + "";
+        String sOPTION = aiRegisters[6] + "";
+        String sPrescaler = aiRegisters[7] + "";
+
+        String sWRegister = aiRegisters[8] + "";
+
+        oSFRRegisters.setValueAt(sTMR0, 0, 1);
+        oSFRRegisters.setValueAt(sPCIntern, 0, 3);
+        oSFRRegisters.setValueAt(sSTATUS, 1, 1);
+        oSFRRegisters.setValueAt(sPCLATH, 1, 3);
+        oSFRRegisters.setValueAt(sFSR, 2, 1);
+        oSFRRegisters.setValueAt(sPCL, 2, 3);
+        oSFRRegisters.setValueAt(sOPTION, 3, 1);
+        oSFRRegisters.setValueAt(sPrescaler, 3, 3);
+
+        oWRegister.setValueAt(sWRegister, 0, 1);
     }
 
     private void setWidth() {
