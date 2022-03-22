@@ -33,93 +33,69 @@ public class GUIMainFrame extends JFrame {
     Color[] aoDarkTheme = {new Color(255, 253, 250), new Color(76, 78, 82), new Color(47, 47, 47), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
     Color[] aoLightTheme = {new Color(76, 78, 82), new Color(255, 253, 250), new Color(173, 216, 230), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
 
-    GUITestFileTable oGUITestFileTable;
+    GUITestFileTable oGUITestFileTable = new GUITestFileTable();
     GUIMenuBar oGUIMenuBar;
+    GUIRegister oGUIRegister = new GUIRegister();
+    GUIRegistersDetailed oGUIRegistersDetailed = new GUIRegistersDetailed();
+    GUIRamTable oGUIRamTable = new GUIRamTable();
+    GUIPorts oGUIPorts = new GUIPorts();
+    GUIStack oGUIStack = new GUIStack();
+    GUIMCMenu oGUIMCMenu = new GUIMCMenu();
 
-    JPanel oMainPanel;
-    JPanel oPanelRegisterInformation;
+    JPanel oMainPanel = new JPanel();
+    JPanel oPanel0 = new JPanel();
+    JPanel oPanel1 = new JPanel();
 
     ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
     /**
      * Constructor
      */
     public GUIMainFrame(Environment env) {
-        oMainPanel = new JPanel();
+
         this.setTitle("PIC-Simulator GUI"); // sets title of frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // if x is pressed, exit application (HIDE_ON_CLOSE-hides application, DO_NOTHING_ON_CLOSE-prevents user from closing application)
-        //this.setResizable(false); // prevent frame from beeing resized
+        this.setResizable(false); // prevent frame from beeing resized
         this.setSize(1400, 800); //sets x and y dimension of frame
-        //this.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+
+
         oMainPanel.setLayout(new GridBagLayout());
-        oGUITestFileTable = new GUITestFileTable();
+        oPanel0.setLayout(new GridBagLayout());
+        oPanel1.setLayout(new GridBagLayout());
 
-        oPanelRegisterInformation = new JPanel();
-        oPanelRegisterInformation.setLayout(new GridBagLayout());
-        GridBagConstraints oConstraintsRegisterInformation = new GridBagConstraints();
-        int iPrescaler;
-        if (env.getPIC().getRam().get_PSA())
-            iPrescaler = env.getPIC().getRam().get_WDT_PrescalerRate();
-        else
-            iPrescaler = env.getPIC().getRam().get_TMR0_PrescalerRate();
-        /*int[] aiRegisters = {env.getPIC().getRam().get_PCL(), env.getPIC().getRam().get_PCLATH(), 
-                             env.getPIC().getRam().get_Programcounter(), env.getPIC().getRam().get_STATUS(),
-                             env.getPIC().getRam().get_FSR(), env.getPIC().getRam().get_OPTION(),
-                             iPrescaler, env.getPIC().getRam().get_TMR0(),
-                             env.getPIC().get_WRegister()};*/
-        GUIRegister oGUIRegister = new GUIRegister();
-        //oGUIRegisters.setRegisters(aiRegisters);
-        GUIRegistersDetailed oGUIRegistersDetailed = new GUIRegistersDetailed();
-        oConstraintsRegisterInformation.anchor = GridBagConstraints.NORTHWEST;
-        oConstraintsRegisterInformation.gridx = 0;
-        oConstraintsRegisterInformation.gridy = 0;
-        oConstraintsRegisterInformation.insets = new Insets(10, 0, 10, 0);
-        oPanelRegisterInformation.add(oGUIRegister, oConstraintsRegisterInformation);
-        oConstraintsRegisterInformation.gridy = 1;
-        oConstraintsRegisterInformation.anchor = GridBagConstraints.WEST;
-        oPanelRegisterInformation.add(oGUIRegistersDetailed, oConstraintsRegisterInformation);
+        GridBagConstraints oConstraints = new GridBagConstraints();
+        oConstraints.anchor = GridBagConstraints.NORTHWEST;
+        oConstraints.weightx = 1;
+        oConstraints.weighty = 1;
 
-        this.setJMenuBar(new GUIMenuBar(env, this, oGUITestFileTable, oGUIRegister, oGUIRegistersDetailed));
-        this.setVisible(true); //make frame visible
+        oConstraints.gridx = 0;
+        oConstraints.gridy = 0;
+        oConstraints.insets = new Insets(0,0,0,0);
+        oPanel0.add(oGUITestFileTable, oConstraints);
+
+        oConstraints.gridx = 0;
+        oConstraints.gridy = 0;
+        oConstraints.insets = new Insets(0,0,0,0);
+        oPanel1.add(oGUIRegister, oConstraints);
+        oConstraints.gridy = 1;
+        oPanel1.add(oGUIRegistersDetailed, oConstraints);
+        oConstraints.gridy = 2;
+        oPanel1.add(oGUIRamTable, oConstraints);
+
+
+        oPanels.add(oPanel0);
+        oPanels.add(oPanel1);
+        oPanels.add(oMainPanel);
 
         ImageIcon guiLogo = new ImageIcon("./pictures/gui_logo.png"); // create an ImageIcon
         this.setIconImage(guiLogo.getImage()); // change icon of frame
-        
-        //this.getContentPane().setBackground(Color.green); //change color of background
 
-        //JLabel text = new JLabel(); // create label, passing of text at constructor possible
-        //text.setText("Bro do you even code?"); // set text of label
-        //text.setIcon(guiLogo);
-        //text.setHorizontalTextPosition(JLabel.CENTER); //JLabel.LEFT, JLabel.CENTER, JLabel.RIGHT
-        //text.setVerticalTextPosition(JLabel.TOP); //JLabel.TOP, JLabel.CENTER, JLabel.BOTTOM
-        //text.setForeground(Color.green); // set fontcolor of text
-        //text.setFont(new Font("Arial", Font.ITALIC, 20)); // set fontstyle, fontformat (PLAIN, BOLD, ITALIC), and size
-        //text.setIconTextGap(-100); // set gap of text to image
-        //text.setBackground(Color.BLUE); // set background color
-        //text.setOpaque(true); // display background color
+        oGUIMenuBar = new GUIMenuBar(env, this, oGUITestFileTable, oGUIRegister, oGUIRegistersDetailed);
+        this.setJMenuBar(oGUIMenuBar);
 
-        //Border border = BorderFactory.createLineBorder(Color.green, 3); // creates border for label, color and size of border
-
-        //text.setBorder(border); // sets border of label to "border"
-        //text.setVerticalAlignment(JLabel.TOP); // vertically alligns label "text" (JLabel.TOP, JLabel.CENTER, JLabel.BOTTOM)
-        //text.setHorizontalAlignment(JLabel.CENTER); // horizontally aligns label "text" (JLabel.LEFT, JLabel.CENTER, JLabel.RIGHT)
-
-        //this.add(text); // add label to frame
-
-        //getContentPane().setLayout(new BorderLayout());
-        //this.add(new GUITestFileTable("./testfiles/TPicSim1.LST"));
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets(2,5,2,5);
-        c.gridx = 0; //next added element will be in column 1
-        c.gridy = 0; //next added element will be in row 1
-        oMainPanel.add(oGUITestFileTable, c);
-        c.gridx = 1;
-        oMainPanel.add(oPanelRegisterInformation, c);
-        oPanels.add(oPanelRegisterInformation);
-        oPanels.add(oMainPanel);
-        oMainPanel.add(new GUIPorts());
         this.add(oMainPanel);
+
         updateWindow();
+        this.setVisible(true); //make frame visible
     }
 
     public void updateWindow() {
