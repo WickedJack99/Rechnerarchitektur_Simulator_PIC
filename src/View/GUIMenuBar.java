@@ -25,6 +25,8 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     GUIRegister oGUIRegister;
     GUIRegistersDetailed oGUIRegistersDetailed;
 
+    MyView oMyView;
+
     ArrayList<JCheckBox> oBreakpoints;
     ReadEepromFile oRef;
     boolean[] bBreakpointSet;
@@ -96,7 +98,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
      * Constructor initializes menubar.
      * @param frame
      */
-    public GUIMenuBar(Environment env, GUIMainFrame mainframe, GUITestFileTable guitft, GUIRegister guiregs, GUIRegistersDetailed guiregsdet) { //TODO maybe single components, with methods, of frame to set theme
+    public GUIMenuBar(MyView view, Environment env, GUIMainFrame mainframe, GUITestFileTable guitft, GUIRegister guiregs, GUIRegistersDetailed guiregsdet) { //TODO maybe single components, with methods, of frame to set theme
 
         //Custom Separators since default is not able to change background.
         oSeparator0 = new JMenuItem();
@@ -113,6 +115,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         oSeparator3.setPreferredSize(new Dimension(0,1));
 
         //Referrence to change different parts of gui for theme.
+        oMyView = view;
         oEnv = env;
         oGUIMainFrame = mainframe;
         oGUITestFileTable = guitft;
@@ -368,19 +371,13 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         if (e.getSource() == oDarkTheme) {
             System.out.println("It's gettin dark brooo"); //TODO
             setTheme(aoDarkTheme[0], aoDarkTheme[1]);
-            oGUITestFileTable.setTheme(1);
-            oGUIRegister.setTheme(1);
-            oGUIMainFrame.setTheme(1);
-            oGUIRegistersDetailed.setTheme(1);
+            oMyView.setTheme(1);
         }
         //Change to light theme
         if (e.getSource() == oLightTheme) {
             System.out.println("Death to all vampires!"); //TODO
             setTheme(aoLightTheme[0], aoLightTheme[1]);
-            oGUITestFileTable.setTheme(0);
-            oGUIRegister.setTheme(0);
-            oGUIMainFrame.setTheme(0);
-            oGUIRegistersDetailed.setTheme(0);
+            oMyView.setTheme(0);
         }
 
         //Microcontroller

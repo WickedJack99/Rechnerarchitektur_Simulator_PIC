@@ -49,6 +49,8 @@ public class GUIMainFrame extends JFrame {
     JPanel oPanel2 = new JPanel();
     JPanel oPanel3 = new JPanel();
 
+    MyView oMyView = new MyView(this, oGUIMCMenu, oGUIMenuBar, oGUIPorts, oGUIRamTable, oGUIRegister, oGUIRegistersDetailed, oGUIStack, oGUITestFileTable, oGUITime, oMainPanel);
+
     ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
     /**
      * Constructor
@@ -137,7 +139,7 @@ public class GUIMainFrame extends JFrame {
         this.setIconImage(guiLogo.getImage()); // change icon of frame
 
         //Set menubar
-        oGUIMenuBar = new GUIMenuBar(env, this, oGUITestFileTable, oGUIRegister, oGUIRegistersDetailed);
+        oGUIMenuBar = new GUIMenuBar(oMyView, env, this, oGUITestFileTable, oGUIRegister, oGUIRegistersDetailed);
         this.setJMenuBar(oGUIMenuBar);
 
         //Build this frame
