@@ -41,10 +41,13 @@ public class GUIMainFrame extends JFrame {
     GUIPorts oGUIPorts = new GUIPorts();
     GUIStack oGUIStack = new GUIStack();
     GUIMCMenu oGUIMCMenu = new GUIMCMenu();
+    GUITime oGUITime = new GUITime();
 
     JPanel oMainPanel = new JPanel();
     JPanel oPanel0 = new JPanel();
     JPanel oPanel1 = new JPanel();
+    JPanel oPanel2 = new JPanel();
+    JPanel oPanel3 = new JPanel();
 
     ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
     /**
@@ -57,43 +60,89 @@ public class GUIMainFrame extends JFrame {
         this.setResizable(false); // prevent frame from beeing resized
         this.setSize(1400, 800); //sets x and y dimension of frame
 
-
+        //Set layouts of panels
         oMainPanel.setLayout(new GridBagLayout());
         oPanel0.setLayout(new GridBagLayout());
         oPanel1.setLayout(new GridBagLayout());
+        oPanel2.setLayout(new GridBagLayout());
+        oPanel3.setLayout(new GridBagLayout());
 
+        //Create constraints for positioning
         GridBagConstraints oConstraints = new GridBagConstraints();
         oConstraints.anchor = GridBagConstraints.NORTHWEST;
         oConstraints.weightx = 1;
         oConstraints.weighty = 1;
 
+        //Build first Panel from left
         oConstraints.gridx = 0;
         oConstraints.gridy = 0;
-        oConstraints.insets = new Insets(0,0,0,0);
+        oConstraints.insets = new Insets(10,10,0,0);
         oPanel0.add(oGUITestFileTable, oConstraints);
 
+        //Build 2nd Panel from left
+        oConstraints.gridx = 0;
+        oConstraints.gridy = 0;
+        oConstraints.insets = new Insets(10,10,0,0);
+        oPanel1.add(oGUIRegister, oConstraints);
+        oConstraints.gridy = 1;
+        oConstraints.insets = new Insets(36,10,0,0);
+        oPanel1.add(oGUIRegistersDetailed, oConstraints);
+        oConstraints.gridy = 2;
+        oConstraints.insets = new Insets(47,10,0,0);
+        oPanel1.add(oGUIRamTable, oConstraints);
+
+        //Build 3rd Panel from left
+        oConstraints.gridx = 0;
+        oConstraints.gridy = 0;
+        oConstraints.insets = new Insets(10,10,0,0);
+        oPanel2.add(oGUIPorts, oConstraints);
+        oConstraints.gridy = 1;
+        oPanel2.add(oPanel3, oConstraints);
+        oConstraints.gridy = 2;
+        oConstraints.insets = new Insets(45,90,0,0);
+        oPanel2.add(oGUIMCMenu, oConstraints);
+
+        //Build lower panel of 3rd panel
         oConstraints.gridx = 0;
         oConstraints.gridy = 0;
         oConstraints.insets = new Insets(0,0,0,0);
-        oPanel1.add(oGUIRegister, oConstraints);
-        oConstraints.gridy = 1;
-        oPanel1.add(oGUIRegistersDetailed, oConstraints);
-        oConstraints.gridy = 2;
-        oPanel1.add(oGUIRamTable, oConstraints);
+        oConstraints.weightx = 1;
+        oConstraints.weighty = 1;
+        oPanel3.add(oGUIStack, oConstraints);
+        oConstraints.insets = new Insets(0,40,0,0);
+        oConstraints.gridx = 1;
+        oPanel3.add(oGUITime, oConstraints);
 
+        //Build MainPanel
+        oConstraints.gridx = 0;
+        oConstraints.gridy = 0;
+        oConstraints.weightx = 1;
+        oConstraints.weighty = 1;
+        oConstraints.insets = new Insets(0,0,0,0);
+        oMainPanel.add(oPanel0, oConstraints);
+        oConstraints.gridx = 1;
+        oMainPanel.add(oPanel1, oConstraints);
+        oConstraints.gridx = 2;
+        oMainPanel.add(oPanel2, oConstraints);
 
+        //Add panels to list
         oPanels.add(oPanel0);
         oPanels.add(oPanel1);
+        oPanels.add(oPanel2);
+        oPanels.add(oPanel3);
         oPanels.add(oMainPanel);
 
+        //Set Icon
         ImageIcon guiLogo = new ImageIcon("./pictures/gui_logo.png"); // create an ImageIcon
         this.setIconImage(guiLogo.getImage()); // change icon of frame
 
+        //Set menubar
         oGUIMenuBar = new GUIMenuBar(env, this, oGUITestFileTable, oGUIRegister, oGUIRegistersDetailed);
         this.setJMenuBar(oGUIMenuBar);
 
+        //Build this frame
         this.add(oMainPanel);
-
+        setTheme(0);
         updateWindow();
         this.setVisible(true); //make frame visible
     }
@@ -110,12 +159,26 @@ public class GUIMainFrame extends JFrame {
                     oPanel.setForeground(aoLightTheme[0]);
                     oPanel.setBackground(aoLightTheme[1]);
                 }
+                this.setForeground(aoLightTheme[0]);
+                this.setBackground(aoLightTheme[1]);
+                oGUIMCMenu.setTheme(0);
+                oGUIStack.setTheme(0);
+                oGUIPorts.setTheme(0);
+                oGUIRamTable.setTheme(0);
+                oGUITime.setTheme(0);
             }break;
             case 1: {
                 for (JPanel oPanel : oPanels) {
                     oPanel.setForeground(aoDarkTheme[0]);
                     oPanel.setBackground(aoDarkTheme[1]);
                 }
+                this.setForeground(aoDarkTheme[0]);
+                this.setBackground(aoDarkTheme[1]);
+                oGUIMCMenu.setTheme(1);
+                oGUIStack.setTheme(1);
+                oGUIPorts.setTheme(1);
+                oGUIRamTable.setTheme(1);
+                oGUITime.setTheme(1);
             }break;
         }
     }

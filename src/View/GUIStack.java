@@ -43,7 +43,7 @@ public class GUIStack extends JPanel {
         GridBagConstraints oConstraints = new GridBagConstraints();
 
         this.setLayout(new GridBagLayout());
-
+        oStackTable.setEnabled(false);
         oConstraints.gridx = 0;
         oConstraints.gridy = 0;
         oConstraints.anchor = GridBagConstraints.WEST;
@@ -60,6 +60,7 @@ public class GUIStack extends JPanel {
                 oStackTable.setForeground(aoLightTheme[0]);
                 oStackTable.setBackground(aoLightTheme[1]);
                 oStackTable.setGridColor(aoLightTheme[2]);
+                oStackTable.setBorder(BorderFactory.createLineBorder(aoLightTheme[2]));
                 this.setForeground(aoLightTheme[0]);
                 this.setBackground(aoLightTheme[1]);
                 this.setBorder(BorderFactory.createLineBorder(aoLightTheme[2], 2));
@@ -70,6 +71,7 @@ public class GUIStack extends JPanel {
                 oStackTable.setForeground(aoDarkTheme[0]);
                 oStackTable.setBackground(aoDarkTheme[1]);
                 oStackTable.setGridColor(aoDarkTheme[2]);
+                oStackTable.setBorder(BorderFactory.createLineBorder(aoDarkTheme[2]));
                 this.setForeground(aoDarkTheme[0]);
                 this.setBackground(aoDarkTheme[1]);
                 this.setBorder(BorderFactory.createLineBorder(aoDarkTheme[2], 2));

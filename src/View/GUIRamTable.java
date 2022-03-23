@@ -98,22 +98,26 @@ public class GUIRamTable extends JScrollPane {
             case 0: {
                 oRam.setForeground(aoLightTheme[0]);
                 oRam.setBackground(aoLightTheme[1]);
+                oRamPanel.setForeground(aoLightTheme[0]);
+                oRamPanel.setBackground(aoLightTheme[1]);
                 oRamTable.setForeground(aoLightTheme[0]);
                 oRamTable.setBackground(aoLightTheme[1]);
                 oRamTable.setGridColor(aoLightTheme[2]);
                 this.setForeground(aoLightTheme[0]);
                 this.setBackground(aoLightTheme[1]);
-                this.setBorder(BorderFactory.createLineBorder(aoLightTheme[2]));
+                this.setBorder(BorderFactory.createLineBorder(aoLightTheme[2], 2));
             }break;
             case 1: {
                 oRam.setForeground(aoDarkTheme[0]);
                 oRam.setBackground(aoDarkTheme[1]);
+                oRamPanel.setForeground(aoDarkTheme[0]);
+                oRamPanel.setBackground(aoDarkTheme[1]);
                 oRamTable.setForeground(aoDarkTheme[0]);
                 oRamTable.setBackground(aoDarkTheme[1]);
                 oRamTable.setGridColor(aoDarkTheme[2]);
                 this.setForeground(aoDarkTheme[0]);
                 this.setBackground(aoDarkTheme[1]);
-                this.setBorder(BorderFactory.createLineBorder(aoDarkTheme[2]));
+                this.setBorder(BorderFactory.createLineBorder(aoDarkTheme[2], 2));
             }break;
         }
     }

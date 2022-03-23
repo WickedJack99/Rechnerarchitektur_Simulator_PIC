@@ -3,6 +3,7 @@ package View;
 import java.util.ArrayList;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -30,16 +31,20 @@ public class GUIMCMenu extends JPanel {
     Color[] aoDarkTheme = {new Color(255, 253, 250), new Color(76, 78, 82), new Color(47, 47, 47), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
     Color[] aoLightTheme = {new Color(76, 78, 82), new Color(255, 253, 250), new Color(173, 216, 230), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
 
-    JButton oButtonStart = new JButton();
-    JButton oButtonStep = new JButton();
-    JButton oButtonPause = new JButton();
-    JButton oButtonReset = new JButton();
+    String[] asLangGerman = {"Start", "Schritt", "Pausieren", "Zurücksetzen"};
+    String[] asLangEnglish = {"Start", "Step", "Pause", "Reset"};
+
+    JButton oButtonStart = new JButton("Start");
+    JButton oButtonStep = new JButton("Step");
+    JButton oButtonPause = new JButton("Pause");
+    JButton oButtonReset = new JButton("Reset");
 
     ArrayList<JButton> oButtons = new ArrayList<JButton>();
 
     public GUIMCMenu() {
         buildGUIMCMenu();
         fillList();
+        setLanguage(0);
     }
 
     private void buildGUIMCMenu() {
@@ -54,6 +59,28 @@ public class GUIMCMenu extends JPanel {
         this.add(oButtonStep, oConstraints);
         oConstraints.gridy = 2;
         this.add(oButtonPause, oConstraints);
+        oConstraints.gridy = 3;
+        this.add(oButtonReset, oConstraints);
+    }
+
+    public void setLanguage(int iLangNr) {
+        switch (iLangNr) {
+            case 0: {
+                int i = 0;
+                for (JButton oButton : oButtons) {
+                    oButton.setText(asLangGerman[i]);
+                    oButton.setPreferredSize(new Dimension(150,20));
+                    i++;
+                }
+            }break;
+            case 1: {
+                int i = 0;
+                for (JButton oButton : oButtons) {
+                    oButton.setText(asLangEnglish[i]);
+                    i++;
+                }
+            }break;
+        }
     }
 
     private void fillList() {
@@ -73,21 +100,19 @@ public class GUIMCMenu extends JPanel {
                 for (JButton oButton : oButtons) {
                     oButton.setForeground(aoLightTheme[0]);
                     oButton.setBackground(aoLightTheme[1]);
-                    oButton.setBorder(BorderFactory.createLineBorder(aoLightTheme[2]));
+                    oButton.setBorder(BorderFactory.createLineBorder(aoLightTheme[2], 2));
                 }
                 this.setForeground(aoLightTheme[0]);
                 this.setBackground(aoLightTheme[1]);
-                this.setBorder(BorderFactory.createLineBorder(aoLightTheme[2]));
             }break;
             case 1: {
                 for (JButton oButton : oButtons) {
                     oButton.setForeground(aoDarkTheme[0]);
                     oButton.setBackground(aoDarkTheme[1]);
-                    oButton.setBorder(BorderFactory.createLineBorder(aoDarkTheme[2]));
+                    oButton.setBorder(BorderFactory.createLineBorder(aoDarkTheme[2], 2));
                 }
                 this.setForeground(aoDarkTheme[0]);
                 this.setBackground(aoDarkTheme[1]);
-                this.setBorder(BorderFactory.createLineBorder(aoDarkTheme[2]));
             }break;
         }
     }
