@@ -10,8 +10,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Model.Backend.MyModel;
-import Model.Backend.Runtime.Environment;
+import Control.MyControlModel;
+import Control.MyControlView;
+import Model.MyModel;
+import Model.Runtime.Environment;
 
 public class GUIMainFrame extends JFrame {
 
@@ -59,6 +61,8 @@ public class GUIMainFrame extends JFrame {
 
     MyModel oMyModel;
 
+    MyControlView mcv;
+
     ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
 
     /**
@@ -87,6 +91,9 @@ public class GUIMainFrame extends JFrame {
         setTheme(0);
         updateWindow();
         this.setVisible(true); //make frame visible
+        oMyModel = new MyModel(oEnvironment.getPIC(), oEnvironment);
+        mcv = new MyControlView(oMyView, oMyModel);
+        mcv.updateView();
     }
 
     private void buildGUIMainFrame() {

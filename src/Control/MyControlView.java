@@ -2,7 +2,7 @@ package Control;
 
 import java.util.ArrayList;
 
-import Model.Backend.MyModel;
+import Model.MyModel;
 import View.MyView;
 
 public class MyControlView {
@@ -20,6 +20,8 @@ public class MyControlView {
         setPortAView();
         setPortBView();
         setRamView();
+        setRegistersDetailed();
+        setStack();
     }
 
     /**
@@ -51,11 +53,49 @@ public class MyControlView {
      * Sets detailed register-table values to values from PIC.
      */
     public void setRegistersDetailed() {
+        int iStatus = oMyModel.getPIC().getRam().get_STATUS();
+        int iOption = oMyModel.getPIC().getRam().get_OPTION();
+        int iIntcon = oMyModel.getPIC().getRam().get_INTCON();
 
+        int iS0 = ((iStatus & 1) == 1) ? 1:0;
+        int iS1 = ((iStatus & 2) == 2) ? 1:0;
+        int iS2 = ((iStatus & 4) == 4) ? 1:0;
+        int iS3 = ((iStatus & 8) == 8) ? 1:0;
+        int iS4 = ((iStatus & 16) == 16) ? 1:0;
+        int iS5 = ((iStatus & 32) == 32) ? 1:0;
+        int iS6 = ((iStatus & 64) == 64) ? 1:0;
+        int iS7 = ((iStatus & 128) == 128) ? 1:0;
+
+        int[] aiStatus = {iS0, iS1, iS2, iS3, iS4, iS5, iS6, iS7};
+        oMyView.getGUIRegistersDetailed().setStatus(aiStatus);
+
+        int iO0 = ((iOption & 1) == 1) ? 1:0;
+        int iO1 = ((iOption & 2) == 2) ? 1:0;
+        int iO2 = ((iOption & 4) == 4) ? 1:0;
+        int iO3 = ((iOption & 8) == 8) ? 1:0;
+        int iO4 = ((iOption & 16) == 16) ? 1:0;
+        int iO5 = ((iOption & 32) == 32) ? 1:0;
+        int iO6 = ((iOption & 64) == 64) ? 1:0;
+        int iO7 = ((iOption & 128) == 128) ? 1:0;
+
+        int[] aiOption = {iO0, iO1, iO2, iO3, iO4, iO5, iO6, iO7};
+        oMyView.getGUIRegistersDetailed().setOption(aiOption);
+
+        int iI0 = ((iIntcon & 1) == 1) ? 1:0;
+        int iI1 = ((iIntcon & 2) == 2) ? 1:0;
+        int iI2 = ((iIntcon & 4) == 4) ? 1:0;
+        int iI3 = ((iIntcon & 8) == 8) ? 1:0;
+        int iI4 = ((iIntcon & 16) == 16) ? 1:0;
+        int iI5 = ((iIntcon & 32) == 32) ? 1:0;
+        int iI6 = ((iIntcon & 64) == 64) ? 1:0;
+        int iI7 = ((iIntcon & 128) == 128) ? 1:0;
+
+        int[] aiIntcon = {iI0, iI1, iI2, iI3, iI4, iI5, iI6, iI7};
+        oMyView.getGUIRegistersDetailed().setIntcon(aiIntcon);
     }
 
     /**
-     * 
+     * Enables and disables checkboxes of PortA.
      */
     public void setPortAView() {
 
@@ -76,9 +116,12 @@ public class MyControlView {
         oMyView.getGUIPorts().enableCheckboxesA(abEnabled);
     }
 
+    /**
+     * Enables and disables checkboxes of PortB.
+     */
     public void setPortBView() {
 
-        boolean[] abEnabled = new boolean[10];
+        boolean[] abEnabled = new boolean[16];
 
         abEnabled[0] = oMyModel.getPIC().getRam().get_TRISB0();
         abEnabled[1] = oMyModel.getPIC().getRam().get_TRISB1();
@@ -98,26 +141,29 @@ public class MyControlView {
         abEnabled[14] = true;
         abEnabled[15] = true;
 
-        oMyView.getGUIPorts().enableCheckboxesA(abEnabled);
+        oMyView.getGUIPorts().enableCheckboxesB(abEnabled);
     }
 
     public void setRamView() {
         int[] aiData;
         int[] aiBank0 = oMyModel.getPIC().getRam().get_Bank0();
         int[] aiBank1 = oMyModel.getPIC().getRam().get_Bank1();
-        int iLenB0 = aiBank0.length;
-        int iLenB1 = aiBank1.length;
-        aiData = new int[iLenB0 + iLenB1];
-        for (int i = 0; i < iLenB0; i++) {
+
+        aiData = new int[256];
+        for (int i = 0; i < 128; i++) {
             aiData[i] = aiBank0[i];
         }
-        for (int i = iLenB0; i < (iLenB0 + iLenB1); i++) {
-            aiData[i] = aiBank1[i];
+        int j = 0;
+        for (int i = 128; i < 256; i++) {
+            aiData[i] = aiBank1[j];
+            j++;
         }
         oMyView.getGUIRamTable().setGUIRam(aiData);
     }
 
-
+    public void setStack() {
+        oMyView.getGUIStack().setStack(oMyModel.getPIC().getStack().getSTACK());
+    }
     
     public void startProgramView() {
 

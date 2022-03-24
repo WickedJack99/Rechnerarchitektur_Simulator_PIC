@@ -2,7 +2,7 @@ package Control;
 
 import java.util.ArrayList;
 
-import Model.Backend.MyModel;
+import Model.MyModel;
 import View.MyView;
 
 public class MyControlModel {
