@@ -23,6 +23,9 @@ public class RAM {
     //Last programmcounter for function getLastLine in main.
     private int lastProgramcounter;
 
+    //
+    private int iPrescaledTMR0;
+
     /**
      * Constructor of RAM
      * Initializes two banks as two int arrays of size 128.
@@ -202,22 +205,36 @@ public class RAM {
      */
     public synchronized void increment_TMR0() {
         int iValTMR0 = get_TMR0();
-        int iValIncr;
+        int iValPrescaler;
+
+        boolean bPSA = get_PSA(); //PreScalerAssignment
 
         //Check assignment of prescaler (PSA == 0) => TMR0; (PSA == 1) => WDT
-        if (get_PSA()) {
-            iValIncr = 1;
+        //Prescaler assigned to WDT, icrement TMR0 by 1.
+        if (bPSA) {
+            //Increment TMR0 by 1, set T0IF at overflow.
+            if ((iValTMR0 + 1) > 255) {
+                set_T0IF(true);
+                set_TMR0((iValTMR0 + 1) & 255);
+            } else {
+                set_T0IF(false);
+                set_TMR0(iValTMR0 + 1);
+            }
+            //Prescaler assigned to TMR0, increment TMR0 if prescaled TMR0 equals TMR0 prescaler-rate.
         } else {
-            iValIncr = get_TMR0_PrescalerRate();
-        }
-
-        //Check for overflow and set bit and timer
-        if ((iValTMR0 + iValIncr) > 255) {
-            set_T0IF(true);
-            set_TMR0((iValTMR0 + iValIncr) & 255); //TODO 0 or &255 (Question to Prof)
-        } else {
-            set_T0IF(false);
-            set_TMR0(iValTMR0 + iValIncr);
+            iValPrescaler = get_TMR0_PrescalerRate();
+            iPrescaledTMR0++;
+            if (iPrescaledTMR0 == iValPrescaler) {
+                iPrescaledTMR0 = 0; //Reset prescaled TMR0
+                //Increment TMR0 by 1, set T0IF at overflow.
+                if ((iValTMR0 + 1) > 255) {
+                    set_T0IF(true);
+                    set_TMR0((iValTMR0 + 1) & 255);
+                } else {
+                    set_T0IF(false);
+                    set_TMR0(iValTMR0 + 1);
+                }
+            }
         }
     }
 
@@ -1553,5 +1570,45 @@ public class RAM {
 
     public synchronized boolean get_TRISA4() {
         return (get_TRISA() & 0b00010000) == 16;
+    }
+
+    public synchronized boolean get_TRISB0() {
+        return (get_TRISB() & 0b00000001) == 1;
+    }
+
+    public synchronized boolean get_TRISB1() {
+        return (get_TRISB() & 0b00000010) == 2;
+    }
+
+    public synchronized boolean get_TRISB2() {
+        return (get_TRISB() & 0b00000100) == 4;
+    }
+
+    public synchronized boolean get_TRISB3() {
+        return (get_TRISB() & 0b00001000) == 8;
+    }
+
+    public synchronized boolean get_TRISB4() {
+        return (get_TRISB() & 0b00010000) == 16;
+    }
+
+    public synchronized boolean get_TRISB5() {
+        return (get_TRISB() & 0b00100000) == 32;
+    }
+
+    public synchronized boolean get_TRISB6() {
+        return (get_TRISB() & 0b01000000) == 64;
+    }
+
+    public synchronized boolean get_TRISB7() {
+        return (get_TRISB() & 0b10000000) == 128;
+    }
+
+    public synchronized int[] get_Bank0() {
+        return bank0;
+    }
+
+    public synchronized int[] get_Bank1() {
+        return bank1;
     }
 }

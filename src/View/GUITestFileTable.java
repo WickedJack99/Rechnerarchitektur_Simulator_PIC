@@ -137,6 +137,14 @@ public class GUITestFileTable extends JScrollPane {
         return oCheckboxes;
     }
 
+    //Sets checkbox at position i to boolean at position i at overhanded list.
+    public void setCheckboxes(ArrayList<Boolean> bEnabled) {
+        int iCheckboxesSize = oCheckboxes.size();
+        for (int i = 0; i < iCheckboxesSize; i++) {
+            oCheckboxes.get(i).setEnabled(bEnabled.get(i));
+        }
+    }
+
     /**
      * @param data ArrayList to check.
      * @returns length of longest string at ArrayList.

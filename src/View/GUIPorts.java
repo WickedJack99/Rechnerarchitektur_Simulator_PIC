@@ -215,6 +215,18 @@ public class GUIPorts extends JPanel {
             return null;
     }
 
+    public void enableCheckboxesA(boolean[] abEnabled) {
+        for (int i = 0; i < 10; i++) {
+            oCheckboxes.get(i).setEnabled(abEnabled[i]);
+        }
+    }
+
+    public void enableCheckboxesB(boolean[] abEnabled) {
+        for (int i = 10; i < 26; i++) {
+            oCheckboxes.get(i).setEnabled(abEnabled[i]);
+        }
+    }
+
     public void setTheme(int iThemeNr) {
         switch (iThemeNr) {
             case 0: {

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Model.Backend.MyModel;
 import Model.Backend.Runtime.Environment;
 
 public class GUIMainFrame extends JFrame {
@@ -33,6 +33,7 @@ public class GUIMainFrame extends JFrame {
     Color[] aoDarkTheme = {new Color(255, 253, 250), new Color(76, 78, 82), new Color(47, 47, 47), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
     Color[] aoLightTheme = {new Color(76, 78, 82), new Color(255, 253, 250), new Color(173, 216, 230), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
 
+    //Components of gui-main-frame
     GUITestFileTable oGUITestFileTable = new GUITestFileTable();
     GUIMenuBar oGUIMenuBar;
     GUIRegister oGUIRegister = new GUIRegister();
@@ -43,25 +44,52 @@ public class GUIMainFrame extends JFrame {
     GUIMCMenu oGUIMCMenu = new GUIMCMenu();
     GUITime oGUITime = new GUITime();
 
+    //Panels of gui-main-frame
     JPanel oMainPanel = new JPanel();
     JPanel oPanel0 = new JPanel();
     JPanel oPanel1 = new JPanel();
     JPanel oPanel2 = new JPanel();
     JPanel oPanel3 = new JPanel();
 
-    MyView oMyView = new MyView(this, oGUIMCMenu, oGUIMenuBar, oGUIPorts, oGUIRamTable, oGUIRegister, oGUIRegistersDetailed, oGUIStack, oGUITestFileTable, oGUITime, oMainPanel);
+    /**
+     * Object for storing all components, will be overhanded to menubar, to set theme.
+     * 
+     */
+    MyView oMyView;
+
+    MyModel oMyModel;
 
     ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
+
     /**
      * Constructor
      */
-    public GUIMainFrame(Environment env) {
+    public GUIMainFrame(Environment oEnvironment) {
 
         this.setTitle("PIC-Simulator GUI"); // sets title of frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // if x is pressed, exit application (HIDE_ON_CLOSE-hides application, DO_NOTHING_ON_CLOSE-prevents user from closing application)
         this.setResizable(false); // prevent frame from beeing resized
         this.setSize(1400, 800); //sets x and y dimension of frame
+        //Set Icon
+        ImageIcon guiLogo = new ImageIcon("./pictures/gui_logo.png"); // create an ImageIcon
+        this.setIconImage(guiLogo.getImage()); // change icon of frame
 
+        //Adds components to frame, sets layouts,...
+        buildGUIMainFrame();
+
+        //Init view object with components of main frame.
+        oMyView = new MyView(this, oGUIMCMenu, oGUIPorts, oGUIRamTable, oGUIRegister, oGUIRegistersDetailed, oGUIStack, oGUITestFileTable, oGUITime, oMainPanel, oEnvironment);
+
+        //Set menubar
+        oGUIMenuBar = new GUIMenuBar(oMyModel, oMyView);
+        this.setJMenuBar(oGUIMenuBar);
+        
+        setTheme(0);
+        updateWindow();
+        this.setVisible(true); //make frame visible
+    }
+
+    private void buildGUIMainFrame() {
         //Set layouts of panels
         oMainPanel.setLayout(new GridBagLayout());
         oPanel0.setLayout(new GridBagLayout());
@@ -134,19 +162,8 @@ public class GUIMainFrame extends JFrame {
         oPanels.add(oPanel3);
         oPanels.add(oMainPanel);
 
-        //Set Icon
-        ImageIcon guiLogo = new ImageIcon("./pictures/gui_logo.png"); // create an ImageIcon
-        this.setIconImage(guiLogo.getImage()); // change icon of frame
-
-        //Set menubar
-        oGUIMenuBar = new GUIMenuBar(oMyView, env, this, oGUITestFileTable, oGUIRegister, oGUIRegistersDetailed);
-        this.setJMenuBar(oGUIMenuBar);
-
         //Build this frame
         this.add(oMainPanel);
-        setTheme(0);
-        updateWindow();
-        this.setVisible(true); //make frame visible
     }
 
     public void updateWindow() {
