@@ -33,7 +33,8 @@ public class GUITime extends JPanel {
     JLabel oLabelWDT = new JLabel("Watchdog Timer");
     JCheckBox oEnableWDT = new JCheckBox("WDT");
     
-    JLabel oLabelRuntime = new JLabel("Runtime: 0");
+    int iRuntime = 0;
+    JLabel oLabelRuntime = new JLabel("Runtime: " + iRuntime);
 
     JLabel oLabelQuarz = new JLabel("Quarzfrequency");
     String[] asIntervals = {"32 kHz", "100 kHz", "500 kHz", "1 MHz", "2 MHz", "4 MHz", "8 MHz", "12 MHz", "16 MHz", "20 MHz"};
@@ -41,6 +42,7 @@ public class GUITime extends JPanel {
 
     public GUITime() {
         buildGUITime();
+        setLanguage(0);
     }
 
     private void buildGUITime() {
@@ -65,6 +67,27 @@ public class GUITime extends JPanel {
         oConstraints.gridy = 4;
         oConstraints.insets = new Insets(0,35,5,36);
         this.add(oIntervals, oConstraints);
+    }
+
+    public void setLanguage(int iLangNr) {
+        switch (iLangNr) {
+            case 0: {
+                oLabelRuntime.setText("Laufzeit: " + iRuntime);
+                oLabelQuarz.setText("Quarzfrequenz");
+            }break;
+            case 1: {
+                oLabelRuntime.setText("Runtime: " + iRuntime);
+                oLabelQuarz.setText("Quarzfrequency");
+            }break;
+        }
+    }
+
+    public void setRuntime(int iRuntime) {
+        this.iRuntime = iRuntime;
+    }
+
+    public int getRuntime() {
+        return iRuntime;
     }
 
     public void setTheme(int iThemeNr) {

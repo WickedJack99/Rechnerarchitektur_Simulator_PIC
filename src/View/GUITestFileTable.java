@@ -22,6 +22,7 @@ public class GUITestFileTable extends JScrollPane {
     JPanel oTable = new JPanel();
     int iTheme = 0;
     boolean bFileLoaded = false;
+    JTextField oFill;
 
     /**
      * Color oWhite = new Color(255, 253, 250);
@@ -46,7 +47,7 @@ public class GUITestFileTable extends JScrollPane {
      */
     public GUITestFileTable() {
         
-        JTextField oFill = new JTextField("Please load testfile!");
+        oFill = new JTextField();
         oFill.setEditable(false);
         oLineInformation.add(oFill);
 
@@ -57,6 +58,7 @@ public class GUITestFileTable extends JScrollPane {
         this.setPreferredSize(new Dimension(600, 700));
         this.setViewportView(oTestPanel);
         setTheme(0);
+        setLanguage(0);
     }
 
     /**
@@ -209,6 +211,17 @@ public class GUITestFileTable extends JScrollPane {
             oLineInformation.get(iLineToUnmark).setForeground(getThemeColor()[0]);
             oLineInformation.get(iLineToUnmark).setBackground(getThemeColor()[1]);
             oLineInformation.get(iLineToUnmark).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+        }
+    }
+
+    public void setLanguage(int iLangNr) {
+        switch (iLangNr) {
+            case 0: {
+                oFill.setText("Bitte Testdatei laden!");
+            }break;
+            case 1: {
+                oFill.setText("Please load testfile!");
+            }break;
         }
     }
 

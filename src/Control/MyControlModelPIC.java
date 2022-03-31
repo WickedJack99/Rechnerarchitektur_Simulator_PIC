@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import Model.MyModel;
 import View.MyView;
 
-public class MyControlModel {
+public class MyControlModelPIC {
 
     MyModel oModel;
     MyView oView;
     //put Objects to manipulate here
 
-    public MyControlModel(MyModel model, MyView view) {
+    public MyControlModelPIC(MyModel model, MyView view) {
         oModel = model;
         oView = view;
     }
@@ -73,28 +73,7 @@ public class MyControlModel {
     public void setRamModel(int[][] aiiRam) {
 
     }
-
-
     
-    public void startProgramModel() {
-
-    }
-
-    public void stepProgramModel() {
-
-    }
-
-    public void pauseProgramModel() {
-
-    }
-
-    public void resetProgramModel() {
-
-    }
-
-    public void controlWDTModel(boolean bEnabled) {
-
-    }
 
     public void setQuarzModel(int iElement) {
 

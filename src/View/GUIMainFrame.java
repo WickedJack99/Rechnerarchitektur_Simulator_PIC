@@ -10,41 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Control.MyControlModel;
-import Control.MyControlView;
-import Model.MyModel;
-import Model.Runtime.Environment;
-
 public class GUIMainFrame extends JFrame {
-
-    /**
-     * Color oWhite = new Color(255, 253, 250);
-     * Color oDarkGray = new Color(76, 78, 82);
-     * Color oDarkGrayB = new Color(47, 47, 47);
-     * Color oLightBlue = new Color(173, 216, 230);
-     * Color oOrangeDM = new Color(255, 170, 0);
-     * Color oLightBlueDM = new Color(0, 213, 255);
-     * Color oOrangeDMB = new Color(255, 85, 0);
-     * First Color == TextColor
-     * Second Color == BackgroundColor
-     * Third Color == BorderColor
-     * Fourth Color == TextColor Marked
-     * Fifth Color == BackgroundColor Marked
-     * Sixth Color == BorderColor Marked
-     */
-    Color[] aoDarkTheme = {new Color(255, 253, 250), new Color(76, 78, 82), new Color(47, 47, 47), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
-    Color[] aoLightTheme = {new Color(76, 78, 82), new Color(255, 253, 250), new Color(173, 216, 230), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
-
-    //Components of gui-main-frame
-    GUITestFileTable oGUITestFileTable = new GUITestFileTable();
-    GUIMenuBar oGUIMenuBar;
-    GUIRegister oGUIRegister = new GUIRegister();
-    GUIRegistersDetailed oGUIRegistersDetailed = new GUIRegistersDetailed();
-    GUIRamTable oGUIRamTable = new GUIRamTable();
-    GUIPorts oGUIPorts = new GUIPorts();
-    GUIStack oGUIStack = new GUIStack();
-    GUIMCMenu oGUIMCMenu = new GUIMCMenu();
-    GUITime oGUITime = new GUITime();
 
     //Panels of gui-main-frame
     JPanel oMainPanel = new JPanel();
@@ -53,27 +19,31 @@ public class GUIMainFrame extends JFrame {
     JPanel oPanel2 = new JPanel();
     JPanel oPanel3 = new JPanel();
 
+    ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
+
     /**
      * Object for storing all components, will be overhanded to menubar, to set theme.
-     * 
      */
     MyView oMyView;
-
-    MyModel oMyModel;
-
-    MyControlView mcv;
-
-    ArrayList<JPanel> oPanels = new ArrayList<JPanel>();
 
     /**
      * Constructor
      */
-    public GUIMainFrame(Environment oEnvironment) {
+    public GUIMainFrame(GUIMenuBar oGUIMenuBar, MyView view) {
+        oMyView = view;
 
-        this.setTitle("PIC-Simulator GUI"); // sets title of frame
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // if x is pressed, exit application (HIDE_ON_CLOSE-hides application, DO_NOTHING_ON_CLOSE-prevents user from closing application)
-        this.setResizable(false); // prevent frame from beeing resized
-        this.setSize(1400, 800); //sets x and y dimension of frame
+        // sets title of frame
+        this.setTitle("PIC-Simulator GUI");
+
+        // if x is pressed, exit application (HIDE_ON_CLOSE-hides application, DO_NOTHING_ON_CLOSE-prevents user from closing application)
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+
+        //prevent frame from beeing resized
+        this.setResizable(false);
+
+        //sets x and y dimension of frame
+        this.setSize(1400, 800);
+
         //Set Icon
         ImageIcon guiLogo = new ImageIcon("./pictures/gui_logo.png"); // create an ImageIcon
         this.setIconImage(guiLogo.getImage()); // change icon of frame
@@ -81,19 +51,16 @@ public class GUIMainFrame extends JFrame {
         //Adds components to frame, sets layouts,...
         buildGUIMainFrame();
 
-        //Init view object with components of main frame.
-        oMyView = new MyView(this, oGUIMCMenu, oGUIPorts, oGUIRamTable, oGUIRegister, oGUIRegistersDetailed, oGUIStack, oGUITestFileTable, oGUITime, oMainPanel, oEnvironment);
-
         //Set menubar
-        oGUIMenuBar = new GUIMenuBar(oMyModel, oMyView);
         this.setJMenuBar(oGUIMenuBar);
         
         setTheme(0);
-        updateWindow();
         this.setVisible(true); //make frame visible
-        oMyModel = new MyModel(oEnvironment.getPIC(), oEnvironment);
-        mcv = new MyControlView(oMyView, oMyModel);
-        mcv.updateView();
+        updateWindow();
+    }
+
+    public JPanel getMainPanel() {
+        return oMainPanel;
     }
 
     private void buildGUIMainFrame() {
@@ -114,30 +81,30 @@ public class GUIMainFrame extends JFrame {
         oConstraints.gridx = 0;
         oConstraints.gridy = 0;
         oConstraints.insets = new Insets(10,10,0,0);
-        oPanel0.add(oGUITestFileTable, oConstraints);
+        oPanel0.add(oMyView.getGUITestFileTable(), oConstraints);
 
         //Build 2nd Panel from left
         oConstraints.gridx = 0;
         oConstraints.gridy = 0;
         oConstraints.insets = new Insets(10,10,0,0);
-        oPanel1.add(oGUIRegister, oConstraints);
+        oPanel1.add(oMyView.getGUIRegister(), oConstraints);
         oConstraints.gridy = 1;
         oConstraints.insets = new Insets(36,10,0,0);
-        oPanel1.add(oGUIRegistersDetailed, oConstraints);
+        oPanel1.add(oMyView.getGUIRegistersDetailed(), oConstraints);
         oConstraints.gridy = 2;
         oConstraints.insets = new Insets(47,10,0,0);
-        oPanel1.add(oGUIRamTable, oConstraints);
+        oPanel1.add(oMyView.getGUIRamTable(), oConstraints);
 
         //Build 3rd Panel from left
         oConstraints.gridx = 0;
         oConstraints.gridy = 0;
         oConstraints.insets = new Insets(10,10,0,0);
-        oPanel2.add(oGUIPorts, oConstraints);
+        oPanel2.add(oMyView.getGUIPorts(), oConstraints);
         oConstraints.gridy = 1;
         oPanel2.add(oPanel3, oConstraints);
         oConstraints.gridy = 2;
         oConstraints.insets = new Insets(45,90,0,0);
-        oPanel2.add(oGUIMCMenu, oConstraints);
+        oPanel2.add(oMyView.getGUIMCMenu(), oConstraints);
 
         //Build lower panel of 3rd panel
         oConstraints.gridx = 0;
@@ -145,10 +112,10 @@ public class GUIMainFrame extends JFrame {
         oConstraints.insets = new Insets(0,0,0,0);
         oConstraints.weightx = 1;
         oConstraints.weighty = 1;
-        oPanel3.add(oGUIStack, oConstraints);
+        oPanel3.add(oMyView.getGUIStack(), oConstraints);
         oConstraints.insets = new Insets(0,40,0,0);
         oConstraints.gridx = 1;
-        oPanel3.add(oGUITime, oConstraints);
+        oPanel3.add(oMyView.getGUITime(), oConstraints);
 
         //Build MainPanel
         oConstraints.gridx = 0;
@@ -181,30 +148,22 @@ public class GUIMainFrame extends JFrame {
     public void setTheme(int iThemeNr) {
         switch (iThemeNr) {
             case 0: {
+                Color[] aoLightTheme = MyColors.getTheme(0);
                 for (JPanel oPanel : oPanels) {
                     oPanel.setForeground(aoLightTheme[0]);
                     oPanel.setBackground(aoLightTheme[1]);
                 }
                 this.setForeground(aoLightTheme[0]);
                 this.setBackground(aoLightTheme[1]);
-                oGUIMCMenu.setTheme(0);
-                oGUIStack.setTheme(0);
-                oGUIPorts.setTheme(0);
-                oGUIRamTable.setTheme(0);
-                oGUITime.setTheme(0);
             }break;
             case 1: {
+                Color[] aoDarkTheme = MyColors.getTheme(1);
                 for (JPanel oPanel : oPanels) {
                     oPanel.setForeground(aoDarkTheme[0]);
                     oPanel.setBackground(aoDarkTheme[1]);
                 }
                 this.setForeground(aoDarkTheme[0]);
                 this.setBackground(aoDarkTheme[1]);
-                oGUIMCMenu.setTheme(1);
-                oGUIStack.setTheme(1);
-                oGUIPorts.setTheme(1);
-                oGUIRamTable.setTheme(1);
-                oGUITime.setTheme(1);
             }break;
         }
     }

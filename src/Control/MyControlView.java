@@ -10,7 +10,7 @@ public class MyControlView {
     MyView oMyView;
     MyModel oMyModel;
 
-    public MyControlView(MyView view, MyModel model) {
+    public MyControlView(MyModel model, MyView view) {
         oMyView = view;
         oMyModel = model;
     }

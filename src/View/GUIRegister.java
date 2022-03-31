@@ -64,6 +64,7 @@ public class GUIRegister extends JPanel {
         buildGUIRegister();
         setWidth();
         setTheme(0);
+        setLanguage(0);
     }
 
     private void addComponents() {
@@ -149,6 +150,18 @@ public class GUIRegister extends JPanel {
         for (int i = 0; i < 4; i++) {
             oWRegister.getColumn(i + "").setPreferredWidth(100);
         }
+    }
+
+    public void setLanguage(int iLangNr) {
+        switch (iLangNr) {
+            case 0: {
+                oSFRRegisters.setValueAt("Vorteiler", 3, 2);
+            }break;
+            case 1: {
+                oSFRRegisters.setValueAt("Prescaler", 3, 2);
+            }break;
+        }
+        
     }
 
     public void setTheme(int iThemeNr) {

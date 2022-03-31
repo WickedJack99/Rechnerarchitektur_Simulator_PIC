@@ -15,38 +15,21 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import Control.MyControlModel;
-import Model.Backend.MyModel;
-import Model.Backend.EepromLoader.ReadEepromFile;
+import Model.MyModel;
+import Model.EepromLoader.ReadEepromFile;
 
 public class GUIMenuBar extends JMenuBar implements ActionListener {
-    /**
-     * Color oWhite = new Color(255, 253, 250);
-     * Color oDarkGray = new Color(76, 78, 82);
-     * Color oDarkGrayB = new Color(47, 47, 47);
-     * Color oLightBlue = new Color(173, 216, 230);
-     * Color oOrangeDM = new Color(255, 170, 0);
-     * Color oLightBlueDM = new Color(0, 213, 255);
-     * Color oOrangeDMB = new Color(255, 85, 0);
-     * First Color == TextColor
-     * Second Color == BackgroundColor
-     * Third Color == BorderColor
-     * Fourth Color == TextColor Marked
-     * Fifth Color == BackgroundColor Marked
-     * Sixth Color == BorderColor Marked
-     */
-    Color[] aoDarkTheme = {new Color(255, 253, 250), new Color(76, 78, 82), new Color(47, 47, 47), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
-    Color[] aoLightTheme = {new Color(76, 78, 82), new Color(255, 253, 250), new Color(173, 216, 230), new Color(0, 213, 255), new Color(255, 170, 0), new Color(255, 85, 0)};
 
     MyView oMyView;
 
-    MyControlModel oMyControl;
+    MyModel oMyModel;
 
     ArrayList<JCheckBox> oBreakpoints;
     ReadEepromFile oRef;
     boolean[] bBreakpointSet;
     int iTestFileLoaded = 0;
 
+    ArrayList<JMenuItem> oMenuItems = new ArrayList<JMenuItem>();
     //Custom separators because addSeparator(default) looks not nice.
     JMenuItem oSeparator0;
     JMenuItem oSeparator1;
@@ -123,7 +106,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         //Referrence to change different parts of gui for theme.
         oMyView = view;
 
-        oMyControl = new MyControlModel(model, view);
+        oMyModel = model;
 
         //File
         oFileMenu = new JMenu(sGermanLang[0]);
@@ -157,6 +140,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         oManual = new JMenuItem(sGermanLang[22]);
         oAbout = new JMenuItem(sGermanLang[23]);
 
+        fillList();
         setActionListeners();
         setGerMnemonics();
         buildMenubar();
@@ -394,7 +378,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             System.out.println("oResetProg"); //TODO
         }
         if (e.getSource() == oStepProg) {
-            oMyView.getEnvironment().step();
+            System.out.println("oStepProg"); //TODO
         }
         if (e.getSource() == oIntervalASAP) {
             System.out.println("oIntervalASAP"); //TODO
@@ -411,11 +395,13 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         if (e.getSource() == oGerLangItem) {
             changeLangMenuBar(sGermanLang);
             setGerMnemonics();
+            oMyView.setLanguage(0);
             //TODO rest of gui
         }
         if (e.getSource() == oEngLangItem) {
             changeLangMenuBar(sEnglishLang);
             setEngMnemonics();
+            oMyView.setLanguage(1);
             //TODO rest of gui
         }
         //Show manual
@@ -430,9 +416,31 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         controlBreakpoints(e);
     }
 
+    private void fillList() {
+        //Fill list oMenuitems
+        oMenuItems.add(oLoadTestFile);
+        oMenuItems.add(oLoadProgStateItem);
+        oMenuItems.add(oSaveProgStateItem);
+        oMenuItems.add(oExitItem);
+        oMenuItems.add(oDarkTheme);
+        oMenuItems.add(oLightTheme);
+        oMenuItems.add(oStartProg);
+        oMenuItems.add(oPauseProg);
+        oMenuItems.add(oResetProg);
+        oMenuItems.add(oStepProg);
+        oMenuItems.add(oIntervalASAP);
+        oMenuItems.add(oInterval1Sec);
+        oMenuItems.add(oInterval2Sec);
+        oMenuItems.add(oGerLangItem);
+        oMenuItems.add(oEngLangItem);
+        oMenuItems.add(oManual);
+        oMenuItems.add(oAbout);
+    }
+
     public void setTheme(int iThemeNr) {
         switch (iThemeNr) {
             case 0: {
+                Color[] aoLightTheme = MyColors.getTheme(0);
                 this.setBackground(aoLightTheme[1]);
                 this.setBorder(BorderFactory.createLineBorder(aoLightTheme[1], 2));
                 this.setOpaque(true);
@@ -531,6 +539,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
                 oSeparator3.setBorder(BorderFactory.createLineBorder(oColorSeparators, 2));
             }break;
             case 1: {
+                Color[] aoDarkTheme = MyColors.getTheme(1);
                 this.setBackground(aoDarkTheme[1]);
                 this.setBorder(BorderFactory.createLineBorder(aoDarkTheme[1], 2));
                 this.setOpaque(true);
@@ -644,34 +653,38 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
             oRef.setOPCode(oRef.getData());
             oMyView.getGUITestFileTable().setData(oRef.getData());
 
-
-            ArrayList<String> data = oRef.getData();
-            int iDataSize = data.size();
-            ArrayList<String> opcode = oRef.getOPCode();
-
-            int iOPCodeSize = opcode.size();
-            //If testfile was loaded before, reset all checkboxes
-            if (iTestFileLoaded > 0) {
-                oBreakpoints = oMyView.getGUITestFileTable().getCheckboxes();
-                for (int i = 0; i < iDataSize; i++) {                    
-                    oBreakpoints.get(i).setEnabled(false);
-                }
-            }
-            //Enable only checkboxes which belong to real code
-            for (int i = 0; i < iDataSize; i++) {
-                for (int j = 0; j < iOPCodeSize; j++) {
-                    if (data.get(i).equals(opcode.get(j))) {
-                        oBreakpoints = oMyView.getGUITestFileTable().getCheckboxes();
-                        oBreakpoints.get(i).setEnabled(true);
-                        oBreakpoints.get(i).addActionListener(this);
-                    }
-                }
-            }
-            bBreakpointSet = new boolean[iOPCodeSize];
-            oRef.readFileAndWriteToEEPROM(oMyView.getEnvironment().getPIC());
+            setBreakpointsActionListeners();
+            
+            oRef.readFileAndWriteToEEPROM(oMyModel.getPIC());
             oMyView.getGUIMainFrame().updateWindow();
             iTestFileLoaded = 1;
         }
+    }
+
+    private void setBreakpointsActionListeners() {
+        ArrayList<String> data = oRef.getData();
+        int iDataSize = data.size();
+        ArrayList<String> opcode = oRef.getOPCode();
+
+        int iOPCodeSize = opcode.size();
+        //If testfile was loaded before, reset all checkboxes
+        if (iTestFileLoaded > 0) {
+            oBreakpoints = oMyView.getGUITestFileTable().getCheckboxes();
+            for (int i = 0; i < iDataSize; i++) {                    
+                oBreakpoints.get(i).setEnabled(false);
+            }
+        }
+        //Enable only checkboxes which belong to real code
+        for (int i = 0; i < iDataSize; i++) {
+            for (int j = 0; j < iOPCodeSize; j++) {
+                if (data.get(i).equals(opcode.get(j))) {
+                    oBreakpoints = oMyView.getGUITestFileTable().getCheckboxes();
+                    oBreakpoints.get(i).setEnabled(true);
+                    oBreakpoints.get(i).addActionListener(this);
+                }
+            }
+        }
+        bBreakpointSet = new boolean[iOPCodeSize];
     }
 
     private void controlBreakpoints(ActionEvent e) {
