@@ -141,6 +141,7 @@ public class GUIMainFrame extends JFrame {
     }
 
     public void updateWindow() {
+        //update tables
         this.revalidate();
         this.repaint();
     }

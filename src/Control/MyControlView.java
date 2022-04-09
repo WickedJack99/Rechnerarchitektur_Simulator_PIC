@@ -2,17 +2,21 @@ package Control;
 
 import java.util.ArrayList;
 
-import Model.MyModel;
+import Model.Microcontroller.PIC;
 import View.MyView;
 
+/**
+ * Class to set fields of parts of view.
+ */
 public class MyControlView {
 
     MyView oMyView;
-    MyModel oMyModel;
+    PIC oPIC;
 
-    public MyControlView(MyModel model, MyView view) {
+    public MyControlView(PIC oPIC, MyView view) {
         oMyView = view;
-        oMyModel = model;
+        this.oPIC = oPIC;
+        updateView();
     }
 
     public void updateView() {
@@ -22,6 +26,7 @@ public class MyControlView {
         setRamView();
         setRegistersDetailed();
         setStack();
+        setTestFileTable();
     }
 
     /**
@@ -31,19 +36,19 @@ public class MyControlView {
 
         //Get values from pic
         int[] aiValues = new int[9];
-        aiValues[0] = oMyModel.getPIC().getRam().get_TMR0();
-        aiValues[1] = oMyModel.getPIC().getRam().get_Programcounter();
-        aiValues[2] = oMyModel.getPIC().getRam().get_STATUS();
-        aiValues[3] = oMyModel.getPIC().getRam().get_PCLATH();
-        aiValues[4] = oMyModel.getPIC().getRam().get_FSR();
-        aiValues[5] = oMyModel.getPIC().getRam().get_PCL();
-        aiValues[6] = oMyModel.getPIC().getRam().get_OPTION();
-        if (oMyModel.getPIC().getRam().get_PSA()) {
-            aiValues[7] = oMyModel.getPIC().getRam().get_WDT_PrescalerRate();
+        aiValues[0] = oPIC.getRam().get_TMR0();
+        aiValues[1] = oPIC.getRam().get_Programcounter();
+        aiValues[2] = oPIC.getRam().get_STATUS();
+        aiValues[3] = oPIC.getRam().get_PCLATH();
+        aiValues[4] = oPIC.getRam().get_FSR();
+        aiValues[5] = oPIC.getRam().get_PCL();
+        aiValues[6] = oPIC.getRam().get_OPTION();
+        if (oPIC.getRam().get_PSA()) {
+            aiValues[7] = oPIC.getRam().get_WDT_PrescalerRate();
         } else {
-            aiValues[7] = oMyModel.getPIC().getRam().get_TMR0_PrescalerRate();
+            aiValues[7] = oPIC.getRam().get_TMR0_PrescalerRate();
         }
-        aiValues[8] = oMyModel.getPIC().get_WRegister();
+        aiValues[8] = oPIC.get_WRegister();
 
         //Fill gui element with gathered values 
         oMyView.getGUIRegister().setRegisters(aiValues);
@@ -53,9 +58,9 @@ public class MyControlView {
      * Sets detailed register-table values to values from PIC.
      */
     public void setRegistersDetailed() {
-        int iStatus = oMyModel.getPIC().getRam().get_STATUS();
-        int iOption = oMyModel.getPIC().getRam().get_OPTION();
-        int iIntcon = oMyModel.getPIC().getRam().get_INTCON();
+        int iStatus = oPIC.getRam().get_STATUS();
+        int iOption = oPIC.getRam().get_OPTION();
+        int iIntcon = oPIC.getRam().get_INTCON();
 
         int iS0 = ((iStatus & 1) == 1) ? 1:0;
         int iS1 = ((iStatus & 2) == 2) ? 1:0;
@@ -101,11 +106,11 @@ public class MyControlView {
 
         boolean[] abEnabled = new boolean[10];
 
-        abEnabled[0] = oMyModel.getPIC().getRam().get_TRISA0();
-        abEnabled[1] = oMyModel.getPIC().getRam().get_TRISA1();
-        abEnabled[2] = oMyModel.getPIC().getRam().get_TRISA2();
-        abEnabled[3] = oMyModel.getPIC().getRam().get_TRISA3();
-        abEnabled[4] = oMyModel.getPIC().getRam().get_TRISA4();
+        abEnabled[0] = oPIC.getRam().get_TRISA0();
+        abEnabled[1] = oPIC.getRam().get_TRISA1();
+        abEnabled[2] = oPIC.getRam().get_TRISA2();
+        abEnabled[3] = oPIC.getRam().get_TRISA3();
+        abEnabled[4] = oPIC.getRam().get_TRISA4();
 
         abEnabled[5] = true;
         abEnabled[6] = true;
@@ -123,14 +128,14 @@ public class MyControlView {
 
         boolean[] abEnabled = new boolean[16];
 
-        abEnabled[0] = oMyModel.getPIC().getRam().get_TRISB0();
-        abEnabled[1] = oMyModel.getPIC().getRam().get_TRISB1();
-        abEnabled[2] = oMyModel.getPIC().getRam().get_TRISB2();
-        abEnabled[3] = oMyModel.getPIC().getRam().get_TRISB3();
-        abEnabled[4] = oMyModel.getPIC().getRam().get_TRISB4();
-        abEnabled[5] = oMyModel.getPIC().getRam().get_TRISB5();
-        abEnabled[6] = oMyModel.getPIC().getRam().get_TRISB6();
-        abEnabled[7] = oMyModel.getPIC().getRam().get_TRISB7();
+        abEnabled[0] = oPIC.getRam().get_TRISB0();
+        abEnabled[1] = oPIC.getRam().get_TRISB1();
+        abEnabled[2] = oPIC.getRam().get_TRISB2();
+        abEnabled[3] = oPIC.getRam().get_TRISB3();
+        abEnabled[4] = oPIC.getRam().get_TRISB4();
+        abEnabled[5] = oPIC.getRam().get_TRISB5();
+        abEnabled[6] = oPIC.getRam().get_TRISB6();
+        abEnabled[7] = oPIC.getRam().get_TRISB7();
 
         abEnabled[8] = true;
         abEnabled[9] = true;
@@ -146,8 +151,8 @@ public class MyControlView {
 
     public void setRamView() {
         int[] aiData;
-        int[] aiBank0 = oMyModel.getPIC().getRam().get_Bank0();
-        int[] aiBank1 = oMyModel.getPIC().getRam().get_Bank1();
+        int[] aiBank0 = oPIC.getRam().get_Bank0();
+        int[] aiBank1 = oPIC.getRam().get_Bank1();
 
         aiData = new int[256];
         for (int i = 0; i < 128; i++) {
@@ -162,7 +167,22 @@ public class MyControlView {
     }
 
     public void setStack() {
-        oMyView.getGUIStack().setStack(oMyModel.getPIC().getStack().getSTACK());
+        oMyView.getGUIStack().setStack(oPIC.getStack().getSTACK());
+    }
+
+    public void setTestFileTable() {
+        if (oPIC.getEeprom().getProgramLines() != null) {
+            if (oPIC.getRam().get_LastProgramcounter() > -1) {
+                oMyView.getGUITestFileTable().unmarkLine(oPIC.getEeprom().getProgramLine(oPIC.getRam().get_LastProgramcounter()));
+                oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getProgramLine(oPIC.getRam().get_Programcounter()));
+            } else {
+                int[] aiProgList = oPIC.getEeprom().getProgramLines();
+                for (int i = 0; i < aiProgList.length; i++) {
+                    oMyView.getGUITestFileTable().unmarkLine(aiProgList[i]);
+                }
+                oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getProgramLine(0));
+            }
+        }
     }
     
     public void startProgramView() {
@@ -204,5 +224,9 @@ public class MyControlView {
 
     public void exitSimulatorView() {
         
+    }
+
+    public void setPIC(PIC oPic) {
+        oPIC = oPic;
     }
 }

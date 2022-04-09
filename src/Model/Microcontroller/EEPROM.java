@@ -12,9 +12,36 @@ public class EEPROM
     private int[] eeprom;
     private int eepromLength = 0;
 
+    private int[] aiProgramLines;
+
     public EEPROM()
     {
         eeprom = new int[1024];
+    }
+
+    /**
+     * Returns array of program lines in data
+     * @return
+     */
+    public int[] getProgramLines() {
+        return aiProgramLines;
+    }
+
+    /**
+     * Return element i of program lines in data
+     * @param i
+     * @return
+     */
+    public int getProgramLine(int i) {
+        return aiProgramLines[i];
+    }
+
+    /**
+     * Sets program lines of data
+     * @param aiProgLines
+     */
+    public void setProgramLines(int[] aiProgLines) {
+        aiProgramLines = aiProgLines;
     }
 
     /**

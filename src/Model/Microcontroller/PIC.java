@@ -1208,9 +1208,6 @@ public class PIC {
         int wRegValue = get_WRegister();
 
         //Build Two's complement
-        //eightK = (eightK ^ 0b11111111) + 1;
-
-        //Build Two's complement
         wRegValue = (wRegValue ^ 0b11111111) + 1;
 
         //Add both complemented values.

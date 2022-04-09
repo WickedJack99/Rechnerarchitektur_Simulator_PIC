@@ -21,7 +21,7 @@ public class RAM {
     private int[] bank1;
 
     //Last programmcounter for function getLastLine in main.
-    private int lastProgramcounter;
+    private int lastProgramcounter = -1;
 
     //
     private int iPrescaledTMR0;

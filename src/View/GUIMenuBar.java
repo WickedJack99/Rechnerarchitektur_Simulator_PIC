@@ -2,32 +2,24 @@ package View;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import Model.MyModel;
 import Model.EepromLoader.ReadEepromFile;
 
-public class GUIMenuBar extends JMenuBar implements ActionListener {
+public class GUIMenuBar extends JMenuBar {
 
     MyView oMyView;
-
-    MyModel oMyModel;
 
     ArrayList<JCheckBox> oBreakpoints;
     ReadEepromFile oRef;
     boolean[] bBreakpointSet;
-    int iTestFileLoaded = 0;
 
     ArrayList<JMenuItem> oMenuItems = new ArrayList<JMenuItem>();
     //Custom separators because addSeparator(default) looks not nice.
@@ -69,16 +61,16 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
     JMenuItem oAbout;
 
     //German language array
-    String[] sGermanLang = {"Datei", "Testdatei laden", "Programmzustand laden", "Programmzustand speichern", "Simulation beenden",
+    String[][] sLanguages = {
+                            {"Datei", "Testdatei laden", "Programmzustand laden", "Programmzustand speichern", "Simulation beenden",
                             "Ansicht", "Thema", "Dunkler Modus", "Heller Modus",
                             "Microcontroller", "Programm starten", "Programm pausieren", "Programm zuruecksetzen", "Schritt fuer Schritt", "Bearbeitungsintervall", "Sofort", "1 Sekunde", "2 Sekunden", 
-                            "Hilfe", "Sprache", "Deutsch", "Englisch", "Anleitung", "Ueber"};
-    
-    //English language array
-    String[] sEnglishLang = {"File", "Load Testfile", "Load Programstate", "Save Programstate", "Exit simulation",
-                             "View", "Theme", "Dark Theme", "Light Theme",
-                             "Microcontroller", "Start program", "Pause program", "Reset program", "Step by Step", "Workinterval", "Instant", "1 second", "2 seconds", 
-                             "Help", "Language", "German", "English", "Manual", "About"};
+                            "Hilfe", "Sprache", "Deutsch", "Englisch", "Anleitung", "Ueber"}, 
+                            
+                            {"File", "Load Testfile", "Load Programstate", "Save Programstate", "Exit simulation",
+                            "View", "Theme", "Dark Theme", "Light Theme",
+                            "Microcontroller", "Start program", "Pause program", "Reset program", "Step by Step", "Workinterval", "Instant", "1 second", "2 seconds", 
+                            "Help", "Language", "German", "English", "Manual", "About"}};
 
     //Color for separators is always the same.
     Color oColorSeparators = new Color(47, 47, 47);
@@ -87,7 +79,7 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
      * Constructor initializes menubar.
      * @param frame
      */
-    public GUIMenuBar(MyModel model, MyView view) { //TODO maybe single components, with methods, of frame to set theme
+    public GUIMenuBar(MyView view) {
 
         //Custom Separators since default is not able to change background.
         oSeparator0 = new JMenuItem();
@@ -106,75 +98,42 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         //Referrence to change different parts of gui for theme.
         oMyView = view;
 
-        oMyModel = model;
-
         //File
-        oFileMenu = new JMenu(sGermanLang[0]);
-        oLoadTestFile = new JMenuItem(sGermanLang[1]);
-        oLoadProgStateItem  = new JMenuItem(sGermanLang[2]);
-        oSaveProgStateItem = new JMenuItem(sGermanLang[3]);
-        oExitItem = new JMenuItem(sGermanLang[4]);
+        oFileMenu = new JMenu(sLanguages[0][0]);
+        oLoadTestFile = new JMenuItem(sLanguages[0][1]);
+        oLoadProgStateItem  = new JMenuItem(sLanguages[0][2]);
+        oSaveProgStateItem = new JMenuItem(sLanguages[0][3]);
+        oExitItem = new JMenuItem(sLanguages[0][4]);
 
         //View
-        oViewMenu = new JMenu(sGermanLang[5]);
-        oChangeColors = new JMenu(sGermanLang[6]);
-        oDarkTheme = new JMenuItem(sGermanLang[7]);
-        oLightTheme = new JMenuItem(sGermanLang[8]);
+        oViewMenu = new JMenu(sLanguages[0][5]);
+        oChangeColors = new JMenu(sLanguages[0][6]);
+        oDarkTheme = new JMenuItem(sLanguages[0][7]);
+        oLightTheme = new JMenuItem(sLanguages[0][8]);
 
         //Microcontroller
-        oMicrocontroller = new JMenu(sGermanLang[9]);
-        oStartProg = new JMenuItem(sGermanLang[10]);
-        oPauseProg = new JMenuItem(sGermanLang[11]);
-        oResetProg = new JMenuItem(sGermanLang[12]);
-        oStepProg = new JMenuItem(sGermanLang[13]);
-        oChangeWorkInterval = new JMenu(sGermanLang[14]);
-        oIntervalASAP = new JMenuItem(sGermanLang[15]);
-        oInterval1Sec = new JMenuItem(sGermanLang[16]);
-        oInterval2Sec = new JMenuItem(sGermanLang[17]);
+        oMicrocontroller = new JMenu(sLanguages[0][9]);
+        oStartProg = new JMenuItem(sLanguages[0][10]);
+        oPauseProg = new JMenuItem(sLanguages[0][11]);
+        oResetProg = new JMenuItem(sLanguages[0][12]);
+        oStepProg = new JMenuItem(sLanguages[0][13]);
+        oChangeWorkInterval = new JMenu(sLanguages[0][14]);
+        oIntervalASAP = new JMenuItem(sLanguages[0][15]);
+        oInterval1Sec = new JMenuItem(sLanguages[0][16]);
+        oInterval2Sec = new JMenuItem(sLanguages[0][17]);
 
         //Help
-        oHelpMenu = new JMenu(sGermanLang[18]);
-        oChangeLanguageMenu = new JMenu(sGermanLang[19]);
-        oGerLangItem = new JMenuItem(sGermanLang[20]);
-        oEngLangItem = new JMenuItem(sGermanLang[21]);
-        oManual = new JMenuItem(sGermanLang[22]);
-        oAbout = new JMenuItem(sGermanLang[23]);
+        oHelpMenu = new JMenu(sLanguages[0][18]);
+        oChangeLanguageMenu = new JMenu(sLanguages[0][19]);
+        oGerLangItem = new JMenuItem(sLanguages[0][20]);
+        oEngLangItem = new JMenuItem(sLanguages[0][21]);
+        oManual = new JMenuItem(sLanguages[0][22]);
+        oAbout = new JMenuItem(sLanguages[0][23]);
 
         fillList();
-        setActionListeners();
         setGerMnemonics();
         buildMenubar();
         setTheme(0);
-    }
-
-    /**
-     * Sets ActionListeners to all items.
-     */
-    private void setActionListeners() {
-        //File
-        oLoadTestFile.addActionListener(this);
-        oLoadProgStateItem.addActionListener(this);
-        oSaveProgStateItem.addActionListener(this);
-        oExitItem.addActionListener(this);
-
-        //View
-        oDarkTheme.addActionListener(this);
-        oLightTheme.addActionListener(this);
-
-        //Microcontroller
-        oStartProg.addActionListener(this);
-        oPauseProg.addActionListener(this);
-        oResetProg.addActionListener(this);
-        oStepProg.addActionListener(this);
-        oIntervalASAP.addActionListener(this);
-        oInterval1Sec.addActionListener(this);
-        oInterval2Sec.addActionListener(this);
-
-        //Help
-        oGerLangItem.addActionListener(this);
-        oEngLangItem.addActionListener(this);
-        oManual.addActionListener(this);
-        oAbout.addActionListener(this);
     }
 
     /**
@@ -298,122 +257,47 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
      * Change language to overhanded language array.
      * @param lang = language to change to.
      */
-    private void changeLangMenuBar(String[] lang) {
+    public void changeLangMenuBar(int iLang) {
+        switch (iLang) {
+            case 0: {
+                setGerMnemonics();
+            }break;
+            case 1: {
+                setEngMnemonics();
+            }break;
+        }
+
         //File
-        oFileMenu.setText(lang[0]);
-        oLoadTestFile.setText(lang[1]);
-        oLoadProgStateItem.setText(lang[2]);
-        oSaveProgStateItem.setText(lang[3]);
-        oExitItem.setText(lang[4]);
+        oFileMenu.setText(sLanguages[iLang][0]);
+        oLoadTestFile.setText(sLanguages[iLang][1]);
+        oLoadProgStateItem.setText(sLanguages[iLang][2]);
+        oSaveProgStateItem.setText(sLanguages[iLang][3]);
+        oExitItem.setText(sLanguages[iLang][4]);
 
         //View
-        oViewMenu.setText(lang[5]);
-        oChangeColors.setText(lang[6]);
-        oDarkTheme.setText(lang[7]);
-        oLightTheme.setText(lang[8]);
+        oViewMenu.setText(sLanguages[iLang][5]);
+        oChangeColors.setText(sLanguages[iLang][6]);
+        oDarkTheme.setText(sLanguages[iLang][7]);
+        oLightTheme.setText(sLanguages[iLang][8]);
 
         //Microcontroller
-        oMicrocontroller.setText(lang[9]);
-        oStartProg.setText(lang[10]);
-        oPauseProg.setText(lang[11]);
-        oResetProg.setText(lang[12]);
-        oStepProg.setText(lang[13]);
-        oChangeWorkInterval.setText(lang[14]);
-        oIntervalASAP.setText(lang[15]);
-        oInterval1Sec.setText(lang[16]);
-        oInterval2Sec.setText(lang[17]);
+        oMicrocontroller.setText(sLanguages[iLang][9]);
+        oStartProg.setText(sLanguages[iLang][10]);
+        oPauseProg.setText(sLanguages[iLang][11]);
+        oResetProg.setText(sLanguages[iLang][12]);
+        oStepProg.setText(sLanguages[iLang][13]);
+        oChangeWorkInterval.setText(sLanguages[iLang][14]);
+        oIntervalASAP.setText(sLanguages[iLang][15]);
+        oInterval1Sec.setText(sLanguages[iLang][16]);
+        oInterval2Sec.setText(sLanguages[iLang][17]);
 
         //Help
-        oHelpMenu.setText(lang[18]);
-        oChangeLanguageMenu.setText(lang[19]);
-        oGerLangItem.setText(lang[20]);
-        oEngLangItem.setText(lang[21]);
-        oManual.setText(lang[22]);
-        oAbout.setText(lang[23]);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        //File
-        if (e.getSource() == oLoadTestFile) {
-            loadTestFile();
-        }
-        if (e.getSource() == oLoadProgStateItem) {
-            System.out.println("Bro do you even code? load");
-            //TODO
-        }
-        if (e.getSource() == oSaveProgStateItem) {
-            System.out.println("Bro do you even code? save");
-            //TODO
-            System.exit(0);
-        }
-        if (e.getSource() == oExitItem) {
-            System.out.println("Bro do you even code? exit");
-            //TODO
-            System.exit(0);
-        }
-
-        //View
-        //Change to dark theme
-        if (e.getSource() == oDarkTheme) {
-            System.out.println("It's gettin dark brooo"); //TODO
-            setTheme(1);
-            oMyView.setTheme(1);
-        }
-        //Change to light theme
-        if (e.getSource() == oLightTheme) {
-            System.out.println("Death to all vampires!"); //TODO
-            setTheme(0);
-            oMyView.setTheme(0);
-        }
-
-        //Microcontroller
-        if (e.getSource() == oStartProg) {
-            System.out.println("Start prog"); //TODO
-        }
-        if (e.getSource() == oPauseProg) {
-            System.out.println("oPauseProg"); //TODO
-        }
-        if (e.getSource() == oResetProg) {
-            System.out.println("oResetProg"); //TODO
-        }
-        if (e.getSource() == oStepProg) {
-            System.out.println("oStepProg"); //TODO
-        }
-        if (e.getSource() == oIntervalASAP) {
-            System.out.println("oIntervalASAP"); //TODO
-        }
-        if (e.getSource() == oInterval1Sec) {
-            System.out.println("oInterval1Sec"); //TODO
-        }
-        if (e.getSource() == oInterval2Sec) {
-            System.out.println("oInterval2Sec"); //TODO
-        }
-
-        //Help
-        //Change language at gui.
-        if (e.getSource() == oGerLangItem) {
-            changeLangMenuBar(sGermanLang);
-            setGerMnemonics();
-            oMyView.setLanguage(0);
-            //TODO rest of gui
-        }
-        if (e.getSource() == oEngLangItem) {
-            changeLangMenuBar(sEnglishLang);
-            setEngMnemonics();
-            oMyView.setLanguage(1);
-            //TODO rest of gui
-        }
-        //Show manual
-        if (e.getSource() == oManual) {
-            //TODO
-        }
-        //Show about
-        if (e.getSource() == oAbout) {
-            //TODO
-        }
-
-        controlBreakpoints(e);
+        oHelpMenu.setText(sLanguages[iLang][18]);
+        oChangeLanguageMenu.setText(sLanguages[iLang][19]);
+        oGerLangItem.setText(sLanguages[iLang][20]);
+        oEngLangItem.setText(sLanguages[iLang][21]);
+        oManual.setText(sLanguages[iLang][22]);
+        oAbout.setText(sLanguages[iLang][23]);
     }
 
     private void fillList() {
@@ -640,75 +524,11 @@ public class GUIMenuBar extends JMenuBar implements ActionListener {
         }
     }
 
-    private void loadTestFile() {
-        File oFile;
-        //select file to open
-        JFileChooser oFileChooser = new JFileChooser();
-        int iResponse = oFileChooser.showOpenDialog(null);
-        if (iResponse == JFileChooser.APPROVE_OPTION) {
-            oFile = new File(oFileChooser.getSelectedFile().getAbsolutePath());
-            //System.out.println(oFile);
-            oRef = new ReadEepromFile();
-            oRef.setData(oFile);
-            oRef.setOPCode(oRef.getData());
-            oMyView.getGUITestFileTable().setData(oRef.getData());
-
-            setBreakpointsActionListeners();
-            
-            oRef.readFileAndWriteToEEPROM(oMyModel.getPIC());
-            oMyView.getGUIMainFrame().updateWindow();
-            iTestFileLoaded = 1;
-        }
-    }
-
-    private void setBreakpointsActionListeners() {
-        ArrayList<String> data = oRef.getData();
-        int iDataSize = data.size();
-        ArrayList<String> opcode = oRef.getOPCode();
-
-        int iOPCodeSize = opcode.size();
-        //If testfile was loaded before, reset all checkboxes
-        if (iTestFileLoaded > 0) {
-            oBreakpoints = oMyView.getGUITestFileTable().getCheckboxes();
-            for (int i = 0; i < iDataSize; i++) {                    
-                oBreakpoints.get(i).setEnabled(false);
-            }
-        }
-        //Enable only checkboxes which belong to real code
-        for (int i = 0; i < iDataSize; i++) {
-            for (int j = 0; j < iOPCodeSize; j++) {
-                if (data.get(i).equals(opcode.get(j))) {
-                    oBreakpoints = oMyView.getGUITestFileTable().getCheckboxes();
-                    oBreakpoints.get(i).setEnabled(true);
-                    oBreakpoints.get(i).addActionListener(this);
-                }
-            }
-        }
-        bBreakpointSet = new boolean[iOPCodeSize];
-    }
-
-    private void controlBreakpoints(ActionEvent e) {
-        if (oRef != null) {
-            int iOPCode = oRef.getOPCode().size();
-            if (iOPCode > 0) {
-                for (int i = 0; i < oBreakpoints.size(); i++) {
-                    if (e.getSource() == oBreakpoints.get(i)) {
-                        for (int j = 0; j < iOPCode; j++) {
-                            if (oRef.getOPCode().get(j).equals(oRef.getData().get(i))) {                            
-                                bBreakpointSet[j] = !bBreakpointSet[j];
-                                if (bBreakpointSet[j])
-                                    System.out.println("Breakpoint " + j + " got set.");
-                                else
-                                    System.out.println("Breakpoint " + j + " got reset.");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public boolean[] getBreakpoints() {
         return bBreakpointSet;
+    }
+
+    public ArrayList<JMenuItem> getMenuItems() {
+        return oMenuItems;
     }
 }

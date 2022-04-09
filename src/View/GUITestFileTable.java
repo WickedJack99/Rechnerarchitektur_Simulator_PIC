@@ -194,11 +194,12 @@ public class GUITestFileTable extends JScrollPane {
      * Mark line at testfiletable.
      * @param iLineToMark
      */
-    public void markLine(int iLineToMark) { //TODO
+    public void markLine(int iLineToMark) {
         if (iLineToMark > -1) {
-            oLineInformation.get(iLineToMark).setForeground(getThemeColor()[3]);
-            oLineInformation.get(iLineToMark).setBackground(getThemeColor()[4]);
-            oLineInformation.get(iLineToMark).setBorder(BorderFactory.createLineBorder(getThemeColor()[5]));
+            oLineInformation.get(iLineToMark * 2).setForeground(getThemeColor()[3]);
+            oLineInformation.get(iLineToMark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[3]));
+            oLineInformation.get(iLineToMark * 2 + 1).setForeground(getThemeColor()[3]);
+            oLineInformation.get(iLineToMark * 2 + 1).setBorder(BorderFactory.createLineBorder(getThemeColor()[3]));
         }
     }
 
@@ -206,11 +207,12 @@ public class GUITestFileTable extends JScrollPane {
      * Unmark line at testfiletable.
      * @param iLineToUnmark
      */
-    public void unmarkLine(int iLineToUnmark) { //TODO
+    public void unmarkLine(int iLineToUnmark) {
         if (iLineToUnmark > -1) {
-            oLineInformation.get(iLineToUnmark).setForeground(getThemeColor()[0]);
-            oLineInformation.get(iLineToUnmark).setBackground(getThemeColor()[1]);
-            oLineInformation.get(iLineToUnmark).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+            oLineInformation.get(iLineToUnmark * 2).setForeground(getThemeColor()[0]);
+            oLineInformation.get(iLineToUnmark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+            oLineInformation.get(iLineToUnmark * 2 + 1).setForeground(getThemeColor()[0]);
+            oLineInformation.get(iLineToUnmark * 2 + 1).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
         }
     }
 

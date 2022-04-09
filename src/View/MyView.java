@@ -1,8 +1,10 @@
 package View;
 
-import javax.swing.JPanel;
+import java.util.ArrayList;
 
-import Model.MyModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 
 public class MyView implements IMyView {
 
@@ -19,8 +21,8 @@ public class MyView implements IMyView {
 
     private JPanel oGUIMainPanel;
 
-    public MyView(MyModel model) {
-        oGUIMenuBar = new GUIMenuBar(model, this);
+    public MyView() {
+        oGUIMenuBar = new GUIMenuBar(this);
         oGUIMCMenu = new GUIMCMenu();
         oGUIPorts = new GUIPorts();
         oGUIRamTable = new GUIRamTable();
@@ -48,13 +50,37 @@ public class MyView implements IMyView {
     }
 
     public void setLanguage(int iLangNr) {
+        oGUIMenuBar.changeLangMenuBar(iLangNr);
         oGUIMCMenu.setLanguage(iLangNr);
         oGUIRegister.setLanguage(iLangNr);
         oGUITestFileTable.setLanguage(iLangNr);
         oGUITime.setLanguage(iLangNr);
     }
 
-    public GUIMainFrame getGUIMainFrame() {
+    
+
+    public void test() {
+        this.getGUITime().getQuarzComboBox();
+        this.getGUIMenuBar().getMenuItems();
+    }
+
+    public ArrayList<JButton> getControlButtons() {
+        return this.getGUIMCMenu().getControlButtons();
+    }
+
+    public ArrayList<JCheckBox> getCheckboxes() {
+        return this.getGUITestFileTable().getCheckboxes();
+    }
+
+    public JCheckBox getWDTEnableCheckbox() {
+        return this.getGUITime().getWDTEnableCheckbox();
+    }
+
+    public void updateWindow() {
+        this.getGUIMainFrame().updateWindow();
+    }
+
+    private GUIMainFrame getGUIMainFrame() {
         return this.oGUIMainFrame;
     }
 
@@ -92,5 +118,9 @@ public class MyView implements IMyView {
 
     public JPanel getGUIMainPanel() {
         return this.oGUIMainPanel;
+    }
+
+    public GUIMenuBar getGUIMenuBar() {
+        return oGUIMenuBar;
     }
 }

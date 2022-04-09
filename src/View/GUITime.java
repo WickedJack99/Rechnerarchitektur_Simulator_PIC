@@ -82,6 +82,14 @@ public class GUITime extends JPanel {
         }
     }
 
+    public JComboBox<String> getQuarzComboBox() {
+        return oIntervals;
+    }
+
+    public JCheckBox getWDTEnableCheckbox() {
+        return oEnableWDT;
+    }
+
     public void setRuntime(int iRuntime) {
         this.iRuntime = iRuntime;
     }
