@@ -27,6 +27,7 @@ public class MyControlView {
         setRegistersDetailed();
         setStack();
         setTestFileTable();
+        setMCMenu();
     }
 
     /**
@@ -147,6 +148,10 @@ public class MyControlView {
         abEnabled[15] = true;
 
         oMyView.getGUIPorts().enableCheckboxesB(abEnabled);
+    }
+
+    public void setMCMenu() {
+        oMyView.getGUITime().setRuntime(oPIC.getRuntimer().getRuntime());
     }
 
     public void setRamView() {

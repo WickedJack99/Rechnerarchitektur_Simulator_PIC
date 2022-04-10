@@ -113,66 +113,13 @@ public class MyModel extends Thread {
         }
     }
 
-    private void setQuarzSpeed(int iInterval) { //TODO Quartz
-        switch (iInterval) {
-            //10 {"32 kHz", "100 kHz", "500 kHz", "1 MHz", "2 MHz", "4 MHz", "8 MHz", "12 MHz", "16 MHz", "20 MHz"}
-            case 0: {
-                //32 kHz => 
-                dRTIncrVal = (4 / 0.032);
-            }break;
-
-            case 1: {
-                //100kHz => 0.000010s
-                dRTIncrVal = (4 / 0.1);
-            }break;
-
-            case 2: {
-                //500kHz => 0.0000020s
-                dRTIncrVal = (4 / 0.5);
-            }break;
-
-            case 3: {
-                //1MHz => 0.0000010s
-                dRTIncrVal = (4 / 1);
-            }break;
-
-            case 4: {
-                //2MHz => 0.0000005s
-                dRTIncrVal = (4 / 2);
-            }break;
-
-            case 5: {
-                //4MHz => 0.00000025s 1 mükrosekunde
-                dRTIncrVal = (4 / 4);
-            }break;
-
-            case 6: {
-                //8MHz => 0.000000125s
-                dRTIncrVal = (4 / 8);
-            }break;
-
-            case 7: {
-                //12MHz => 0.00000008333333
-                dRTIncrVal = (4 / 12);
-            }break;
-
-            case 8: {
-                //16MHz => 0.0000000625
-                dRTIncrVal = (4 / 16);
-            }break;
-
-            case 9: {
-                //20MHz => 0.00000005
-                dRTIncrVal = (4 / 20);
-            }break;
-        }
-    }
+    
 
     private void setModel(MyModelData data) {
         oMyModelData = data;
         oPIC = oMyModelData.getPIC();
         abBreakpoints = oMyModelData.getBreakpoints();
-        setQuarzSpeed(oMyModelData.getQuartzInterval());
+        oPIC.getRuntimer().setQuarzSpeed(oMyModelData.getQuartzInterval());
         iVisualInterval = oMyModelData.getVisualInterval();
     }
 }

@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.GridBagConstraints;
@@ -33,16 +34,19 @@ public class GUITime extends JPanel {
     JLabel oLabelWDT = new JLabel("Watchdog Timer");
     JCheckBox oEnableWDT = new JCheckBox("WDT");
     
-    int iRuntime = 0;
-    JLabel oLabelRuntime = new JLabel("Runtime: " + iRuntime);
+    double dRuntime = 0;
+    JLabel oLabelRuntime = new JLabel("Runtime: " + dRuntime);
 
     JLabel oLabelQuarz = new JLabel("Quarzfrequency");
     String[] asIntervals = {"32 kHz", "100 kHz", "500 kHz", "1 MHz", "2 MHz", "4 MHz", "8 MHz", "12 MHz", "16 MHz", "20 MHz"};
     JComboBox<String> oIntervals = new JComboBox<>(asIntervals);
 
+    int iLanguage;
+
     public GUITime() {
         buildGUITime();
         setLanguage(0);
+        oLabelRuntime.setPreferredSize(new Dimension(150, 20));
     }
 
     private void buildGUITime() {
@@ -70,13 +74,14 @@ public class GUITime extends JPanel {
     }
 
     public void setLanguage(int iLangNr) {
+        iLanguage = iLangNr;
         switch (iLangNr) {
             case 0: {
-                oLabelRuntime.setText("Laufzeit: " + iRuntime);
+                oLabelRuntime.setText("Laufzeit: " + dRuntime);
                 oLabelQuarz.setText("Quarzfrequenz");
             }break;
             case 1: {
-                oLabelRuntime.setText("Runtime: " + iRuntime);
+                oLabelRuntime.setText("Runtime: " + dRuntime);
                 oLabelQuarz.setText("Quarzfrequency");
             }break;
         }
@@ -90,12 +95,18 @@ public class GUITime extends JPanel {
         return oEnableWDT;
     }
 
-    public void setRuntime(int iRuntime) {
-        this.iRuntime = iRuntime;
+    public void setRuntime(double dRuntime) {
+        this.dRuntime = dRuntime;
+        if (iLanguage == 0) {
+            oLabelRuntime.setText("Laufzeit: " + dRuntime);
+        } else {
+            oLabelRuntime.setText("Runtime: " + dRuntime);
+        }
+        
     }
 
-    public int getRuntime() {
-        return iRuntime;
+    public double getRuntime() {
+        return dRuntime;
     }
 
     public void setTheme(int iThemeNr) {

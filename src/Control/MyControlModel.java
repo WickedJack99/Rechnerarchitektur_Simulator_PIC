@@ -3,6 +3,8 @@ package Control;
 import Model.MyModelData;
 import Model.EepromLoader.ReadEepromFile;
 import Model.Microcontroller.PIC;
+import View.GUIAbout;
+import View.GUIHelp;
 import View.MyView;
 
 import java.awt.event.ActionEvent;
@@ -259,9 +261,11 @@ public class MyControlModel implements ActionListener {
                         oMyView.setLanguage(1);
                     }break;
                     case 15: {
+                        new GUIHelp();
                         //Show manual
                     }break;
                     case 16: {
+                        new GUIAbout();
                         //Show about
                     }break;
                 }
@@ -292,5 +296,6 @@ public class MyControlModel implements ActionListener {
                 oMenuItem.addActionListener(this);
             }
         }
+        
     }
 }

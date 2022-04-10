@@ -17,18 +17,21 @@ public class PIC {
     private RAM Ram;
     private STACK Stack;
     private int WRegister;
+    private RUNTIMER Runtimer;
 
     public PIC() {
         //Initialising objects of PIC.
         Eeprom = new EEPROM();
         Ram = new RAM();
         Stack = new STACK();
+        Runtimer = new RUNTIMER(Ram);
         WRegister = 0;
     }
 
     public synchronized void resetPIC() {
         Ram = new RAM();
         Stack = new STACK();
+        Runtimer = new RUNTIMER(Ram);
         WRegister = 0;
     }
 
@@ -76,6 +79,10 @@ public class PIC {
 
     public synchronized STACK getStack() {
         return Stack;
+    }
+
+    public synchronized RUNTIMER getRuntimer() {
+        return Runtimer;
     }
 
     /**
@@ -137,6 +144,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PCL and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -173,6 +182,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -258,6 +269,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -309,6 +322,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -337,6 +352,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -378,6 +395,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -404,6 +423,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -441,6 +462,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -469,9 +492,10 @@ public class PIC {
         if (Ram.get_T0CS() == false)
             Ram.increment_TMR0();
 
-
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -492,6 +516,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -512,6 +538,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -537,6 +565,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -583,6 +613,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -632,6 +664,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -679,6 +713,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -701,6 +737,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -749,6 +787,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -805,6 +845,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -838,6 +880,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -879,6 +923,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -899,6 +945,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -937,6 +985,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -955,6 +1005,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -970,6 +1022,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -997,6 +1051,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**OPTION
@@ -1012,6 +1068,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
     
 
@@ -1039,6 +1097,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1061,6 +1121,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1117,6 +1179,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1172,6 +1236,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1195,6 +1261,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1251,6 +1319,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1326,6 +1396,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1363,6 +1435,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1388,6 +1462,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1419,6 +1495,8 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 
     /**
@@ -1462,5 +1540,7 @@ public class PIC {
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+
+        Runtimer.incrementRuntime();
     }
 }
