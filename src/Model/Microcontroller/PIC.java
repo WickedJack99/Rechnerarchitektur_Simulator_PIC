@@ -479,21 +479,16 @@ public class PIC {
     public void CALL(int elevenK) {
         //Push next instruction on STACK.
         Stack.pushReturnAdressOnStack(Ram.get_Programcounter() + 1);
-        
-        //Get upper two bits of PCLATH and shift it by eight.
-        int shiftedPCLATH = (Ram.get_PCLATH() & 0b11000) << 8;
-
-        //Create new address out of shifted PCLATH and elevenK.
-        int newPC = shiftedPCLATH | elevenK;
 
         //Set Programmcounter to new address.
-        Ram.set_Programcounter(newPC);
-        //Increment TMR0 if interbnal instruction cycle assigned to TMR0.
+        Ram.set_Programcounter(elevenK + ((Ram.get_PCLATH() & 0b11000) << 8));
+
+        //Increment TMR0 if internal instruction cycle assigned to TMR0.
         if (Ram.get_T0CS() == false)
             Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
 
         Runtimer.incrementRuntime();
     }
@@ -727,10 +722,10 @@ public class PIC {
      * GOTO is a two cycle instruction.
      */
     public void GOTO(int elevenK) {
-        //elevenK OR ((PCLATH AND 0b11000) << 8)
-        int result = elevenK | ((Ram.get_PCLATH() & 0b11000) << 8);
 
-        Ram.set_Programcounter(result);
+        //Set Programmcounter to new address.
+        Ram.set_Programcounter(elevenK + ((Ram.get_PCLATH() & 0b11000) << 8));
+
         //Increment TMR0 if internal instruction cycle assigned to TMR0.
         if (Ram.get_T0CS() == false)
             Ram.increment_TMR0();
@@ -1004,7 +999,7 @@ public class PIC {
             Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1017,11 +1012,12 @@ public class PIC {
     public void NOP() {
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+
         if (Ram.get_T0CS() == false)
             Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
 
         Runtimer.incrementRuntime();
     }

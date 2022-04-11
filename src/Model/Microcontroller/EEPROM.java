@@ -9,14 +9,18 @@ package Model.Microcontroller;
   */
 public class EEPROM
 {
-    private int[] eeprom;
-    private int eepromLength = 0;
+    private int[][] eeprom;
+    private int eepromLength = 1024;
 
     private int[] aiProgramLines;
 
     public EEPROM()
     {
-        eeprom = new int[1024];
+        eeprom = new int[eepromLength][2];
+    }
+
+    public EEPROM(int iLength) {
+        eeprom = new int[iLength][2];
     }
 
     /**
@@ -49,23 +53,31 @@ public class EEPROM
      * @param element index of array.
      * @return element at index.
      */
-    public int getElement(int index)
-    {
+    public int getElement(int index) {
         int returnValue = -1;
-
-        if (index >= 0 && index <= 1024)
-        {
-            returnValue = eeprom[index];
+        if (index >= 0 && index < 1024) {
+            returnValue = eeprom[index][0];
         }
+        return returnValue;
+    }
 
+    /**
+     * Returns index of line at data lines
+     * @param iIndex
+     * @return
+     */
+    public int getIndex(int iIndex) {
+        int returnValue = -1;
+        if (iIndex >= 0 && iIndex < 1024) {
+            returnValue = eeprom[iIndex][1];
+        }
         return returnValue;
     }
 
     /**
      * Returns length of EEPROM
      */
-    public int getLengthEEPROM()
-    {
+    public int getLengthEEPROM() {
         return eepromLength;
     }
 
@@ -75,25 +87,27 @@ public class EEPROM
      * @param value of what the element is set to.
      * @return true if set worked.
      */
-    public boolean setElementXToValueY(int index, int value)
-    {
-        boolean setWorked = false;
-
-        if ((index >= 0) && (index <= 1024))
-        {
-            eeprom[index] = value;
-            setWorked = true;
+    public boolean setElementXToValueY(int index, int value) {
+        boolean bSetWorked = false;
+        if ((index >= 0) && (index < 1024)) {
+            eeprom[index][0] = value;
+            bSetWorked = true;
         }
-
-        return setWorked;
-    }
+        return bSetWorked;
+    }  
 
     /**
-     * Length of eeprom gets restricted.
-     * @param length is new length.
+     * 
+     * @param iElement
+     * @param iIndex
+     * @return
      */
-    public void setLengthEEPROM(int length)
-    {
-        eepromLength = length;
-    }    
+    public boolean setElementXToIndexY(int iElement, int iIndex) {
+        boolean bSetWorked = false;
+        if ((iElement >= 0) && (iElement < 1024)) {
+            eeprom[iElement][1] = iIndex;
+            bSetWorked = true;
+        }
+        return bSetWorked;
+    }
 }

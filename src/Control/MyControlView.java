@@ -178,8 +178,14 @@ public class MyControlView {
     public void setTestFileTable() {
         if (oPIC.getEeprom().getProgramLines() != null) {
             if (oPIC.getRam().get_LastProgramcounter() > -1) {
-                oMyView.getGUITestFileTable().unmarkLine(oPIC.getEeprom().getProgramLine(oPIC.getRam().get_LastProgramcounter()));
-                oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getProgramLine(oPIC.getRam().get_Programcounter()));
+
+                int iL = oPIC.getRam().get_LastProgramcounter();
+
+                int iProgC = oPIC.getRam().get_Programcounter();
+
+                oMyView.getGUITestFileTable().unmarkLine(oPIC.getEeprom().getIndex(iL));
+                oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getIndex(iProgC));
+                
             } else {
                 int[] aiProgList = oPIC.getEeprom().getProgramLines();
                 for (int i = 0; i < aiProgList.length; i++) {

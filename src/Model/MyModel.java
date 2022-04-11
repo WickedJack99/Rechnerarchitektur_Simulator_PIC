@@ -39,7 +39,7 @@ public class MyModel extends Thread {
             }
             //Check if element at command-queue
             if (!qReceivedCommands.isEmpty()) {
-                /* -1 == ERROR, 0 == END, 1 == START, 2 == PAUSE, 3 == RESET*/
+                /* -1 == ERROR, 0 == END, 1 == START, 2 == PAUSE, 3 == RESET 4 == STEP*/
                 iProgState = qReceivedCommands.poll();
                 switch (iProgState) {
                     case (-1): {
@@ -86,7 +86,9 @@ public class MyModel extends Thread {
                     case (4): {
                         if (abBreakpoints != null) {
                             //Check if breakpoint is set
-                            if (!abBreakpoints[oPIC.getRam().get_Programcounter()]) {
+                            int iProgC = oPIC.getRam().get_Programcounter();
+                            iProgC &= abBreakpoints.length;
+                            if (!abBreakpoints[iProgC]) {
                                 step();
                                 qDataToView.add(oPIC); //TODO
                             }

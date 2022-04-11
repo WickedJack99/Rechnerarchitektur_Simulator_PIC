@@ -20,6 +20,8 @@ public class RAM {
     //Bank1 of the PIC-RAM
     private int[] bank1;
 
+    private int iProgramcounter = 0;
+
     //Last programmcounter for function getLastLine in main.
     private int lastProgramcounter = -1;
 
@@ -114,6 +116,7 @@ public class RAM {
                         }break;
                         case 2: {
                             set_PCL(value);
+                            set_Programcounter(value + (get_PCLATH() << 8));
                         }break;
                         case 3: {
                             set_STATUS(value);
@@ -623,9 +626,8 @@ public class RAM {
         return (get_STATUS() & 0b10000000) == 128;
     }
 
-    //Bank0 PCL
     public synchronized int get_Programcounter() {
-        return (bank0[2]);
+        return iProgramcounter;
     }
 
     public synchronized int get_LastProgramcounter() {
@@ -637,19 +639,10 @@ public class RAM {
      * @param value
      * @param kindOfCall 0 at normal instruction, 1 at Fetchzycle,... 2 at Jumpcommand, 3 at ...
      */
-    public synchronized void inkrement_Programcounter(int value, int kindOfCall) {
-        if (bank0[2] >= 0 && bank0[2] <= 255) {
-            lastProgramcounter = bank0[2];
-            bank0[2] += value;
-        } else {
-            if (kindOfCall == 0) {
-                //Nothing happens
-            }
-
-            if (kindOfCall == 1) {
-                bank0[2] = 0; //Wrap-Around at fetchcycle
-            }
-        }
+    public synchronized void inkrement_Programcounter(int value, int kindOfCall) {        
+        lastProgramcounter = get_Programcounter();
+        iProgramcounter += value;
+        iProgramcounter &= 0x3FF;
     }
 
     /**
@@ -657,12 +650,9 @@ public class RAM {
      * @param value to decrement PC by.
      */
     public synchronized void dekrement_Programcounter(int value) {
-        if (bank0[2] > 0 && bank0[2] <= 255) {
-            lastProgramcounter = bank0[2];
-            bank0[2] -= value;
-        } else {
-            throw new IndexOutOfBoundsException();
-        }
+        lastProgramcounter = get_Programcounter();
+        iProgramcounter -= value;
+        iProgramcounter &= 0x3FF;
     }
 
     /**
@@ -670,18 +660,9 @@ public class RAM {
      * @param value to set PC to.
      * @returns true if set worked, else false if set didn't work.
      */
-    public synchronized boolean set_Programcounter(int value) {
-        boolean setWorked = false;
-
-        if (value >= 0 && value <= 255) {
-            lastProgramcounter = bank0[2];
-            bank0[2] = value;
-            setWorked = true;
-        } else {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return setWorked;
+    public synchronized void set_Programcounter(int value) {
+        lastProgramcounter = iProgramcounter;
+        iProgramcounter = value;
     }
 
     //Bank0 PORTA

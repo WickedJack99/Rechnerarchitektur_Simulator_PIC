@@ -88,6 +88,7 @@ public class MyControlModel implements ActionListener {
             oRef.readFileAndWriteToEEPROM(oPIC);
             oMyView.updateWindow();
             iTestFileLoaded = 1;
+            resetProgramModel();
             oMyModelData.setPIC(oPIC);
             oMyModelData.setBreakpoints(abBreakpoints);
             qDataForModel.add(oMyModelData);
@@ -142,22 +143,26 @@ public class MyControlModel implements ActionListener {
             }
         }
         oPIC.getEeprom().setProgramLines(aiProgramLines);
-        abBreakpoints = new boolean[iOPCodeSize];
+        abBreakpoints = new boolean[oPIC.getEeprom().getLengthEEPROM()];
     }
 
     private void controlBreakpoints(ActionEvent e) {
         if (oRef != null) {
             int iOPCode = oRef.getOPCode().size();
             if (iOPCode > 0) {
+                int [][] aiiOPCodeInformation = oRef.getOPCodeArrayCommandAsInt(oRef.getOPCode());
                 for (int i = 0; i < oBreakpoints.size(); i++) {
                     if (e.getSource() == oBreakpoints.get(i)) {
-                        for (int j = 0; j < iOPCode; j++) {
-                            if (oRef.getOPCode().get(j).equals(oRef.getData().get(i))) {
-                                abBreakpoints[j] = !abBreakpoints[j];
-                                oMyModelData.setBreakpoints(abBreakpoints);
-                                qDataForModel.add(oMyModelData);
+                        //i = index of breakpoint which got set / reset
+                        for (int j = 0; j < aiiOPCodeInformation.length; j++) {
+                            //aiiOPCodeInformation[j][0] index of eepromindex
+                            //aiiOPCodeInformation[j][2] index of breakpoint
+                            if (aiiOPCodeInformation[j][2] == i) {
+                                abBreakpoints[aiiOPCodeInformation[j][0]] = !abBreakpoints[aiiOPCodeInformation[j][0]];
                             }
                         }
+                        oMyModelData.setBreakpoints(abBreakpoints);
+                        qDataForModel.add(oMyModelData);
                     }
                 }
             }

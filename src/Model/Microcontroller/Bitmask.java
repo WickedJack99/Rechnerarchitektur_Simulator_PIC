@@ -7,7 +7,7 @@ public class Bitmask {
      * @param oPIC
      */
     public int bitMaskDecoderAndExecuteCommand(int iCommandAsIntToMask, PIC oPIC) {
-        System.out.println("Command " + Integer.toHexString(iCommandAsIntToMask));
+        //System.out.println("Command " + Integer.toHexString(iCommandAsIntToMask));
         //Return-value will be -1 if command can't be read.
         int iDecodedCommand = -1;
 

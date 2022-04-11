@@ -67,11 +67,21 @@ public class ReadEepromFile {
 
     /**
      * Turns hex-values of an overhanded String-array into an int-array with decimal-values.
+     * [0] = memoryCountIndex
+     * [1] = commandAsInt
+     * [2] = dataLineRepresentationIndex
      * @param oPCode String-array
      * @return int-array
      */
     public int[][] getOPCodeArrayCommandAsInt(ArrayList<String> oPCode) {
-        int[][] aiReturnArray = new int[oPCode.size()][2];
+        int[][] aiReturnArray = new int[oPCode.size()][3];
+
+        for (int i = 0; i < oPCode.size(); i++) {
+            for (int k = 0; k < dataLines.size(); k++)
+            if (oPCode.get(i).equals(dataLines.get(k))) {
+                aiReturnArray[i][2] = k;
+            }
+        }
 
         for (int indexRowOPCode = 0; indexRowOPCode < oPCode.size(); indexRowOPCode++) {
             int indexOPCode = 0;
@@ -204,9 +214,6 @@ public class ReadEepromFile {
             //Get an twodimensional array with int-values.
             int[][] oPCodeAsInt = getOPCodeArrayCommandAsInt(oPCode);
 
-            //Set length of eeprom for programend.
-            oPIC.getEeprom().setLengthEEPROM(oPCodeAsInt.length);
-
             //asCommands are written into EEPROM
             for (int i = 0; i < oPCodeAsInt.length; i++) {
                 //The adress where the command will be written in the EEPROM
@@ -217,8 +224,12 @@ public class ReadEepromFile {
                 int command = oPCodeAsInt[i][1];
                 //System.out.println(command);
 
+                int iIndex = oPCodeAsInt[i][2];
+
                 //asCommands are written into EEPROM
                 oPIC.getEeprom().setElementXToValueY(memoryAdress, command);
+
+                oPIC.getEeprom().setElementXToIndexY(memoryAdress, iIndex);
             }
         } 
     }
