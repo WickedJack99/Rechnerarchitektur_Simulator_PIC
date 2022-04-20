@@ -1,11 +1,13 @@
 package Model.InterruptHandling;
 
-public class InterruptServiceHandler extends Thread {
+import Model.Microcontroller.PIC;
 
-    public InterruptServiceHandler() {}
+public class InterruptServiceHandler {
 
-    public void run() {
+    private PIC oPIC;
 
+    public InterruptServiceHandler(PIC oPIC) {
+        this.oPIC = oPIC;
     }
 
     

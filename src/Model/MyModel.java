@@ -59,7 +59,7 @@ public class MyModel extends Thread {
                             }
                             //Check if breakpoint is set
                             if (abBreakpoints != null) {
-                                if (!abBreakpoints[oPIC.getRam().get_Programcounter()]) {
+                                if (!abBreakpoints[oPIC.getRam().get_Programcounter()] && !interruptAcknowledged()) {
                                     if(iVisualInterval > 0) {                                    
                                         try {
                                             Thread.sleep(iVisualInterval * 1000);
@@ -123,5 +123,16 @@ public class MyModel extends Thread {
         abBreakpoints = oMyModelData.getBreakpoints();
         oPIC.getRuntimer().setQuarzSpeed(oMyModelData.getQuartzInterval());
         iVisualInterval = oMyModelData.getVisualInterval();
+        qDataToView.add(oPIC);
+    }
+
+    private boolean interruptAcknowledged() {
+        boolean bInterruptAcknowledged = false;
+        
+        if (oPIC.getRam().get_GIE()) {
+            
+        }
+
+        return bInterruptAcknowledged;
     }
 }

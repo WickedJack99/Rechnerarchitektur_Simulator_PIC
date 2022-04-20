@@ -28,6 +28,7 @@ public class MyControlModel implements ActionListener {
     JCheckBox oWDTEnabled;
     JComboBox<String> oQuarzIntervals;
     ArrayList<JMenuItem> oMenuItems;
+    ArrayList<JCheckBox> oPorts;
 
     ConcurrentLinkedQueue<Integer> qCommandsForModel;
     ConcurrentLinkedQueue<MyModelData> qDataForModel;
@@ -48,6 +49,7 @@ public class MyControlModel implements ActionListener {
         oBreakpoints = oMyView.getGUITestFileTable().getCheckboxes();
         oWDTEnabled = oMyView.getGUITime().getWDTEnableCheckbox();
         oQuarzIntervals = oMyView.getGUITime().getQuarzComboBox();
+        oPorts = oMyView.getGUIPorts().getPorts();
         oMenuItems = oMyView.getGUIMenuBar().getMenuItems();
         addActionListeners();
     }   
@@ -200,6 +202,7 @@ public class MyControlModel implements ActionListener {
             qDataForModel.add(oMyModelData);
         }
 
+        //Menuitems
         int i = 0;
         for (JMenuItem oMenuItem : oMenuItems) {
             if (e.getSource() == oMenuItem) {
@@ -277,8 +280,128 @@ public class MyControlModel implements ActionListener {
             }
             i++;
         }
+
+        //Ports checked/unchecked?
+        i = 0;
+        for (JCheckBox oPort : oPorts) {
+            if (e.getSource() == oPort) {
+                switch (i) {
+                    case 0: {
+                        //RA0
+                        oPIC.getRam().set_RA0(oPort.isSelected());
+                    }break;
+                    case 1: {
+                        //RA1
+                        oPIC.getRam().set_RA1(oPort.isSelected());
+                    }break;
+                    case 2: {
+                        //RA2
+                        oPIC.getRam().set_RA2(oPort.isSelected());
+                    }break;
+                    case 3: {
+                        //RA3
+                        oPIC.getRam().set_RA3(oPort.isSelected());
+                    }break;
+                    case 4: {
+                        //RA4
+                        oPIC.getRam().set_RA4_T0CKI(oPort.isSelected());
+                    }break;
+                    case 5: {
+                        //TRISA0
+                        oPIC.getRam().set_TRISA0(oPort.isSelected());
+                    }break;
+                    case 6: {
+                        //TRISA1
+                        oPIC.getRam().set_TRISA1(oPort.isSelected());
+                    }break;
+                    case 7: {
+                        //TRISA2
+                        oPIC.getRam().set_TRISA2(oPort.isSelected());
+                    }break;
+                    case 8: {
+                        //TRISA3
+                        oPIC.getRam().set_TRISA3(oPort.isSelected());
+                    }break;
+                    case 9: {
+                        //TRISA4
+                        oPIC.getRam().set_TRISA4(oPort.isSelected());
+                    }break;
+                    case 10: {
+                        //RB0
+                        oPIC.getRam().set_RB0_INT(oPort.isSelected());
+                    }break;
+                    case 11: {
+                        //RB1
+                        oPIC.getRam().set_RB1(oPort.isSelected());
+                    }break;
+                    case 12: {
+                        //RB2
+                        oPIC.getRam().set_RB2(oPort.isSelected());
+                    }break;
+                    case 13: {
+                        //RB3
+                        oPIC.getRam().set_RB3(oPort.isSelected());
+                    }break;
+                    case 14: {
+                        //RB4
+                        oPIC.getRam().set_RB4(oPort.isSelected());
+                    }break;
+                    case 15: {
+                        //RB5
+                        oPIC.getRam().set_RB5(oPort.isSelected());
+                    }break;
+                    case 16: {
+                        //RB6
+                        oPIC.getRam().set_RB6(oPort.isSelected());
+                    }break;
+                    case 17: {
+                        //RB7
+                        oPIC.getRam().set_RB7(oPort.isSelected());
+                    }break;
+                    case 18: {
+                        //TRISB0
+                        oPIC.getRam().set_TRISB0(oPort.isSelected());
+                    }break;
+                    case 19: {
+                        //TRISB1
+                        oPIC.getRam().set_TRISB1(oPort.isSelected());
+                    }break;
+                    case 20: {
+                        //TRISB2
+                        oPIC.getRam().set_TRISB2(oPort.isSelected());
+                    }break;
+                    case 21: {
+                        //TRISB3
+                        oPIC.getRam().set_TRISB3(oPort.isSelected());
+                    }break;
+                    case 22: {
+                        //TRISB4
+                        oPIC.getRam().set_TRISB4(oPort.isSelected());
+                    }break;
+                    case 23: {
+                        //TRISB5
+                        oPIC.getRam().set_TRISB5(oPort.isSelected());
+                    }break;
+                    case 24: {
+                        //TRISB6
+                        oPIC.getRam().set_TRISB6(oPort.isSelected());
+                    }break;
+                    case 25: {
+                        //TRISB7
+                        oPIC.getRam().set_TRISB7(oPort.isSelected());
+                    }break;
+                }
+                //Send changes to model
+                oMyModelData.setPIC(oPIC);
+                qDataForModel.add(oMyModelData);
+            }
+            i++;
+        }
     }
 
+    /**
+     * Adds action listeners to all elements of view which are referrenced.
+     */
     private void addActionListeners() {
         if (oBreakpoints != null) {
             for (JCheckBox oBreakpoint : oBreakpoints) {
@@ -301,6 +424,10 @@ public class MyControlModel implements ActionListener {
                 oMenuItem.addActionListener(this);
             }
         }
-        
+        if (oPorts != null) {
+            for (JCheckBox oCheckbox : oPorts) {
+                oCheckbox.addActionListener(this);
+            }
+        }
     }
 }

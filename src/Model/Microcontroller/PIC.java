@@ -155,20 +155,17 @@ public class PIC {
      * AND’ed with the eight bit literal 'k'. The
      * result is placed in the W register.
      */
-    public void ANDLW(int eightK)
-    {
+    public void ANDLW(int eightK) {
         int wRegValue = get_WRegister();
         int result = wRegValue & eightK;
 
         //If result is zero.
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
         
         //If result is not zero.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
@@ -177,8 +174,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -194,8 +192,7 @@ public class PIC {
      * stored in the W register. If ’d’ is 1 the result is
      * stored back in register ’f’.
      */
-    public void ADDWF(int destinationBit, int registerFileAddress)
-    {
+    public void ADDWF(int destinationBit, int registerFileAddress) {
         //Get Value of 
         int wRegValue = get_WRegister();
         //Get Value of RAM-Bank-RP0Bit Address.
@@ -205,33 +202,28 @@ public class PIC {
         int result = wRegValue + regFileAddrValue;
 
         //If result is zero.
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
 
         //If result is not zero.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         //If result is greater than 255.
-        if (result > 255)
-        {
+        if (result > 255) {
             result &= 255;
             Ram.set_Carryflag(true);
         }
 
         //If result is smaller than 0.
-        else if (result < 0)
-        {
+        else if (result < 0) {
             result &= 255;
             Ram.set_Carryflag(true);
         }
 
-        else
-        {
+        else {
             Ram.set_Carryflag(false);
         }
 
@@ -239,33 +231,30 @@ public class PIC {
         int dcResult = (wRegValue & 15) + (regFileAddrValue & 15);
 
         //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15)
-        {
+        if (dcResult > 15) {
             Ram.set_Digitcarryflag(true);
         }
 
         //If the result is smaller or equal to 15, DC-Flag is set false.
-        else
-        {
+        else {
             Ram.set_Digitcarryflag(false);
         }
 
         //If the destinationbit is 0, the result is written into the 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If the destinationbit is 1, the result is written into the RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -281,8 +270,7 @@ public class PIC {
      * ter. If 'd' is 1 the result is stored back in
      * register 'f'.
      */
-    public void ANDWF(int destinationBit, int registerFileAddress)
-    {
+    public void ANDWF(int destinationBit, int registerFileAddress) {
         //Get Value of 
         int wRegValue = get_WRegister();
         //Get Value of RAM-Bank-RP0Bit Address.
@@ -292,33 +280,30 @@ public class PIC {
         int result = wRegValue & regFileAddrValue;
 
         //If result is zero.
-        if (result == 0)
-        {
+        if (result == 0) {
             Ram.set_Zeroflag(true);
         }
         
         //If result is not zero.
-        else
-        {
+        else {
             Ram.set_Zeroflag(false);
         }
 
         //If the destinationbit is 0, the result is written into the 
-        if (destinationBit == 0)
-        {
+        if (destinationBit == 0) {
             setWRegister(result);
         }
 
         //If the destinationbit is 1, the result is written into the RAM.
-        else
-        {
+        else {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -331,8 +316,7 @@ public class PIC {
      * 
      * Bit ’b’ in register ’f’ is cleared .
      */
-    public void BCF(int bitaddress, int registerFileAddress)
-    {
+    public void BCF(int bitaddress, int registerFileAddress) {
         //Get bitmask to clear bit in fileaddress.
         int bitMask = bitMaskClearBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
@@ -347,8 +331,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -366,29 +351,28 @@ public class PIC {
      * executed instead, making this a 2TCY
      * instruction.
      */
-    public void BTFSC(int bitaddress, int registerFileAddress)
-    {
+    public void BTFSC(int bitaddress, int registerFileAddress) {
         //Get bitmask to AND with fileaddress to get bit.
         int bitMask = bitMaskSetBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
 
         //If bit at bitaddress is 1, next instruction is executed.
-        if ((bitMask & regFileAddrValue) == bitMask)
-        {
+        if ((bitMask & regFileAddrValue) == bitMask) {
             //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
+            if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
+            }
         }
 
         //If bit at bitaddress is 0, next instruction will be replaced by a NOP.
-        else
-        {
+        else {
             //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
+            if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
+            }
             //Execute NOP.
             NOP();
         }
@@ -418,8 +402,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -446,16 +431,18 @@ public class PIC {
         if ((bitMask & regFileAddrValue) != bitMask) {
             //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
+            if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
+            }
         }
 
         //If bit at bitaddress is 1, next instruction will be replaced by a NOP.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
+            if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
+            }
             //Execute NOP.
             NOP();
         }
@@ -484,8 +471,9 @@ public class PIC {
         Ram.set_Programcounter(elevenK + ((Ram.get_PCLATH() & 0b11000) << 8));
 
         //Increment TMR0 if internal instruction cycle assigned to TMR0.
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
@@ -506,8 +494,9 @@ public class PIC {
         Ram.set_Zeroflag(true);
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -528,8 +517,9 @@ public class PIC {
         Ram.set_Zeroflag(true);
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -555,8 +545,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -603,8 +594,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -644,16 +636,18 @@ public class PIC {
         if (regFileAddrValue != 0) {
             //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
+            if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
+            }
         }
 
         //If the dekremented value equals zero, a NOP is executed and the other instruction will be dismissed.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
+            if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
+            }
             NOP();
         }
 
@@ -703,8 +697,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -727,8 +722,9 @@ public class PIC {
         Ram.set_Programcounter(elevenK + ((Ram.get_PCLATH() & 0b11000) << 8));
 
         //Increment TMR0 if internal instruction cycle assigned to TMR0.
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -777,8 +773,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -831,8 +828,9 @@ public class PIC {
         else {
             ///Increment programcounter and TMR0 if assigned to TMR0.
             Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
+            if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
+            }
 
             //Call NOP.
             NOP();
@@ -870,8 +868,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -913,8 +912,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -935,8 +935,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -975,8 +976,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -995,8 +997,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
@@ -1013,8 +1016,9 @@ public class PIC {
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
 
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
@@ -1042,8 +1046,9 @@ public class PIC {
         //Write returnAddress into programcounter.
         Ram.set_Programcounter(returnAddress);
         //Increment TMR0 if assigned to TMR0.
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1059,8 +1064,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1088,8 +1094,9 @@ public class PIC {
         //Write returnAddress into programcounter.
         Ram.set_Programcounter(returnAddress);
         //Increment TMR0 if assigned to TMR0.
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1112,8 +1119,9 @@ public class PIC {
         //Write returnAddress into programcounter.
         Ram.set_Programcounter(returnAddress);
         //Increment TMR0 if assigned to TMR0.
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1170,8 +1178,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1227,8 +1236,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1252,8 +1262,9 @@ public class PIC {
         //Not implemented 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1310,8 +1321,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1349,8 +1361,7 @@ public class PIC {
         int dcResult = (regFileAddrValue & 15) + (wRegValue & 15) + 1;
 
         //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15)
-        {
+        if (dcResult > 15) {
             Ram.set_Digitcarryflag(true);
         }
 
@@ -1387,8 +1398,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1426,8 +1438,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1453,8 +1466,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1486,8 +1500,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
@@ -1531,8 +1546,9 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
-        if (Ram.get_T0CS() == false)
+        if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+        }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
         Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);

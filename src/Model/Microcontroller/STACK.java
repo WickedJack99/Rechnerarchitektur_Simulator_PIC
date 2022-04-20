@@ -48,21 +48,19 @@ public class STACK
      * Pops returnAddress from stack. If stack is empty, throws EmptyStackException.
      * @return
      */
-    public int popReturnAdressFromStack()
-    {
+    public int popReturnAdressFromStack() {
         int adressToReturn = -1;
 
-        if (noObjects(stack))
-        {
+        if (noObjects(stack)) {
             throw new EmptyStackException();
-        }
-
-        else
-        {
+        } else {
             stackpointer--;
             adressToReturn = stack[stackpointer];
             stack[stackpointer] = -1;
         }
+
+        if (stackpointer == -1)
+            stackpointer = 7;
 
         return adressToReturn;
     }

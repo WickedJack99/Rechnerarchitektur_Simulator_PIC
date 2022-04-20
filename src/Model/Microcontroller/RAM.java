@@ -241,41 +241,24 @@ public class RAM {
         }
     }
 
-    /**
-     * @returns value of TMR0.
-     */
     public synchronized int get_TMR0() {
         return bank0[1];
     }
 
-    /**
-     * Sets PCL to value.
-     * @param value PCL is set to.
-     */
     public synchronized void set_PCL(int value) {
         bank0[2] = value;
         bank1[2] = value;
     }
 
-    /**
-     * @returns value of PCL
-     */
     public synchronized int get_PCL() {
         return bank0[2];
     }
 
-    /**
-     * Sets STATUS-register to value.
-     * @param value STATUS-register is set to.
-     */
     public synchronized void set_STATUS(int value) {
         bank0[3] = value;
         bank1[3] = value;
     }
 
-    /**
-     * @returns STATUS-register.
-     */
     public synchronized int get_STATUS() {
         return bank0[3];
     }
@@ -513,7 +496,6 @@ public class RAM {
         } else {
             status &= 0b11111110;
         }
-
         set_STATUS(status);
     }
 
@@ -528,7 +510,6 @@ public class RAM {
         } else {
             status &= 0b11111101;
         }
-
         set_STATUS(status);
     }
 
@@ -543,7 +524,6 @@ public class RAM {
         } else {
             status &= 0b11111011;
         }
-
         set_STATUS(status);
     }
 
@@ -558,7 +538,6 @@ public class RAM {
         } else {
             status &= 0b11110111;
         }
-
         set_STATUS(status);
     }
 
@@ -573,7 +552,6 @@ public class RAM {
         } else {
             status &= 0b11101111;
         }
-
         set_STATUS(status);
     }
 
@@ -588,7 +566,6 @@ public class RAM {
         } else {
             status &= 0b11011111;
         }
-
         set_STATUS(status);
     }
 
@@ -603,7 +580,6 @@ public class RAM {
         } else {
             status &= 0b10111111;
         }
-
         set_STATUS(status);
     }
 
@@ -618,7 +594,6 @@ public class RAM {
         } else {
             status &= 0b01111111;
         }
-
         set_STATUS(status);
     }
 
@@ -677,7 +652,6 @@ public class RAM {
         } else {
             portA &= 0b11111110;
         }
-
         set_PORTA(portA);
     }
     
@@ -700,7 +674,6 @@ public class RAM {
         } else {
             portA &= 0b11111101;
         }
-
         set_PORTA(portA);
     }
     
@@ -723,7 +696,6 @@ public class RAM {
         } else {
             portA &= 0b11111011;
         }
-
         set_PORTA(portA);
     }
     
@@ -746,292 +718,182 @@ public class RAM {
         } else {
             portA &= 0b11110111;
         }
-
         set_PORTA(portA);
     }
     
-    public synchronized boolean get_RA3()
-    {
-        {
-            return (get_PORTA() & 0b00001000) == 8;
-        }
+    public synchronized boolean get_RA3() {
+        return (get_PORTA() & 0b00001000) == 8;
     }
 
     //External Clockimpulse for Timer0
-    public synchronized void set_RA4_T0CKI(boolean value)
-    {
+    public synchronized void set_RA4_T0CKI(boolean value) {
         int portA = get_PORTA();
-        if (value)
-        {
+        if (value) {
             portA |= 0b00010000;
-        }
-
-        else
-        {
+        } else {
             portA &= 0b11101111;
         }
-
         set_PORTA(portA);
     }
     
-    public synchronized boolean get_RA4_T0CKI()
-    {
-        {
-            return (get_PORTA() & 0b00010000) == 16;
-        }
+    public synchronized boolean get_RA4_T0CKI() {
+        return (get_PORTA() & 0b00010000) == 16;
     }
 
     //Bank0 PortB
-    public synchronized void set_RB0_INT(boolean value)
-    {
+    public synchronized void set_RB0_INT(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b00000001;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b11111110;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB0_INT()
-    {
-        {
-            return (get_PORTB() & 0b00000001) == 1;
-        }
+    public synchronized boolean get_RB0_INT() {
+        return (get_PORTB() & 0b00000001) == 1;
     }
 
-    public synchronized void set_RB1(boolean value)
-    {
+    public synchronized void set_RB1(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b00000010;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b11111101;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB1()
-    {
-        {
-            return (get_PORTB() & 0b00000010) == 2;
-        }
+    public synchronized boolean get_RB1() {
+        return (get_PORTB() & 0b00000010) == 2;
     }
 
-    public synchronized void set_RB2(boolean value)
-    {
+    public synchronized void set_RB2(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b00000100;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b11111011;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB2()
-    {
+    public synchronized boolean get_RB2() {
         return (get_PORTB() & 0b00000100) == 4;
     }
 
-    public synchronized void set_RB3(boolean value)
-    {
+    public synchronized void set_RB3(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b00001000;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b11110111;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB3()
-    {
-        {
-            return (get_PORTB() & 0b00001000) == 8;
-        }
+    public synchronized boolean get_RB3() {
+        return (get_PORTB() & 0b00001000) == 8;
     }
 
-    public synchronized void set_RB4(boolean value)
-    {
+    public synchronized void set_RB4(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b00010000;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b11101111;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB4()
-    {
-        {
-            return (get_PORTB() & 0b00010000) == 16;
-        }
+    public synchronized boolean get_RB4() {
+        return (get_PORTB() & 0b00010000) == 16;
     }
 
-    public synchronized void set_RB5(boolean value)
-    {
+    public synchronized void set_RB5(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b00100000;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b11011111;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB5()
-    {
-        {
-            return (get_PORTB() & 0b00100000) == 32;
-        }
+    public synchronized boolean get_RB5() {    
+        return (get_PORTB() & 0b00100000) == 32;
     }
 
-    public synchronized void set_RB6(boolean value)
-    {
+    public synchronized void set_RB6(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b01000000;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b10111111;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB6()
-    {
-        {
-            return (get_PORTB() & 0b01000000) == 64;
-        }
+    public synchronized boolean get_RB6() {
+        return (get_PORTB() & 0b01000000) == 64;
     }
 
-    public synchronized void set_RB7(boolean value)
-    {
+    public synchronized void set_RB7(boolean value) {
         int portB = get_PORTB();
-        if (value)
-        {
+        if (value) {
             portB |= 0b10000000;
-        }
-
-        else
-        {
+        } else {
             portB &= 0b01111111;
         }
-
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB7()
-    {
-        {
-            return (get_PORTB() & 0b10000000) == 128;
-        }
+    public synchronized boolean get_RB7() {
+        return (get_PORTB() & 0b10000000) == 128;
     }
 
     //Bank0 INTCON
-    public synchronized void set_RBIF(boolean value)
-    {
+    public synchronized void set_RBIF(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b00000001;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b11111110;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_RBIF()
-    {
-        {
-            return (get_INTCON() & 0b00000001) == 1;
-        }
+    public synchronized boolean get_RBIF() {    
+        return (get_INTCON() & 0b00000001) == 1;
     }
 
-    public synchronized void set_INTF(boolean value)
-    {
+    public synchronized void set_INTF(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b00000010;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b11111101;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_INTF()
-    {
-        {
-            return (get_INTCON() & 0b00000010) == 2;
-        }
+    public synchronized boolean get_INTF() {    
+        return (get_INTCON() & 0b00000010) == 2;
     }
 
-    public synchronized void set_T0IF(boolean value)
-    {
+    public synchronized void set_T0IF(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b00000100;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b11111011;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_T0IF()
-    {
-        {
-            return (get_INTCON() & 0b00000100) == 4;
-        }
+    public synchronized boolean get_T0IF() {
+        return (get_INTCON() & 0b00000100) == 4;
     }
 
     public synchronized void set_RBIE(boolean value) {
@@ -1041,177 +903,110 @@ public class RAM {
         } else {
             intcon &= 0b11110111;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_RBIE()
-    {
-        {
-            return (get_INTCON() & 0b00001000) == 8;
-        }
+    public synchronized boolean get_RBIE() {    
+        return (get_INTCON() & 0b00001000) == 8;
     }
 
-    public synchronized void set_INTE(boolean value)
-    {
+    public synchronized void set_INTE(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b00010000;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b11101111;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_INTE()
-    {
-        {
-            return (get_INTCON() & 0b00010000) == 16;
-        }
+    public synchronized boolean get_INTE() {
+        return (get_INTCON() & 0b00010000) == 16;
     }
 
-    public synchronized void set_T0IE(boolean value)
-    {
+    public synchronized void set_T0IE(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b00100000;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b11011111;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_T0IE()
-    {
-        {
-            return (get_INTCON() & 0b00100000) == 32;
-        }
+    public synchronized boolean get_T0IE() {
+        return (get_INTCON() & 0b00100000) == 32;
     }
 
-    public synchronized void set_EEIE(boolean value)
-    {
+    public synchronized void set_EEIE(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b01000000;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b10111111;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_EEIE()
-    {
-        {
-            return (get_INTCON() & 0b01000000) == 64;
-        }
+    public synchronized boolean get_EEIE() {
+        return (get_INTCON() & 0b01000000) == 64;
     }
 
-    public synchronized void set_GIE(boolean value)
-    {
+    public synchronized void set_GIE(boolean value) {
         int intcon = get_INTCON();
-        if (value)
-        {
+        if (value) {
             intcon |= 0b10000000;
-        }
-
-        else
-        {
+        } else {
             intcon &= 0b01111111;
         }
-
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_GIE()
-    {
-        {
-            return (get_INTCON() & 0b10000000) == 128;
-        }
+    public synchronized boolean get_GIE() {    
+        return (get_INTCON() & 0b10000000) == 128;
     }
 
     //Bank1 OPTION_REG
-    public synchronized void set_PS0(boolean value)
-    {
+    public synchronized void set_PS0(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b00000001;
-        }
-
-        else
-        {
+        } else {
             option &= 0b11111110;
         }
-
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PS0()
-    {
-        {
-            return (get_OPTION() & 0b00000001) == 1;
-        }
+    public synchronized boolean get_PS0() {    
+        return (get_OPTION() & 0b00000001) == 1;
     }
 
-    public synchronized void set_PS1(boolean value)
-    {
+    public synchronized void set_PS1(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b00000010;
-        }
-
-        else
-        {
+        } else {
             option &= 0b11111101;
         }
-
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PS1()
-    {
-        {
-            return (get_OPTION() & 0b00000010) == 2;
-        }
+    public synchronized boolean get_PS1() {    
+        return (get_OPTION() & 0b00000010) == 2;
     }
 
-    public synchronized void set_PS2(boolean value)
-    {
+    public synchronized void set_PS2(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b00000100;
-        }
-
-        else
-        {
+        } else {
             option &= 0b11111011;
         }
-
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PS2()
-    {
-        {
-            return (get_OPTION() & 0b00000100) == 4;
-        }
+    public synchronized boolean get_PS2() {    
+        return (get_OPTION() & 0b00000100) == 4;
     }
 
     public synchronized int get_TMR0_PrescalerRate() {
@@ -1249,115 +1044,73 @@ public class RAM {
         return returnValue;
     }
 
-    public synchronized int get_WDT_PrescalerRate()
-    {
+    public synchronized int get_WDT_PrescalerRate() {
         int returnValue = 0;
 
-        switch (get_OPTION() & 0b00000111)
-        {
-            case 0:
-            {
+        switch (get_OPTION() & 0b00000111) {
+            case 0: {
                 returnValue = 1;
             }break;
-        
-            case 1:
-            {
+            case 1: {
                 returnValue = 2;
             }break;
-
-            case 2:
-            {
+            case 2: {
                 returnValue = 4;
             }break;
-
-            case 3:
-            {
+            case 3: {
                 returnValue = 8;
             }break;
-
-            case 4:
-            {
+            case 4: {
                 returnValue = 16;
             }break;
-
-            case 5:
-            {
+            case 5: {
                 returnValue = 32;
             }break;
-
-            case 6:
-            {
+            case 6: {
                 returnValue = 64;
             }break;
-
-            case 7:
-            {
+            case 7: {
                 returnValue = 128;
             }break;
         }
-
         return returnValue;
     }
 
-    public synchronized void set_PSA(boolean value)
-    {
+    public synchronized void set_PSA(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b00001000;
-        }
-
-        else
-        {
+        } else {
             option &= 0b11110111;
         }
-
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PSA()
-    {
-        {
-            return (get_OPTION() & 0b00001000) == 8;
-        }
+    public synchronized boolean get_PSA() {
+        return (get_OPTION() & 0b00001000) == 8;
     }
 
-    public synchronized void set_T0SE(boolean value)
-    {
+    public synchronized void set_T0SE(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b00010000;
-        }
-
-        else
-        {
+        } else {
             option &= 0b11101111;
         }
-
         set_OPTION(option);
     }
     
-    public synchronized boolean get_T0SE()
-    {
-        {
-            return (get_OPTION() & 0b00010000) == 16;
-        }
+    public synchronized boolean get_T0SE() {
+        return (get_OPTION() & 0b00010000) == 16;
     }
 
-    public synchronized void set_T0CS(boolean value)
-    {
+    public synchronized void set_T0CS(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b00100000;
-        }
-
-        else
-        {
+        } else {
             option &= 0b11011111;
         }
-
         set_OPTION(option);
     }
     
@@ -1365,50 +1118,32 @@ public class RAM {
         return (get_OPTION() & 0b00100000) == 32;
     }
 
-    public synchronized void set_INTEDG(boolean value)
-    {
+    public synchronized void set_INTEDG(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b01000000;
-        }
-
-        else
-        {
+        } else {
             option &= 0b10111111;
         }
-
         set_OPTION(option);
     }
     
-    public synchronized boolean get_INTEDG()
-    {
-        {
-            return (get_OPTION() & 0b01000000) == 64;
-        }
+    public synchronized boolean get_INTEDG() {
+        return (get_OPTION() & 0b01000000) == 64;
     }
 
-    public synchronized void set_RBPU(boolean value)
-    {
+    public synchronized void set_RBPU(boolean value) {
         int option = get_OPTION();
-        if (value)
-        {
+        if (value) {
             option |= 0b10000000;
-        }
-
-        else
-        {
+        } else {
             option &= 0b01111111;
         }
-
         set_OPTION(option);
     }
     
-    public synchronized boolean get_RBPU()
-    {
-        {
-            return (get_OPTION() & 0b10000000) == 128;
-        }
+    public synchronized boolean get_RBPU() {
+        return (get_OPTION() & 0b10000000) == 128;
     }
 
     //Bank1 EECON1
@@ -1553,32 +1288,112 @@ public class RAM {
         return (get_TRISA() & 0b00010000) == 16;
     }
 
+    public synchronized void set_TRISB0(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b00000001;
+        } else {
+            trisB &= 0b11111110;
+        }
+        set_TRISB(trisB);
+    }
+
     public synchronized boolean get_TRISB0() {
         return (get_TRISB() & 0b00000001) == 1;
+    }
+
+    public synchronized void set_TRISB1(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b00000010;
+        } else {
+            trisB &= 0b11111101;
+        }
+        set_TRISB(trisB);
     }
 
     public synchronized boolean get_TRISB1() {
         return (get_TRISB() & 0b00000010) == 2;
     }
 
+    public synchronized void set_TRISB2(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b00000100;
+        } else {
+            trisB &= 0b11111011;
+        }
+        set_TRISB(trisB);
+    }
+
     public synchronized boolean get_TRISB2() {
         return (get_TRISB() & 0b00000100) == 4;
+    }
+
+    public synchronized void set_TRISB3(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b00001000;
+        } else {
+            trisB &= 0b11110111;
+        }
+        set_TRISB(trisB);
     }
 
     public synchronized boolean get_TRISB3() {
         return (get_TRISB() & 0b00001000) == 8;
     }
 
+    public synchronized void set_TRISB4(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b00010000;
+        } else {
+            trisB &= 0b11101111;
+        }
+        set_TRISB(trisB);
+    }
+
     public synchronized boolean get_TRISB4() {
         return (get_TRISB() & 0b00010000) == 16;
+    }
+
+    public synchronized void set_TRISB5(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b00100000;
+        } else {
+            trisB &= 0b11011111;
+        }
+        set_TRISB(trisB);
     }
 
     public synchronized boolean get_TRISB5() {
         return (get_TRISB() & 0b00100000) == 32;
     }
 
+    public synchronized void set_TRISB6(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b01000000;
+        } else {
+            trisB &= 0b10111111;
+        }
+        set_TRISB(trisB);
+    }
+
     public synchronized boolean get_TRISB6() {
         return (get_TRISB() & 0b01000000) == 64;
+    }
+
+    public synchronized void set_TRISB7(boolean value) {
+        int trisB = get_TRISB();
+        if (value) {
+            trisB |= 0b10000000;
+        } else {
+            trisB &= 0b01111111;
+        }
+        set_TRISB(trisB);
     }
 
     public synchronized boolean get_TRISB7() {
