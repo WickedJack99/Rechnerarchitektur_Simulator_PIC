@@ -28,6 +28,7 @@ public class MyControlView {
         setStack();
         setTestFileTable();
         setMCMenu();
+        showStackPrompt();
     }
 
     /**
@@ -178,12 +179,13 @@ public class MyControlView {
     public void setTestFileTable() {
         if (oPIC.getEeprom().getProgramLines() != null) {
             if (oPIC.getRam().get_LastProgramcounter() > -1) {
-
-                int iL = oPIC.getRam().get_LastProgramcounter();
+                int[] aiProgList = oPIC.getEeprom().getProgramLines();
+                for (int i = 0; i < aiProgList.length; i++) {
+                    oMyView.getGUITestFileTable().unmarkLine(aiProgList[i]);
+                }
 
                 int iProgC = oPIC.getRam().get_Programcounter();
 
-                oMyView.getGUITestFileTable().unmarkLine(oPIC.getEeprom().getIndex(iL));
                 oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getIndex(iProgC));
                 
             } else {
@@ -193,6 +195,14 @@ public class MyControlView {
                 }
                 oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getProgramLine(0));
             }
+        }
+    }
+
+    public void showStackPrompt() {
+        if (oPIC.getStack().getStackOverflow()) {
+            //TODO
+        } else if (oPIC.getStack().getStackUnderflow()) {
+            //TODO
         }
     }
     

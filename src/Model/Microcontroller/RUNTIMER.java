@@ -3,7 +3,7 @@ package Model.Microcontroller;
 public class RUNTIMER {
     private double dRuntime;
     private double dMaxWatchdog;
-    private double dRTIncrVal;
+    private double dRTIncrVal = 0.001 * (4 / 0.032);
 
     private boolean WDTE = false;
 

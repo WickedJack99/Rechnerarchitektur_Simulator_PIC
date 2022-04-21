@@ -51,46 +51,65 @@ public class MyModel extends Thread {
                         bStopProgram = true;
                     }break;
                     case (1): {
-                        //start program
+                        //Start program
                         while (iProgState == 1) {
                             //Check if pause/stop was pressed
                             if (!qReceivedCommands.isEmpty()) {
                                 iProgState = qReceivedCommands.poll();
                             }
-                            //Check if breakpoint is set
-                            if (abBreakpoints != null) {
-                                if (!abBreakpoints[oPIC.getRam().get_Programcounter()] && !interruptAcknowledged()) {
-                                    if(iVisualInterval > 0) {                                    
-                                        try {
-                                            Thread.sleep(iVisualInterval * 1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
+                            //Check if interrupt was acknowledged
+                            if (oPIC.interruptAcknowledged()) {
+                                
+                            } else {
+                                //Check if breakpoints initialized
+                                if (abBreakpoints != null) {
+                                    //Check if stack overflowed or underflowed
+                                    if (oPIC.getStack().getStackOverflow() || oPIC.getStack().getStackUnderflow()) {
+                                        qDataToView.add(oPIC);
+                                    //If stack did not over or underflow
+                                    } else {
+                                        //Check if breakpoint at [pc] is set
+                                        if (!abBreakpoints[oPIC.getRam().get_Programcounter()]) {
+                                            //Check if slow interval is active
+                                            if(iVisualInterval > 0) {                                    
+                                                try {
+                                                    Thread.sleep(iVisualInterval * 1000);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            //Execute step
+                                            step();
+                                            //Update view
+                                            qDataToView.add(oPIC);
+                                        } else {
+                                            //Pause program if breakpoint at [pc] is set
+                                            iProgState = 2;
                                         }
-                                    }
-                                    step();
-                                    qDataToView.add(oPIC);
-                                } else {
-                                    //Pause program
-                                    iProgState = 2;
-                                }
-                            }                            
+                                    }                                    
+                                } 
+                            }                                                       
                         }
                     }break;
+                    //Program paused
                     case (2): {
 
                     }break;
+                    //Reset program
                     case (3): {
                         oPIC.resetPIC();
-                        qDataToView.add(oPIC); //TODO
+                        qDataToView.add(oPIC);
                     }break;
+                    //Step program
                     case (4): {
+                        //Check if breakpoints are initialized
                         if (abBreakpoints != null) {
                             //Check if breakpoint is set
                             int iProgC = oPIC.getRam().get_Programcounter();
                             iProgC &= abBreakpoints.length;
                             if (!abBreakpoints[iProgC]) {
                                 step();
-                                qDataToView.add(oPIC); //TODO
+                                qDataToView.add(oPIC);
                             }
                         } else {
                             System.out.println("Please load file!");
@@ -124,15 +143,5 @@ public class MyModel extends Thread {
         oPIC.getRuntimer().setQuarzSpeed(oMyModelData.getQuartzInterval());
         iVisualInterval = oMyModelData.getVisualInterval();
         qDataToView.add(oPIC);
-    }
-
-    private boolean interruptAcknowledged() {
-        boolean bInterruptAcknowledged = false;
-        
-        if (oPIC.getRam().get_GIE()) {
-            
-        }
-
-        return bInterruptAcknowledged;
     }
 }

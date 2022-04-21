@@ -35,7 +35,7 @@ public class GUITime extends JPanel {
     JCheckBox oEnableWDT = new JCheckBox("WDT");
     
     double dRuntime = 0;
-    JLabel oLabelRuntime = new JLabel("Runtime: " + dRuntime);
+    JLabel oLabelRuntime = new JLabel("Runtime: " + dRuntime + "ms");
 
     JLabel oLabelQuarz = new JLabel("Quarzfrequency");
     String[] asIntervals = {"32 kHz", "100 kHz", "500 kHz", "1 MHz", "2 MHz", "4 MHz", "8 MHz", "12 MHz", "16 MHz", "20 MHz"};
@@ -77,11 +77,11 @@ public class GUITime extends JPanel {
         iLanguage = iLangNr;
         switch (iLangNr) {
             case 0: {
-                oLabelRuntime.setText("Laufzeit: " + dRuntime);
+                oLabelRuntime.setText("Laufzeit: " + dRuntime + "ms");
                 oLabelQuarz.setText("Quarzfrequenz");
             }break;
             case 1: {
-                oLabelRuntime.setText("Runtime: " + dRuntime);
+                oLabelRuntime.setText("Runtime: " + dRuntime + "ms");
                 oLabelQuarz.setText("Quarzfrequency");
             }break;
         }
@@ -98,9 +98,9 @@ public class GUITime extends JPanel {
     public void setRuntime(double dRuntime) {
         this.dRuntime = dRuntime;
         if (iLanguage == 0) {
-            oLabelRuntime.setText("Laufzeit: " + dRuntime);
+            oLabelRuntime.setText("Laufzeit: " + dRuntime + "ms");
         } else {
-            oLabelRuntime.setText("Runtime: " + dRuntime);
+            oLabelRuntime.setText("Runtime: " + dRuntime + "ms");
         }
         
     }

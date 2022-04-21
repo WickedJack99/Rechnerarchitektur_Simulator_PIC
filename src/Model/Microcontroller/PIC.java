@@ -85,6 +85,37 @@ public class PIC {
         return Runtimer;
     }
 
+    public boolean interruptAcknowledged() {
+        boolean bInterruptAcknowledged = false;
+        
+        if (this.getRam().get_GIE()) {
+            //Timer0 Interrupt
+            if (this.getRam().get_T0IE() && this.getRam().get_T0IF()) {
+                bInterruptAcknowledged = true;
+            }
+            //External RB0-pin INT Interrupt
+            else if (this.getRam().get_INTE() && this.getRam().get_INTF()) {
+                bInterruptAcknowledged = true;
+            }
+            //Port RB Interrupt
+            else if (this.getRam().get_RBIE() && this.getRam().get_RBIF()) {
+                bInterruptAcknowledged = true;
+            }
+            //EE Write complete interrupt enable
+            else if (this.getRam().get_EEIE() && this.getRam().get_EEIF()) {
+                bInterruptAcknowledged = true;
+            }
+        }
+
+        return bInterruptAcknowledged;
+    }
+
+    public void InterruptServiceRoutine() {
+        this.getRam().set_GIE(false);
+        Stack.pushReturnAdressOnStack(this.getRam().get_Programcounter());
+        this.getRam().set_Programcounter(0x0004);
+    }
+
     /**
      * Datasheet Page 57
      * 

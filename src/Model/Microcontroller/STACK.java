@@ -15,6 +15,9 @@ public class STACK
     private int stackpointer;
     private int[] stack;
 
+    private boolean bStackOverflow = false;
+    private boolean bStackUnderflow = false;
+
     /**
      * Constructor of STACK.
      */
@@ -29,18 +32,15 @@ public class STACK
      * Pushs returnAddress on stack. If stack is full, throws StackOverflowError.
      * @param return_Adress
      */
-    public void pushReturnAdressOnStack(int return_Adress)
-    {
-        if (stackpointer < 8)
-        {
+    public void pushReturnAdressOnStack(int return_Adress) {
+        if (stackpointer < 8) {
             stack[stackpointer] = return_Adress;
             stackpointer++;
         }
         
-        if (stackpointer == 8)
-        {
-            //throw new StackOverflowError();
+        if (stackpointer == 8) {
             stackpointer = 0;
+            bStackOverflow = true;
         }
     }
 
@@ -55,12 +55,15 @@ public class STACK
             throw new EmptyStackException();
         } else {
             stackpointer--;
+            if (stackpointer == -1) {
+                stackpointer = 7;
+                bStackUnderflow = true;
+            }
             adressToReturn = stack[stackpointer];
             stack[stackpointer] = -1;
         }
 
-        if (stackpointer == -1)
-            stackpointer = 7;
+        
 
         return adressToReturn;
     }
@@ -99,5 +102,21 @@ public class STACK
         }
 
         return noObjects;
+    }
+
+    public boolean getStackOverflow() {
+        return bStackOverflow;
+    }
+
+    public void resetStackOverflow() {
+        bStackOverflow = false;
+    }
+
+    public boolean getStackUnderflow() {
+        return bStackUnderflow;
+    }
+
+    public void resetStackUnderflow() {
+        bStackUnderflow = false;
     }
 }
