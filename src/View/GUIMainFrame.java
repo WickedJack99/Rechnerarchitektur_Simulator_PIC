@@ -115,7 +115,7 @@ public class GUIMainFrame extends JFrame {
         oPanel3.add(oMyView.getGUIStack(), oConstraints);
         oConstraints.insets = new Insets(0,40,0,0);
         oConstraints.gridx = 1;
-        oPanel3.add(oMyView.getGUITime(), oConstraints);
+        oPanel3.add(oMyView.getGUITime(), oConstraints);        
 
         //Build MainPanel
         oConstraints.gridx = 0;

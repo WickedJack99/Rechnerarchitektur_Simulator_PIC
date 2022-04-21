@@ -1,6 +1,10 @@
 package Control;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import Model.Microcontroller.PIC;
 import View.MyView;
@@ -12,10 +16,12 @@ public class MyControlView {
 
     MyView oMyView;
     PIC oPIC;
+    ConcurrentLinkedQueue<Integer> qCommandsToModel;
 
-    public MyControlView(PIC oPIC, MyView view) {
+    public MyControlView(PIC oPIC, MyView view, ConcurrentLinkedQueue<Integer> qCommands) {
         oMyView = view;
         this.oPIC = oPIC;
+        qCommandsToModel = qCommands;
         updateView();
     }
 
@@ -29,6 +35,7 @@ public class MyControlView {
         setTestFileTable();
         setMCMenu();
         showStackPrompt();
+        showTimer0InterruptPrompt();
     }
 
     /**
@@ -198,11 +205,50 @@ public class MyControlView {
         }
     }
 
+    public void showTimer0InterruptPrompt() {
+        if (oPIC.getRam().get_GIE() && oPIC.getRam().get_T0IE() && oPIC.getRam().get_T0IF()) {
+            Object[] options = {"Ok"};
+            int n = JOptionPane.showOptionDialog(new JFrame(),"Information Timer 0 Interrupt\nISR will be executed", "Timer 0 Interrupt Acknowledged", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+        }
+    }
+
     public void showStackPrompt() {
         if (oPIC.getStack().getStackOverflow()) {
-            //TODO
+            oPIC.getStack().resetStackOverflow();
+            Object[] options = {"Continue", "Reset"};
+            int n = JOptionPane.showOptionDialog(new JFrame(),"Warning! A stack overflow has occured!", "Stack Overflow", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
+            qCommandsToModel.add(5);
+            switch (n) {
+                case (0): {
+                    //Start program
+                    qCommandsToModel.add(1);
+                }break;
+                case (1): {
+                    //Reset program
+                    qCommandsToModel.add(3);
+                }break;
+                case (-1): {
+                    //Nothing happens / pause
+                }break;
+            }
         } else if (oPIC.getStack().getStackUnderflow()) {
-            //TODO
+            oPIC.getStack().resetStackUnderflow();
+            Object[] options = {"Continue", "Reset"};
+            int n = JOptionPane.showOptionDialog(new JFrame(),"Warning! A stack underflow has occured!", "Stack Underflow", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+            qCommandsToModel.add(6);
+            switch (n) {
+                case (0): {
+                    //Start program
+                    qCommandsToModel.add(1);
+                }break;
+                case (1): {
+                    //Reset program
+                    qCommandsToModel.add(3);
+                }break;
+                case (-1): {
+                    //Nothing happens / pause
+                }break;
+            }
         }
     }
     

@@ -23,7 +23,7 @@ public class Main {
 
         MyView oView = new MyView();
 
-        MyControlView oControlView = new MyControlView(oPIC, oView);
+        MyControlView oControlView = new MyControlView(oPIC, oView, qCommandsToModel);
 
         new MyControlModel(oView, qCommandsToModel, qDataToModel);
 

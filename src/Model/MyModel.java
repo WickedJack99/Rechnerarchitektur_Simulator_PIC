@@ -65,6 +65,7 @@ public class MyModel extends Thread {
                                 if (abBreakpoints != null) {
                                     //Check if stack overflowed or underflowed
                                     if (oPIC.getStack().getStackOverflow() || oPIC.getStack().getStackUnderflow()) {
+                                        iProgState = 2;
                                         qDataToView.add(oPIC);
                                     //If stack did not over or underflow
                                     } else {
@@ -93,7 +94,11 @@ public class MyModel extends Thread {
                     }break;
                     //Program paused
                     case (2): {
-
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }break;
                     //Reset program
                     case (3): {
@@ -114,6 +119,12 @@ public class MyModel extends Thread {
                         } else {
                             System.out.println("Please load file!");
                         }
+                    }break;
+                    case (5): {
+                        oPIC.getStack().resetStackOverflow();
+                    }break;
+                    case (6): {
+                        oPIC.getStack().resetStackUnderflow();
                     }break;
                 }
             }
