@@ -3,6 +3,8 @@ package Model.Microcontroller;
 public class RUNTIMER {
     private double dRuntime;
     private double dMaxWatchdog;
+    private double dOldMaxWatchdog;
+    private double dWatchdogTimer;
     private double dRTIncrVal = 0.001 * (4 / 0.032);
 
     private boolean WDTE = false;
@@ -10,21 +12,29 @@ public class RUNTIMER {
     private RAM oRam;
 
     public RUNTIMER(RAM oRam) {
+        dWatchdogTimer = dMaxWatchdog = dOldMaxWatchdog = 18000;
         this.oRam = oRam;
     }
 
     public void setMaxWatchdog(double dMaxVal) {
+        dWatchdogTimer = dMaxVal - (dOldMaxWatchdog - dWatchdogTimer);
+        dOldMaxWatchdog = dMaxWatchdog;
         dMaxWatchdog = dMaxVal;
     }
 
-    private void checkWatchdog() {
+    public void resetWDT() {
+        dWatchdogTimer = dMaxWatchdog;
+    }
+
+    private void updateWatchdog() {
         if (WDTE) {
             if (oRam.get_PSA()) {
                 setMaxWatchdog(18000 * oRam.get_WDT_PrescalerRate());
             } else {
                 setMaxWatchdog(18000);//18 ms
             }
-            if ((dMaxWatchdog - dRuntime) <= 0) {
+            dWatchdogTimer -= dRuntime;
+            if (dWatchdogTimer <= 0) {
                 System.out.println("WDT Interrupt");
             }
         }
@@ -40,7 +50,7 @@ public class RUNTIMER {
 
     public void incrementRuntime() {
         dRuntime += dRTIncrVal;
-        checkWatchdog();
+        updateWatchdog();
     }
 
     public void setQuarzSpeed(int iInterval) {

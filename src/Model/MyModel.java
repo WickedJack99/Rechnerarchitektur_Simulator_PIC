@@ -42,16 +42,18 @@ public class MyModel extends Thread {
                 /* -1 == ERROR, 0 == END, 1 == START, 2 == PAUSE, 3 == RESET 4 == STEP*/
                 iProgState = qReceivedCommands.poll();
                 switch (iProgState) {
-                    case (-1): {
+                    //Stop program because of error
+                    case (-1): {                        
                         System.out.println("Fehler");
                         bStopProgram = true;
                     }break;
-                    case (0): {
+                    //Stop Program
+                    case (0): {                    
                         System.out.println("Programm wurde beendet.");
                         bStopProgram = true;
                     }break;
-                    case (1): {
-                        //Start program
+                    //Start program
+                    case (1): {                        
                         while (iProgState == 1) {
                             //Check if pause/stop was pressed
                             if (!qReceivedCommands.isEmpty()) {
@@ -59,7 +61,7 @@ public class MyModel extends Thread {
                             }
                             //Check if interrupt was acknowledged
                             if (oPIC.interruptAcknowledged()) {
-                                
+                                //TODO
                             } else {
                                 //Check if breakpoints initialized
                                 if (abBreakpoints != null) {
@@ -120,32 +122,26 @@ public class MyModel extends Thread {
                             System.out.println("Please load file!");
                         }
                     }break;
+                    //Reset Stack Overflow Bit
                     case (5): {
                         oPIC.getStack().resetStackOverflow();
                     }break;
+                    //Reset Stack Underflow Bit
                     case (6): {
                         oPIC.getStack().resetStackUnderflow();
                     }break;
                 }
-            }
-
-            
+            }            
         }
     }
 
     private void step() {
-        //Check if step valid
-        if (oPIC.getRam().get_Programcounter() < (oPIC.getEeprom().getLengthEEPROM())) {
-            //Makes one step through the eeprom.
-            Bitmask oBitmask = new Bitmask();
-            oBitmask.bitMaskDecoderAndExecuteCommand(oPIC.getEeprom().getElement(oPIC.getRam().get_Programcounter()), oPIC);
-            qDataToView.add(oPIC);
-        } else {
-            System.out.println("Step invalid, end of file reached!");
-        }
+        Bitmask oBitmask = new Bitmask();
+        //Makes one step through the eeprom.
+        oBitmask.bitMaskDecoderAndExecuteCommand(oPIC.getEeprom().getElement(oPIC.getRam().get_Programcounter()), oPIC);
+        //Update view
+        qDataToView.add(oPIC);
     }
-
-    
 
     private void setModel(MyModelData data) {
         oMyModelData = data;

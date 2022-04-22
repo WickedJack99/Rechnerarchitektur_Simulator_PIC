@@ -14,6 +14,16 @@ import View.MyView;
  */
 public class MyControlView {
 
+    String[][]asPromptTitle = {
+        {"Timer 0 Interrupt Festgestellt", "EE Interrupt Festgestellt", "PORT B Change Interrupt Festgestellt", "RB0 Interrupt Festgestellt"},
+        {"Timer 0 Interrupt Acknowledged", "EE Interrupt Acknowledged", "PORT B Change Interrupt Acknowledged", "RB0 Interrupt Acknowledged"}
+    };
+
+    String[][]asPromptDialogs = {
+        {"Information Timer 0 Interrupt\nISR wird ausgeführt", "Information EE Interrupt\nISR wird ausgeführt", "Information PORT B Change Interrupt\nISR wird ausgeführt", "Information RB0 Interrupt\nISR wird ausgeführt"},
+        {"Information Timer 0 Interrupt\nISR will be executed", "Information EE Interrupt\nISR will be executed", "Information PORT B Change Interrupt\nISR will be executed", "Information RB0 Interrupt\nISR will be executed"}
+    };
+
     MyView oMyView;
     PIC oPIC;
     ConcurrentLinkedQueue<Integer> qCommandsToModel;
@@ -34,8 +44,12 @@ public class MyControlView {
         setStack();
         setTestFileTable();
         setMCMenu();
+        
         showStackPrompt();
         showTimer0InterruptPrompt();
+        showEEInterruptPrompt();
+        showPORTBInterruptPrompt();
+        showRB0InterruptPrompt();
     }
 
     /**
@@ -208,7 +222,28 @@ public class MyControlView {
     public void showTimer0InterruptPrompt() {
         if (oPIC.getRam().get_GIE() && oPIC.getRam().get_T0IE() && oPIC.getRam().get_T0IF()) {
             Object[] options = {"Ok"};
-            int n = JOptionPane.showOptionDialog(new JFrame(),"Information Timer 0 Interrupt\nISR will be executed", "Timer 0 Interrupt Acknowledged", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+            JOptionPane.showOptionDialog(new JFrame(), asPromptDialogs[0][oMyView.getLanguage()], asPromptTitle[0][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+        }
+    }
+
+    public void showEEInterruptPrompt() { //TODO
+        if (oPIC.getRam().get_GIE() && oPIC.getRam().get_EEIE() && oPIC.getRam().get_EEIF()) {
+            Object[] options = {"Ok"};
+            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[1][oMyView.getLanguage()], asPromptTitle[1][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+        }
+    }
+
+    public void showPORTBInterruptPrompt() {
+        if (oPIC.getRam().get_GIE() && oPIC.getRam().get_RBIE() && oPIC.getRam().get_RBIF()) {
+            Object[] options = {"Ok"};
+            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[2][oMyView.getLanguage()], asPromptTitle[2][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+        }
+    }
+
+    public void showRB0InterruptPrompt() {
+        if (oPIC.getRam().get_GIE() && oPIC.getRam().get_INTE() && oPIC.getRam().get_INTF()) {
+            Object[] options = {"Ok"};
+            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[3][oMyView.getLanguage()], asPromptTitle[3][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
         }
     }
 

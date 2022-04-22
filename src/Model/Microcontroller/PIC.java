@@ -552,9 +552,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -574,14 +571,13 @@ public class PIC {
         Ram.set_PS2(false);
         //Programcounter will be incremented by 1.
 
+        Runtimer.resetWDT();
+
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -628,9 +624,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -682,9 +675,6 @@ public class PIC {
             NOP();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -732,9 +722,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -756,9 +743,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -807,9 +791,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -867,9 +848,6 @@ public class PIC {
             NOP();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -902,9 +880,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -947,9 +922,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -969,9 +941,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1011,9 +980,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1032,9 +998,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1050,9 +1013,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1081,9 +1041,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1095,12 +1052,10 @@ public class PIC {
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
+
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1129,9 +1084,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1153,9 +1105,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1213,9 +1162,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1271,9 +1217,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1296,9 +1239,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1356,9 +1296,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1389,7 +1326,7 @@ public class PIC {
         int carry = (result & 0b100000000) >> 8;
 
         //The lower four bits are bitwise and with 1111b (15d).
-        int dcResult = (regFileAddrValue & 15) + (wRegValue & 15) + 1;
+        int dcResult = (regFileAddrValue & 0x0F) + (wRegValue & 0x0F) + 1; //TODO LST File 3 DC Carry is not set.
 
         //If the result is greater than 15, DC-Flag is set true.
         if (dcResult > 15) {
@@ -1433,9 +1370,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1473,9 +1407,6 @@ public class PIC {
             Ram.increment_TMR0();
         }
 
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
-
         Runtimer.incrementRuntime();
     }
 
@@ -1500,9 +1431,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1534,9 +1462,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }
@@ -1580,9 +1505,6 @@ public class PIC {
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
-
-        //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
 
         Runtimer.incrementRuntime();
     }

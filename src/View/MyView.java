@@ -21,6 +21,8 @@ public class MyView implements IMyView {
 
     private JPanel oGUIMainPanel;
 
+    private int iLang;
+
     public MyView() {
         oGUIMenuBar = new GUIMenuBar(this);
         oGUIMCMenu = new GUIMCMenu();
@@ -50,6 +52,7 @@ public class MyView implements IMyView {
     }
 
     public void setLanguage(int iLangNr) {
+        iLang = iLangNr;
         oGUIMenuBar.changeLangMenuBar(iLangNr);
         oGUIMCMenu.setLanguage(iLangNr);
         oGUIRegister.setLanguage(iLangNr);
@@ -57,7 +60,9 @@ public class MyView implements IMyView {
         oGUITime.setLanguage(iLangNr);
     }
 
-    
+    public int getLanguage() {
+        return iLang;
+    }    
 
     public void test() {
         this.getGUITime().getQuarzComboBox();

@@ -618,6 +618,7 @@ public class RAM {
         lastProgramcounter = get_Programcounter();
         iProgramcounter += value;
         iProgramcounter &= 0x3FF;
+        set_PCL(iProgramcounter & 0xFF);
     }
 
     /**
@@ -628,6 +629,7 @@ public class RAM {
         lastProgramcounter = get_Programcounter();
         iProgramcounter -= value;
         iProgramcounter &= 0x3FF;
+        set_PCL(iProgramcounter & 0xFF);
     }
 
     /**
@@ -638,6 +640,7 @@ public class RAM {
     public synchronized void set_Programcounter(int value) {
         lastProgramcounter = iProgramcounter;
         iProgramcounter = value;
+        set_PCL(iProgramcounter & 0xFF);
     }
 
     //Bank0 PORTA
