@@ -278,7 +278,7 @@ public class PIC {
 
         //If the destinationbit is 1, the result is written into the RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -327,7 +327,7 @@ public class PIC {
 
         //If the destinationbit is 1, the result is written into the RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -358,7 +358,7 @@ public class PIC {
         int result = bitMask & regFileAddrValue;
 
         //Write result back into fileregister.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
@@ -429,7 +429,7 @@ public class PIC {
         int result = bitMask | regFileAddrValue;
 
         //Write result into file-register.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
@@ -520,7 +520,7 @@ public class PIC {
      */
     public void CLRF(int registerFileAddress) {
         //Value at fileregisteraddress is set to zero.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), 0);
+        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), 0, true);
         //Zeroflag is set.
         Ram.set_Zeroflag(true);
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -616,7 +616,7 @@ public class PIC {
 
         //If destinationbit is one, result will be written into fileRegister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -653,7 +653,7 @@ public class PIC {
 
         //If the destinationbit is 1, the decremented value is written bach into the fileregister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, false);
         }
 
         //If the dekremented value doesn't equal zero, the next instruction is executed.
@@ -713,7 +713,7 @@ public class PIC {
 
         //If destinationbit doesn't equal zero, value is written into fileregister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -783,7 +783,7 @@ public class PIC {
 
         //If destinationbit is not 0, value will be written back to RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -825,7 +825,7 @@ public class PIC {
 
         //If destinationbit is one, the value is written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, false);
         }
 
         //If value is not zero, next instruction will be executed.
@@ -913,7 +913,7 @@ public class PIC {
 
         //If destinationbit is not zero, result is written into fileregister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -990,7 +990,7 @@ public class PIC {
      */
     public void MOVWF(int registerFileAddress) {
         //Data from is moved to fileregister.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), get_WRegister());
+        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), get_WRegister(), false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1, 0); //Kind of call
@@ -1150,7 +1150,7 @@ public class PIC {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Set value of carryflag.
@@ -1208,7 +1208,7 @@ public class PIC {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -1361,7 +1361,7 @@ public class PIC {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -1398,7 +1398,7 @@ public class PIC {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
@@ -1497,7 +1497,7 @@ public class PIC {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result);
+            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.

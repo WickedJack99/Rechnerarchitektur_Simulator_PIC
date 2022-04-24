@@ -91,7 +91,7 @@ public class RAM {
      * @param rp0Bit bank where the value will be changed. (y)
      * @param value that will be written into the element. (z)
      */
-    public synchronized void set_Element_X_Of_Bank_Y_To_Z(int element, boolean rp0Bit, int value) {
+    public synchronized void set_Element_X_Of_Bank_Y_To_Z(int element, boolean rp0Bit, int value, boolean bStatusAffected) {
         if (element < 0 || element > 127) {
             System.out.println("Wrong input, value from 0 to 127 expected!");
         } else {
@@ -119,7 +119,14 @@ public class RAM {
                             set_Programcounter(value + (get_PCLATH() << 8));
                         }break;
                         case 3: {
-                            set_STATUS(value);
+                            if (bStatusAffected) {
+                                int iStatus_Lower = get_STATUS() & 0b111;
+                                int iSTATUS_Upper = value & 0b11111000;
+                                int iNewSTATUS = iSTATUS_Upper | iStatus_Lower;
+                                set_STATUS(iNewSTATUS);
+                            } else {
+                                set_STATUS(value);
+                            }                                                        
                         }break;
                         case 4: {
                             set_FSR(value);
