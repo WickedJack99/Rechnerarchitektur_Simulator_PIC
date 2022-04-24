@@ -619,9 +619,8 @@ public class RAM {
     /**
      * 
      * @param value
-     * @param kindOfCall 0 at normal instruction, 1 at Fetchzycle,... 2 at Jumpcommand, 3 at ...
      */
-    public synchronized void inkrement_Programcounter(int value, int kindOfCall) {        
+    public synchronized void inkrement_Programcounter(int value) {        
         lastProgramcounter = get_Programcounter();
         iProgramcounter += value;
         iProgramcounter &= 0x3FF;

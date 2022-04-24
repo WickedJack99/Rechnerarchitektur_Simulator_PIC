@@ -127,56 +127,21 @@ public class PIC {
      */
     public void ADDLW(int eightK) {
         int wRegValue = get_WRegister();
-        int result = wRegValue + eightK;
-
-        //If result is zero.
-        if (result == 0) {
-            Ram.set_Zeroflag(true);
-        }
-        
-        //If result is not zero.
-        else {
-            Ram.set_Zeroflag(false);
-        }
-
-        //If result is greater than 255.
-        if (result > 255) {
-            result = result & 255;
-            Ram.set_Carryflag(true);
-        }
-
-        //If result is smaller than 0.
-        else if (result < 0) {
-            result = result & 255;
-            Ram.set_Carryflag(true);
-        }
-
-        //If result is greater than or equal to 0 and smaller than or equal to 255.  
-        else {
-            Ram.set_Carryflag(false);
-        }
-
-        //The lower four bits are bitwise and with 1111b (15d).
-        int dcResult = (wRegValue & 15) + (eightK & 15);
-
-        //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15) {
-            Ram.set_Digitcarryflag(true);
-        }
-
-        //If the result is smaller or equal to 15, DC-Flag is set false.
-        else {
-            Ram.set_Digitcarryflag(false);
-        }
-
+        int result = ArithmeticLogicUnit.calcValue(eightK, wRegValue, false);
+        result &= 255;
         setWRegister(result);
+
+        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
+        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
+        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
+
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false)
             Ram.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PCL and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
 
         Runtimer.incrementRuntime();
     }
@@ -206,7 +171,7 @@ public class PIC {
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -232,46 +197,11 @@ public class PIC {
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
 
         //Calculate result.
-        int result = wRegValue + regFileAddrValue;
+        int result = ArithmeticLogicUnit.calcValue(regFileAddrValue, wRegValue, false);
 
-        //If result is zero.
-        if (result == 0) {
-            Ram.set_Zeroflag(true);
-        }
-
-        //If result is not zero.
-        else {
-            Ram.set_Zeroflag(false);
-        }
-
-        //If result is greater than 255.
-        if (result > 255) {
-            result &= 255;
-            Ram.set_Carryflag(true);
-        }
-
-        //If result is smaller than 0.
-        else if (result < 0) {
-            result &= 255;
-            Ram.set_Carryflag(true);
-        }
-
-        else {
-            Ram.set_Carryflag(false);
-        }
-
-        //The lower four bits are bitwise and with 1111boolean (15dezimal).
-        int dcResult = (wRegValue & 15) + (regFileAddrValue & 15);
-
-        //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15) {
-            Ram.set_Digitcarryflag(true);
-        }
-
-        //If the result is smaller or equal to 15, DC-Flag is set false.
-        else {
-            Ram.set_Digitcarryflag(false);
-        }
+        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
+        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
+        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
 
         //If the destinationbit is 0, the result is written into the 
         if (destinationBit == 0) {
@@ -284,7 +214,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -333,7 +263,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -363,7 +293,7 @@ public class PIC {
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -393,7 +323,7 @@ public class PIC {
         //If bit at bitaddress is 1, next instruction is executed.
         if ((bitMask & regFileAddrValue) == bitMask) {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            Ram.inkrement_Programcounter(1);
             if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
             }
@@ -402,7 +332,7 @@ public class PIC {
         //If bit at bitaddress is 0, next instruction will be replaced by a NOP.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            Ram.inkrement_Programcounter(1);
             if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
             }
@@ -434,7 +364,7 @@ public class PIC {
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -463,7 +393,7 @@ public class PIC {
         //If bit at bitaddress is 0, next instruction is executed.
         if ((bitMask & regFileAddrValue) != bitMask) {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            Ram.inkrement_Programcounter(1);
             if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
             }
@@ -472,7 +402,7 @@ public class PIC {
         //If bit at bitaddress is 1, next instruction will be replaced by a NOP.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            Ram.inkrement_Programcounter(1);
             if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
             }
@@ -526,7 +456,7 @@ public class PIC {
         //Zeroflag is set.
         Ram.set_Zeroflag(true);
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -549,7 +479,7 @@ public class PIC {
         //Zeroflag is set.
         Ram.set_Zeroflag(true);
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -576,7 +506,7 @@ public class PIC {
         Runtimer.resetWDT();
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -622,7 +552,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -661,7 +591,7 @@ public class PIC {
         //If the dekremented value doesn't equal zero, the next instruction is executed.
         if (regFileAddrValue != 0) {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            Ram.inkrement_Programcounter(1);
             if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
             }
@@ -670,7 +600,7 @@ public class PIC {
         //If the dekremented value equals zero, a NOP is executed and the other instruction will be dismissed.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
+            Ram.inkrement_Programcounter(1);
             if (Ram.get_T0CS() == false) {
                 Ram.increment_TMR0();
             }
@@ -719,7 +649,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -789,7 +719,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -830,22 +760,14 @@ public class PIC {
             Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, false);
         }
 
-        //If value is not zero, next instruction will be executed.
-        if (regFileAddrValue != 0) {
-            //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false)
-                Ram.increment_TMR0();
+        ///Increment programcounter and TMR0 if assigned to TMR0.
+        Ram.inkrement_Programcounter(1);
+        if (Ram.get_T0CS() == false) {
+            Ram.increment_TMR0();
         }
 
         //If value is zero, next instruction will not be executed and NOP is executed instead.
-        else {
-            ///Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1, 0); //Kind of call
-            if (Ram.get_T0CS() == false) {
-                Ram.increment_TMR0();
-            }
-
+        if (regFileAddrValue == 0) {
             //Call NOP.
             NOP();
         }
@@ -878,7 +800,7 @@ public class PIC {
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -919,7 +841,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -939,7 +861,7 @@ public class PIC {
         setWRegister(eightK);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -977,7 +899,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -995,7 +917,7 @@ public class PIC {
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), get_WRegister(), false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1010,7 +932,7 @@ public class PIC {
      */
     public void NOP() {
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
 
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
@@ -1053,7 +975,7 @@ public class PIC {
         //Nothing happens, only programmcounter gets incremented by 1.
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
 
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
@@ -1159,7 +1081,7 @@ public class PIC {
         Ram.set_Carryflag(set_Carryflag);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1214,7 +1136,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1237,7 +1159,7 @@ public class PIC {
         //TODO pause running (no Thread.sleep()!!!)
         //Not implemented 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1255,45 +1177,17 @@ public class PIC {
     public void SUBLW(int eightK) {
         int wRegValue = get_WRegister();
 
-        //Build Two's complement
-        wRegValue = (wRegValue ^ 0b11111111) + 1;
-
-        //Add both complemented values.
-        int result = eightK + wRegValue;
-
-        int carry = (result & 0b100000000) >> 8;
-
-        //The lower four bits are bitwise and with 1111b (15d).
-        int dcResult = (eightK & 15) + (wRegValue & 15) + 1;
-
-        //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15) {
-            Ram.set_Digitcarryflag(true);
-        }
-
-        //If the result is smaller or equal to 15, DC-Flag is set false.
-        else {
-            Ram.set_Digitcarryflag(false);
-        }
-
-        if (result == 0) {
-            Ram.set_Zeroflag(true);
-        } else {
-            Ram.set_Zeroflag(false);
-        }
-
-        if (carry == 1) {
-            Ram.set_Carryflag(true);
-        } else {
-            Ram.set_Carryflag(false);
-        }
-
+        int result = ArithmeticLogicUnit.calcValue(eightK, wRegValue, true);
         result &= 255;
+
+        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
+        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
+        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
 
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1316,48 +1210,14 @@ public class PIC {
         //Get value at fileaddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
 
-        //Build Two's complement
-        //regFileAddrValue = (regFileAddrValue ^ 0b11111111) + 1;
-
-        //Build Two's complement
-        wRegValue = (wRegValue ^ 0b11111111) + 1;
-
-        //Add both complemented values.
-        int result = regFileAddrValue + wRegValue;
-
-        int carry = (result & 0b100000000) >> 8;
-
-        //The lower four bits are bitwise and with 1111b (15d).
-        System.out.println("regFileAddrValue: " + (regFileAddrValue & 0b1111) + " wRegValue: " + (wRegValue & 0b1111));
-        int dcResult = (regFileAddrValue & 0b1111) + (wRegValue & 0b1111); //TODO LST File 3 DC Carry is not set.
-
-        //If the result is greater than 15, DC-Flag is set true.
-        if (dcResult > 15) {
-            Ram.set_Digitcarryflag(true);
-        }
-
-        //If the result is smaller or equal to 15, DC-Flag is set false.
-        else {
-            Ram.set_Digitcarryflag(false);
-        }
-
-        //Set/clear zeroflag
-        if (result == 0) {
-            Ram.set_Zeroflag(true);
-        } else {
-            Ram.set_Zeroflag(false);
-        }
-
-        //Set/clear carryflag
-        if (carry == 1) {
-            Ram.set_Carryflag(true);
-        } else {
-            Ram.set_Carryflag(false);
-        }
-
+        int result = ArithmeticLogicUnit.calcValue(regFileAddrValue, wRegValue, true);
         result &= 255;
 
-        //If destinationbit is zero, result will be written into 
+        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
+        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
+        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
+
+        //If destinationbit is zero, result will be written into wregister
         if (destinationBit == 0) {
             setWRegister(result);
         }
@@ -1368,7 +1228,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1405,7 +1265,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1430,7 +1290,7 @@ public class PIC {
         //Nothing happens, only programcounter will be incremented by 1.
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1461,7 +1321,7 @@ public class PIC {
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
@@ -1504,7 +1364,7 @@ public class PIC {
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1, 0); //Kind of call
+        Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
         }
