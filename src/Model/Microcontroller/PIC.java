@@ -18,6 +18,7 @@ public class PIC {
     private STACK Stack;
     private int WRegister;
     private RUNTIMER Runtimer;
+    private ALU ArithmeticLogicUnit;
 
     public PIC() {
         //Initialising objects of PIC.
@@ -26,6 +27,7 @@ public class PIC {
         Stack = new STACK();
         Runtimer = new RUNTIMER(Ram);
         WRegister = 0;
+        ArithmeticLogicUnit = new ALU();
     }
 
     public synchronized void resetPIC() {
@@ -1326,7 +1328,8 @@ public class PIC {
         int carry = (result & 0b100000000) >> 8;
 
         //The lower four bits are bitwise and with 1111b (15d).
-        int dcResult = (regFileAddrValue & 0x0F) + (wRegValue & 0x0F) + 1; //TODO LST File 3 DC Carry is not set.
+        System.out.println("regFileAddrValue: " + (regFileAddrValue & 0b1111) + " wRegValue: " + (wRegValue & 0b1111));
+        int dcResult = (regFileAddrValue & 0b1111) + (wRegValue & 0b1111); //TODO LST File 3 DC Carry is not set.
 
         //If the result is greater than 15, DC-Flag is set true.
         if (dcResult > 15) {
