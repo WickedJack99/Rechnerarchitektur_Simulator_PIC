@@ -1,6 +1,6 @@
 package Model.Microcontroller;
 
-public class RUNTIMER {
+public class TIME {
     private double dRuntime;
     private double dMaxWatchdog;
     private double dOldMaxWatchdog;
@@ -11,7 +11,7 @@ public class RUNTIMER {
 
     private RAM oRam;
 
-    public RUNTIMER(RAM oRam) {
+    public TIME(RAM oRam) {
         dWatchdogTimer = dMaxWatchdog = dOldMaxWatchdog = 18000;
         this.oRam = oRam;
     }

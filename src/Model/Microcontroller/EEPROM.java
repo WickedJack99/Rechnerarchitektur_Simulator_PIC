@@ -17,7 +17,7 @@ public class EEPROM {
         oFile = new File("./eeprom.dat");
     }
 
-    public void setElementXOfEepromToY(int iX, int iY) {
+    public void setElementXToY(int iX, int iY) {
         aiEeprom[iX] = iY;
     }
 

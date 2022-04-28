@@ -5,22 +5,22 @@ package Model.Microcontroller;
  */
 
  /**
-  * Electrical Eraseable Programmable Read Only Memory of the PIC (Programmspeicher)
+  * ProgramMemory of the PIC (Programmspeicher)
   */
 public class PROGRAMMEMORY
 {
-    private int[][] eeprom;
-    private int eepromLength = 1024;
+    private int[][] aiiProgramMemory;
+    private int iProgramMemoryLength = 1024;
 
     private int[] aiProgramLines;
 
     public PROGRAMMEMORY()
     {
-        eeprom = new int[eepromLength][2];
+        aiiProgramMemory = new int[iProgramMemoryLength][2];
     }
 
     public PROGRAMMEMORY(int iLength) {
-        eeprom = new int[iLength][2];
+        aiiProgramMemory = new int[iLength][2];
     }
 
     /**
@@ -56,7 +56,7 @@ public class PROGRAMMEMORY
     public int getElement(int index) {
         int returnValue = -1;
         if (index >= 0 && index < 1024) {
-            returnValue = eeprom[index][0];
+            returnValue = aiiProgramMemory[index][0];
         }
         return returnValue;
     }
@@ -69,16 +69,16 @@ public class PROGRAMMEMORY
     public int getIndex(int iIndex) {
         int returnValue = -1;
         if (iIndex >= 0 && iIndex < 1024) {
-            returnValue = eeprom[iIndex][1];
+            returnValue = aiiProgramMemory[iIndex][1];
         }
         return returnValue;
     }
 
     /**
-     * Returns length of EEPROM
+     * Returns length of ProgramMemory
      */
     public int getLengthProgramMemory() {
-        return eepromLength;
+        return iProgramMemoryLength;
     }
 
     /**
@@ -90,7 +90,7 @@ public class PROGRAMMEMORY
     public boolean setElementXToValueY(int index, int value) {
         boolean bSetWorked = false;
         if ((index >= 0) && (index < 1024)) {
-            eeprom[index][0] = value;
+            aiiProgramMemory[index][0] = value;
             bSetWorked = true;
         }
         return bSetWorked;
@@ -105,7 +105,7 @@ public class PROGRAMMEMORY
     public boolean setElementXToIndexY(int iElement, int iIndex) {
         boolean bSetWorked = false;
         if ((iElement >= 0) && (iElement < 1024)) {
-            eeprom[iElement][1] = iIndex;
+            aiiProgramMemory[iElement][1] = iIndex;
             bSetWorked = true;
         }
         return bSetWorked;

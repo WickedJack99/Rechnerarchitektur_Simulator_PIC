@@ -17,7 +17,7 @@ public class PIC {
     private RAM Ram;
     private STACK Stack;
     private int WRegister;
-    private RUNTIMER Runtimer;
+    private TIME Runtimer;
     private ALU ArithmeticLogicUnit;
     private EEPROM Eeprom;
     private int iStateMachineWriteEeprom = 0;
@@ -27,7 +27,7 @@ public class PIC {
         ProgramMemory = new PROGRAMMEMORY();
         Ram = new RAM();
         Stack = new STACK();
-        Runtimer = new RUNTIMER(Ram);
+        Runtimer = new TIME(Ram);
         WRegister = 0;
         ArithmeticLogicUnit = new ALU();
         Eeprom = new EEPROM();
@@ -36,7 +36,7 @@ public class PIC {
     public synchronized void resetPIC() {
         Ram = new RAM();
         Stack = new STACK();
-        Runtimer = new RUNTIMER(Ram);
+        Runtimer = new TIME(Ram);
         WRegister = 0;
     }
 
@@ -86,7 +86,7 @@ public class PIC {
         return Stack;
     }
 
-    public synchronized RUNTIMER getRuntimer() {
+    public synchronized TIME getRuntimer() {
         return Runtimer;
     }
 

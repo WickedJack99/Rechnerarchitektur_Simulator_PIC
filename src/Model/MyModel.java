@@ -2,7 +2,7 @@ package Model;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import Model.Microcontroller.Bitmask;
+import Model.Microcontroller.INSTRUCTIONDECODER;
 import Model.Microcontroller.PIC;
 
 public class MyModel extends Thread {
@@ -137,9 +137,9 @@ public class MyModel extends Thread {
     }
 
     private void step() {
-        Bitmask oBitmask = new Bitmask();
+        INSTRUCTIONDECODER oBitmask = new INSTRUCTIONDECODER();
         //Makes one step through the eeprom.
-        oBitmask.bitMaskDecoderAndExecuteCommand(oPIC.getEeprom().getElement(oPIC.getRam().get_Programcounter()), oPIC);
+        oBitmask.decodeAndExecuteCommand(oPIC.getEeprom().getElement(oPIC.getRam().get_Programcounter()), oPIC);
         //Update view
         qDataToView.add(oPIC);
     }
