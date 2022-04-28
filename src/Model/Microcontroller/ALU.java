@@ -23,7 +23,7 @@ public class ALU {
     }
 
     /**
-     * 
+     * Adds or subtracts iValue1 and iWRegister according to bSubtractionBit.
      * @param iValue1
      * @param iWRegister
      * @param bSubtractionBit
@@ -112,14 +112,26 @@ public class ALU {
         return iOutcome;
     }
 
+    /**
+     * 
+     * @returns CarryFlag
+     */
     public boolean getCarryFlag() {
         return bCarryFlag;
     }
 
+    /**
+     * 
+     * @returns DigitCarryFlag
+     */
     public boolean getDigitCarryFlag() {
         return bDigitCarryFlag;
     }
 
+    /**
+     * 
+     * @returns ZeroFlag
+     */
     public boolean getZeroFlag() {
         return bZeroFlag;
     }

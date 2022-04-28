@@ -1,7 +1,7 @@
 package Control;
 
 import Model.MyModelData;
-import Model.EepromLoader.ReadEepromFile;
+import Model.EepromLoader.ReadProgramFile;
 import Model.Microcontroller.PIC;
 import View.GUIAbout;
 import View.GUIHelp;
@@ -33,7 +33,7 @@ public class MyControlModel implements ActionListener {
     ConcurrentLinkedQueue<Integer> qCommandsForModel;
     ConcurrentLinkedQueue<MyModelData> qDataForModel;
 
-    ReadEepromFile oRef;
+    ReadProgramFile oRef;
     int iTestFileLoaded = 0;
     boolean[] abBreakpoints;
     PIC oPIC;
@@ -82,7 +82,7 @@ public class MyControlModel implements ActionListener {
         if (iResponse == JFileChooser.APPROVE_OPTION) {
             oFile = new File(oFileChooser.getSelectedFile().getAbsolutePath());
             //System.out.println(oFile);
-            oRef = new ReadEepromFile();
+            oRef = new ReadProgramFile();
             oRef.setData(oFile);
             oRef.setOPCode(oRef.getData());
             oMyView.getGUITestFileTable().setData(oRef.getData());
@@ -193,7 +193,11 @@ public class MyControlModel implements ActionListener {
         //WDT-Enabled Checkbox
         if (e.getSource() == oWDTEnabled) {
             //Enable/disable watchdog
-            System.out.println("Watchdog got set to " + oWDTEnabled.isSelected());//TODO
+            if (oWDTEnabled.isSelected()) {
+                oPIC.getRuntimer().enableWDT();
+            } else {
+                oPIC.getRuntimer().disableWDT();
+            }            
         }
 
         //Quarzfrequency

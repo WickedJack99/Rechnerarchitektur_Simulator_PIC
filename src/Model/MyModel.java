@@ -61,7 +61,8 @@ public class MyModel extends Thread {
                             }
                             //Check if interrupt was acknowledged
                             if (oPIC.interruptAcknowledged()) {
-                                //TODO
+                                //Execute ISR
+                                oPIC.InterruptServiceRoutine();
                             } else {
                                 //Check if breakpoints initialized
                                 if (abBreakpoints != null) {

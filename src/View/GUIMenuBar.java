@@ -11,14 +11,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import Model.EepromLoader.ReadEepromFile;
+import Model.EepromLoader.ReadProgramFile;
 
 public class GUIMenuBar extends JMenuBar {
 
     MyView oMyView;
 
     ArrayList<JCheckBox> oBreakpoints;
-    ReadEepromFile oRef;
+    ReadProgramFile oRef;
     boolean[] bBreakpointSet;
 
     ArrayList<JMenuItem> oMenuItems = new ArrayList<JMenuItem>();

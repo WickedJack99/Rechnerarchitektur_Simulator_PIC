@@ -13,7 +13,7 @@ public class PIC {
      * Parts of PIC.
      * Objects are written with a large starting letter.
      */
-    private EEPROM Eeprom;
+    private PROGRAMMEMORY Eeprom;
     private RAM Ram;
     private STACK Stack;
     private int WRegister;
@@ -22,7 +22,7 @@ public class PIC {
 
     public PIC() {
         //Initialising objects of PIC.
-        Eeprom = new EEPROM();
+        Eeprom = new PROGRAMMEMORY();
         Ram = new RAM();
         Stack = new STACK();
         Runtimer = new RUNTIMER(Ram);
@@ -75,7 +75,7 @@ public class PIC {
         return Ram;
     }
 
-    public synchronized EEPROM getEeprom() {
+    public synchronized PROGRAMMEMORY getEeprom() {
         return Eeprom;
     }
 
@@ -1156,8 +1156,9 @@ public class PIC {
      * Section 14.8 for more details.
      */
     public void SLEEP() {
-        //TODO pause running (no Thread.sleep()!!!)
+        //pause running (no Thread.sleep()!!!)
         //Not implemented 
+        
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {

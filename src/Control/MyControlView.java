@@ -226,7 +226,7 @@ public class MyControlView {
         }
     }
 
-    public void showEEInterruptPrompt() { //TODO
+    public void showEEInterruptPrompt() {
         if (oPIC.getRam().get_GIE() && oPIC.getRam().get_EEIE() && oPIC.getRam().get_EEIF()) {
             Object[] options = {"Ok"};
             JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[1][oMyView.getLanguage()], asPromptTitle[1][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);

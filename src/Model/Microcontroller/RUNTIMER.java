@@ -107,4 +107,12 @@ public class RUNTIMER {
             }break;
         }
     }
+
+    public void enableWDT() {
+        WDTE = true;
+    }
+
+    public void disableWDT() {
+        WDTE = false;
+    }
 }
