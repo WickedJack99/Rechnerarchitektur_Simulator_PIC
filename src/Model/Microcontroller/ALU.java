@@ -29,7 +29,7 @@ public class ALU {
      * @param bSubtractionBit
      * @return
      */
-    public int calcValue(int iValue1, int iWRegister, boolean bSubtractionBit) {
+    public int calcAddition(int iValue1, int iWRegister, boolean bSubtractionBit) {
         //Array with booleans which represent the value of value 1 that will be used for calculation
         boolean[] abValue1 = new boolean[8];
         abValue1[0] = ((iValue1 & 0b1) == 0b1);

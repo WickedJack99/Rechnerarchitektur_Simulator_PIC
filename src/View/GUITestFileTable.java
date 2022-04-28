@@ -195,11 +195,13 @@ public class GUITestFileTable extends JScrollPane {
      * @param iLineToMark
      */
     public void markLine(int iLineToMark) {
-        if (iLineToMark > -1) {
-            oLineInformation.get(iLineToMark * 2).setForeground(getThemeColor()[3]);
-            oLineInformation.get(iLineToMark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[3]));
-            oLineInformation.get(iLineToMark * 2 + 1).setForeground(getThemeColor()[3]);
-            oLineInformation.get(iLineToMark * 2 + 1).setBorder(BorderFactory.createLineBorder(getThemeColor()[3]));
+        if (oLineInformation.size() > iLineToMark) {
+            if (iLineToMark > -1) {
+                oLineInformation.get(iLineToMark * 2).setForeground(getThemeColor()[3]);
+                oLineInformation.get(iLineToMark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[3]));
+                oLineInformation.get(iLineToMark * 2 + 1).setForeground(getThemeColor()[3]);
+                oLineInformation.get(iLineToMark * 2 + 1).setBorder(BorderFactory.createLineBorder(getThemeColor()[3]));
+            }
         }
     }
 
@@ -208,11 +210,13 @@ public class GUITestFileTable extends JScrollPane {
      * @param iLineToUnmark
      */
     public void unmarkLine(int iLineToUnmark) {
-        if (iLineToUnmark > -1) {
-            oLineInformation.get(iLineToUnmark * 2).setForeground(getThemeColor()[0]);
-            oLineInformation.get(iLineToUnmark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
-            oLineInformation.get(iLineToUnmark * 2 + 1).setForeground(getThemeColor()[0]);
-            oLineInformation.get(iLineToUnmark * 2 + 1).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+        if (oLineInformation.size() > iLineToUnmark) {
+            if (iLineToUnmark > -1) {
+                oLineInformation.get(iLineToUnmark * 2).setForeground(getThemeColor()[0]);
+                oLineInformation.get(iLineToUnmark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+                oLineInformation.get(iLineToUnmark * 2 + 1).setForeground(getThemeColor()[0]);
+                oLineInformation.get(iLineToUnmark * 2 + 1).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));
+            }
         }
     }
 

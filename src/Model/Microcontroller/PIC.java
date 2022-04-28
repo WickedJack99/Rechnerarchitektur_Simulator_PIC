@@ -127,7 +127,7 @@ public class PIC {
      */
     public void ADDLW(int eightK) {
         int wRegValue = get_WRegister();
-        int result = ArithmeticLogicUnit.calcValue(eightK, wRegValue, false);
+        int result = ArithmeticLogicUnit.calcAddition(eightK, wRegValue, false);
         result &= 255;
         setWRegister(result);
 
@@ -197,7 +197,7 @@ public class PIC {
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
 
         //Calculate result.
-        int result = ArithmeticLogicUnit.calcValue(regFileAddrValue, wRegValue, false);
+        int result = ArithmeticLogicUnit.calcAddition(regFileAddrValue, wRegValue, false);
 
         Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
         Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
@@ -1177,7 +1177,7 @@ public class PIC {
     public void SUBLW(int eightK) {
         int wRegValue = get_WRegister();
 
-        int result = ArithmeticLogicUnit.calcValue(eightK, wRegValue, true);
+        int result = ArithmeticLogicUnit.calcAddition(eightK, wRegValue, true);
         result &= 255;
 
         Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
@@ -1210,7 +1210,7 @@ public class PIC {
         //Get value at fileaddress.
         int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
 
-        int result = ArithmeticLogicUnit.calcValue(regFileAddrValue, wRegValue, true);
+        int result = ArithmeticLogicUnit.calcAddition(regFileAddrValue, wRegValue, true);
         result &= 255;
 
         Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
