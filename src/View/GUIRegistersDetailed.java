@@ -163,14 +163,14 @@ public class GUIRegistersDetailed extends JPanel {
     }
 
     public void setIntcon(int[] aiIntcon) {
-        oIntconTable.setValueAt(aiIntcon[0] + "", 1, 0);
-        oIntconTable.setValueAt(aiIntcon[1] + "", 1, 1);
-        oIntconTable.setValueAt(aiIntcon[2] + "", 1, 2);
-        oIntconTable.setValueAt(aiIntcon[3] + "", 1, 3);
-        oIntconTable.setValueAt(aiIntcon[4] + "", 1, 4);
-        oIntconTable.setValueAt(aiIntcon[5] + "", 1, 5);
-        oIntconTable.setValueAt(aiIntcon[6] + "", 1, 6);
-        oIntconTable.setValueAt(aiIntcon[7] + "", 1, 7);
+        oIntconTable.setValueAt(aiIntcon[7] + "", 1, 0);
+        oIntconTable.setValueAt(aiIntcon[6] + "", 1, 1);
+        oIntconTable.setValueAt(aiIntcon[5] + "", 1, 2);
+        oIntconTable.setValueAt(aiIntcon[4] + "", 1, 3);
+        oIntconTable.setValueAt(aiIntcon[3] + "", 1, 4);
+        oIntconTable.setValueAt(aiIntcon[2] + "", 1, 5);
+        oIntconTable.setValueAt(aiIntcon[1] + "", 1, 6);
+        oIntconTable.setValueAt(aiIntcon[0] + "", 1, 7);
     }
 
     public void setTheme(int iThemeNr) {

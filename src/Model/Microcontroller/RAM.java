@@ -227,7 +227,7 @@ public class RAM {
                 set_T0IF(true);
                 set_TMR0((iValTMR0 + 1) & 255);
             } else {
-                set_T0IF(false);
+                //set_T0IF(false);
                 set_TMR0(iValTMR0 + 1);
             }
             //Prescaler assigned to TMR0, increment TMR0 if prescaled TMR0 equals TMR0 prescaler-rate.
@@ -241,7 +241,7 @@ public class RAM {
                     set_T0IF(true);
                     set_TMR0((iValTMR0 + 1) & 255);
                 } else {
-                    set_T0IF(false);
+                    //set_T0IF(false);
                     set_TMR0(iValTMR0 + 1);
                 }
             }
