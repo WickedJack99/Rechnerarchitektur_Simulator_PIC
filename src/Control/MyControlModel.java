@@ -1,8 +1,8 @@
 package Control;
 
 import Model.MyModelData;
-import Model.EepromLoader.ReadProgramFile;
 import Model.Microcontroller.PIC;
+import Model.ProgramLoader.ReadProgramFile;
 import View.GUIAbout;
 import View.GUIHelp;
 import View.MyView;

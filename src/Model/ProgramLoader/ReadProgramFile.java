@@ -1,4 +1,4 @@
-package Model.EepromLoader;
+package Model.ProgramLoader;
 
 import java.io.BufferedReader;
 import java.io.File;

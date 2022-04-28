@@ -222,28 +222,28 @@ public class MyControlView {
     public void showTimer0InterruptPrompt() {
         if (oPIC.getRam().get_GIE() && oPIC.getRam().get_T0IE() && oPIC.getRam().get_T0IF()) {
             Object[] options = {"Ok"};
-            JOptionPane.showOptionDialog(new JFrame(), asPromptDialogs[0][oMyView.getLanguage()], asPromptTitle[0][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+            JOptionPane.showOptionDialog(new JFrame(), asPromptDialogs[oMyView.getLanguage()][0], asPromptTitle[oMyView.getLanguage()][0], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         }
     }
 
     public void showEEInterruptPrompt() {
         if (oPIC.getRam().get_GIE() && oPIC.getRam().get_EEIE() && oPIC.getRam().get_EEIF()) {
             Object[] options = {"Ok"};
-            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[1][oMyView.getLanguage()], asPromptTitle[1][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[oMyView.getLanguage()][1], asPromptTitle[oMyView.getLanguage()][1], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         }
     }
 
     public void showPORTBInterruptPrompt() {
         if (oPIC.getRam().get_GIE() && oPIC.getRam().get_RBIE() && oPIC.getRam().get_RBIF()) {
             Object[] options = {"Ok"};
-            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[2][oMyView.getLanguage()], asPromptTitle[2][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[oMyView.getLanguage()][2], asPromptTitle[oMyView.getLanguage()][2], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         }
     }
 
     public void showRB0InterruptPrompt() {
         if (oPIC.getRam().get_GIE() && oPIC.getRam().get_INTE() && oPIC.getRam().get_INTF()) {
             Object[] options = {"Ok"};
-            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[3][oMyView.getLanguage()], asPromptTitle[3][oMyView.getLanguage()], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+            JOptionPane.showOptionDialog(new JFrame(),asPromptDialogs[oMyView.getLanguage()][3], asPromptTitle[oMyView.getLanguage()][3], JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         }
     }
 
