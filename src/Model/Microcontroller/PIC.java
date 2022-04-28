@@ -13,21 +13,24 @@ public class PIC {
      * Parts of PIC.
      * Objects are written with a large starting letter.
      */
-    private PROGRAMMEMORY Eeprom;
+    private PROGRAMMEMORY ProgramMemory;
     private RAM Ram;
     private STACK Stack;
     private int WRegister;
     private RUNTIMER Runtimer;
     private ALU ArithmeticLogicUnit;
+    private EEPROM Eeprom;
+    private int iStateMachineWriteEeprom = 0;
 
     public PIC() {
         //Initialising objects of PIC.
-        Eeprom = new PROGRAMMEMORY();
+        ProgramMemory = new PROGRAMMEMORY();
         Ram = new RAM();
         Stack = new STACK();
         Runtimer = new RUNTIMER(Ram);
         WRegister = 0;
         ArithmeticLogicUnit = new ALU();
+        Eeprom = new EEPROM();
     }
 
     public synchronized void resetPIC() {
@@ -76,7 +79,7 @@ public class PIC {
     }
 
     public synchronized PROGRAMMEMORY getEeprom() {
-        return Eeprom;
+        return ProgramMemory;
     }
 
     public synchronized STACK getStack() {
@@ -352,6 +355,16 @@ public class PIC {
      * Bit ’b’ in register ’f’ is set.
      */
     public void BSF(int bitaddress, int registerFileAddress) {
+        //TODO have to check bitaddress and registerFileAddress too
+        if (iStateMachineWriteEeprom == 3) {
+            iStateMachineWriteEeprom = 4;
+        } else if (iStateMachineWriteEeprom == 4) {
+            if (Ram.get_WREN()) {
+                Eeprom.writeToFile();
+            }
+        } else {
+            iStateMachineWriteEeprom = 0;
+        }
         //Get bitmask to OR with fileaddress to set bit.
         int bitMask = bitMaskSetBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
@@ -857,6 +870,12 @@ public class PIC {
      * as 0’s.
      */
     public void MOVLW(int eightK) {
+        //TODO has to check eightK
+        if (iStateMachineWriteEeprom == 1) {
+            iStateMachineWriteEeprom = 2;
+        } else {
+            iStateMachineWriteEeprom = 0;
+        }
         //is set to eightK bit literal.
         setWRegister(eightK);
 
@@ -913,6 +932,15 @@ public class PIC {
      * Move data from W register to file register
      */
     public void MOVWF(int registerFileAddress) {
+        //TODO has to check registerFileAddress
+        if (iStateMachineWriteEeprom == 0) {
+            iStateMachineWriteEeprom = 1;
+        } else if (iStateMachineWriteEeprom == 2) {
+            iStateMachineWriteEeprom = 3;
+        } else {
+            iStateMachineWriteEeprom = 0;
+        }
+
         //Data from is moved to fileregister.
         Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), get_WRegister(), false);
 
@@ -1158,7 +1186,7 @@ public class PIC {
     public void SLEEP() {
         //pause running (no Thread.sleep()!!!)
         //Not implemented 
-        
+
         //Increment programcounter and TMR0 if assigned to TMR0.
         Ram.inkrement_Programcounter(1);
         if (Ram.get_T0CS() == false) {

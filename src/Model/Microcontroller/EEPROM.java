@@ -17,6 +17,18 @@ public class EEPROM {
         oFile = new File("./eeprom.dat");
     }
 
+    public void setElementXOfEepromToY(int iX, int iY) {
+        aiEeprom[iX] = iY;
+    }
+
+    public void setEeprom(int[] aiNewEeprom) {
+        aiEeprom = aiNewEeprom;
+    }
+
+    public int[] getEeprom() {
+        return aiEeprom;
+    }
+
     public void changeEepromLocation(String sLocation) {
         oFile = new File(sLocation + "eeprom.dat");
     }

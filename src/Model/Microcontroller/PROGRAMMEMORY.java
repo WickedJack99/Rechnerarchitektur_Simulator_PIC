@@ -77,7 +77,7 @@ public class PROGRAMMEMORY
     /**
      * Returns length of EEPROM
      */
-    public int getLengthEEPROM() {
+    public int getLengthProgramMemory() {
         return eepromLength;
     }
 
