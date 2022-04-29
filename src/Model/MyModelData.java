@@ -1,16 +1,16 @@
 package Model;
 
-import Model.Microcontroller.PIC;
+import Model.Microcontroller.Pic;
 
 public class MyModelData {
-    private PIC oPIC;
+    private Pic oPIC;
     private int iQuartzInterval;
     private int iVisualInterval;
     private boolean bWDTEnabled = false;
 
     private boolean[] abBreakpoints;
 
-    public PIC getPIC() {
+    public Pic getPIC() {
         return oPIC;
     }
 
@@ -30,7 +30,7 @@ public class MyModelData {
         return bWDTEnabled;
     }
 
-    public void setPIC(PIC pic) {
+    public void setPIC(Pic pic) {
         this.oPIC = pic;
     }
 

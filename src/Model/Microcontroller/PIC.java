@@ -8,7 +8,7 @@ package Model.Microcontroller;
 /** 
  * Microcontrollerclass that contains all other partclasses
  */
-public class PIC {
+public class Pic {
     /**
      * Parts of PIC.
      * Objects are written with a large starting letter.
@@ -18,19 +18,19 @@ public class PIC {
     private STACK Stack;
     private int WRegister;
     private TIME Runtimer;
-    private ALU ArithmeticLogicUnit;
-    private EEPROM Eeprom;
+    private Alu ArithmeticLogicUnit;
+    private Eeprom Eeprom;
     private int iStateMachineWriteEeprom = 0;
 
-    public PIC() {
+    public Pic() {
         //Initialising objects of PIC.
         ProgramMemory = new PROGRAMMEMORY();
         Ram = new RAM();
         Stack = new STACK();
         Runtimer = new TIME(Ram);
         WRegister = 0;
-        ArithmeticLogicUnit = new ALU();
-        Eeprom = new EEPROM();
+        ArithmeticLogicUnit = new Alu();
+        Eeprom = new Eeprom();
     }
 
     public synchronized void resetPIC() {
@@ -355,11 +355,11 @@ public class PIC {
      * Bit ’b’ in register ’f’ is set.
      */
     public void BSF(int bitaddress, int registerFileAddress) {
-        //TODO have to check bitaddress and registerFileAddress too
-        if (iStateMachineWriteEeprom == 3) {
+        if ((iStateMachineWriteEeprom == 3) && (bitaddress == 1) && (registerFileAddress == 0x07)) {
             iStateMachineWriteEeprom = 4;
-        } else if (iStateMachineWriteEeprom == 4) {
+        } else if ((iStateMachineWriteEeprom == 4) && (bitaddress == 7) && (registerFileAddress == 0x0B)) {
             if (Ram.get_WREN()) {
+                //TODO start thread
                 Eeprom.writeToFile();
             }
         } else {
@@ -870,8 +870,7 @@ public class PIC {
      * as 0’s.
      */
     public void MOVLW(int eightK) {
-        //TODO has to check eightK
-        if (iStateMachineWriteEeprom == 1) {
+        if ((iStateMachineWriteEeprom == 1) && (eightK == 0xAA)) {
             iStateMachineWriteEeprom = 2;
         } else {
             iStateMachineWriteEeprom = 0;
@@ -932,10 +931,9 @@ public class PIC {
      * Move data from W register to file register
      */
     public void MOVWF(int registerFileAddress) {
-        //TODO has to check registerFileAddress
-        if (iStateMachineWriteEeprom == 0) {
+        if ((iStateMachineWriteEeprom == 0) && (WRegister == 0x55) && (registerFileAddress == 0x08)) {
             iStateMachineWriteEeprom = 1;
-        } else if (iStateMachineWriteEeprom == 2) {
+        } else if ((iStateMachineWriteEeprom == 2) && (WRegister == 0xAA) && (registerFileAddress == 0x08)) {
             iStateMachineWriteEeprom = 3;
         } else {
             iStateMachineWriteEeprom = 0;

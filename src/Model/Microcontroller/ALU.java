@@ -1,6 +1,6 @@
 package Model.Microcontroller;
 
-public class ALU {
+public class Alu {
     private boolean bCarryFlag = false;
     private boolean bDigitCarryFlag = false;
     private boolean bZeroFlag = false;

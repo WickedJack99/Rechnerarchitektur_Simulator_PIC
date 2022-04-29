@@ -6,16 +6,16 @@ import Control.MyControlModel;
 import Control.MyControlView;
 import Model.MyModel;
 import Model.MyModelData;
-import Model.Microcontroller.PIC;
+import Model.Microcontroller.Pic;
 import View.MyView;
 
 public class Main {
 
     public static void main(String[] args) {
-        PIC oPIC = new PIC();
+        Pic oPIC = new Pic();
 
         ConcurrentLinkedQueue<Integer> qCommandsToModel = new ConcurrentLinkedQueue<Integer>();
-        ConcurrentLinkedQueue<PIC> qDataToView = new ConcurrentLinkedQueue<PIC>();
+        ConcurrentLinkedQueue<Pic> qDataToView = new ConcurrentLinkedQueue<Pic>();
         ConcurrentLinkedQueue<MyModelData> qDataToModel = new ConcurrentLinkedQueue<MyModelData>();
 
         MyModel oModel = new MyModel(qCommandsToModel, qDataToView, qDataToModel);
@@ -30,7 +30,7 @@ public class Main {
         //Check if model sent a new pic-element through queue and update view.
         while (true) {
             while (!qDataToView.isEmpty()) {
-                PIC pic = qDataToView.poll();
+                Pic pic = qDataToView.poll();
                 oControlView.setPIC(pic);
                 oControlView.updateView();
             }

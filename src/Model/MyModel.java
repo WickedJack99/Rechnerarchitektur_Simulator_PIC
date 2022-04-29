@@ -2,11 +2,11 @@ package Model;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import Model.Microcontroller.INSTRUCTIONDECODER;
-import Model.Microcontroller.PIC;
+import Model.Microcontroller.InstructionDecoder;
+import Model.Microcontroller.Pic;
 
 public class MyModel extends Thread {
-    PIC oPIC = new PIC();
+    Pic oPIC = new Pic();
     
     MyModelData oMyModelData;
 
@@ -21,9 +21,9 @@ public class MyModel extends Thread {
 
     ConcurrentLinkedQueue<Integer> qReceivedCommands;
     ConcurrentLinkedQueue<MyModelData> qDataToModel;
-    ConcurrentLinkedQueue<PIC> qDataToView;
+    ConcurrentLinkedQueue<Pic> qDataToView;
 
-    public MyModel(ConcurrentLinkedQueue<Integer> qCommands, ConcurrentLinkedQueue<PIC> qDataS, ConcurrentLinkedQueue<MyModelData> qDataR) {
+    public MyModel(ConcurrentLinkedQueue<Integer> qCommands, ConcurrentLinkedQueue<Pic> qDataS, ConcurrentLinkedQueue<MyModelData> qDataR) {
         qReceivedCommands = qCommands;
         qDataToView = qDataS;
         qDataToModel = qDataR;
@@ -137,7 +137,7 @@ public class MyModel extends Thread {
     }
 
     private void step() {
-        INSTRUCTIONDECODER oBitmask = new INSTRUCTIONDECODER();
+        InstructionDecoder oBitmask = new InstructionDecoder();
         //Makes one step through the eeprom.
         oBitmask.decodeAndExecuteCommand(oPIC.getEeprom().getElement(oPIC.getRam().get_Programcounter()), oPIC);
         //Update view

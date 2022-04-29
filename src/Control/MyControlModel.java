@@ -1,7 +1,7 @@
 package Control;
 
 import Model.MyModelData;
-import Model.Microcontroller.PIC;
+import Model.Microcontroller.Pic;
 import Model.ProgramLoader.ReadProgramFile;
 import View.GUIAbout;
 import View.GUIHelp;
@@ -36,13 +36,13 @@ public class MyControlModel implements ActionListener {
     ReadProgramFile oRef;
     int iTestFileLoaded = 0;
     boolean[] abBreakpoints;
-    PIC oPIC;
+    Pic oPIC;
 
     MyModelData oMyModelData = new MyModelData();
 
     public MyControlModel(MyView view, ConcurrentLinkedQueue<Integer> qCommandsForModel, ConcurrentLinkedQueue<MyModelData> qDataForModel) {
         oMyView = view;
-        this.oPIC = new PIC();
+        this.oPIC = new Pic();
         this.qCommandsForModel = qCommandsForModel;
         this.qDataForModel = qDataForModel;
         oControlButtons = oMyView.getGUIMCMenu().getControlButtons();

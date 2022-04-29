@@ -7,12 +7,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class EEPROM {
+public class Eeprom {
 
     private int[] aiEeprom;
     private File oFile;
 
-    public EEPROM() {
+    public Eeprom() {
         aiEeprom = new int[64];
         oFile = new File("./eeprom.dat");
     }

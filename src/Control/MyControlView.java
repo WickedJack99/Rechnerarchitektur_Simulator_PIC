@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Model.Microcontroller.PIC;
+import Model.Microcontroller.Pic;
 import View.MyView;
 
 /**
@@ -25,10 +25,10 @@ public class MyControlView {
     };
 
     MyView oMyView;
-    PIC oPIC;
+    Pic oPIC;
     ConcurrentLinkedQueue<Integer> qCommandsToModel;
 
-    public MyControlView(PIC oPIC, MyView view, ConcurrentLinkedQueue<Integer> qCommands) {
+    public MyControlView(Pic oPIC, MyView view, ConcurrentLinkedQueue<Integer> qCommands) {
         oMyView = view;
         this.oPIC = oPIC;
         qCommandsToModel = qCommands;
@@ -328,7 +328,7 @@ public class MyControlView {
         
     }
 
-    public void setPIC(PIC oPic) {
+    public void setPIC(Pic oPic) {
         oPIC = oPic;
     }
 }

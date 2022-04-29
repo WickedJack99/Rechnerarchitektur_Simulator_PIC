@@ -1,10 +1,10 @@
 package Model;
 
-import Model.Microcontroller.PIC;
+import Model.Microcontroller.Pic;
 
 /**
  * Class to store program-state. TODO
  */
 public class ProgramStepInformation {
-    private PIC oPIC;
+    private Pic oPIC;
 }

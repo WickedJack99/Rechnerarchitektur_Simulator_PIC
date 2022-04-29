@@ -1,12 +1,12 @@
 package Model.Microcontroller;
 
-public class INSTRUCTIONDECODER {
+public class InstructionDecoder {
     /**
      * Decides which PIC-command-method to call.
      * @param iCommandAsIntToMask
      * @param oPIC
      */
-    public int decodeAndExecuteCommand(int iCommandAsIntToMask, PIC oPIC) {
+    public int decodeAndExecuteCommand(int iCommandAsIntToMask, Pic oPIC) {
         //System.out.println("Command " + Integer.toHexString(iCommandAsIntToMask));
         //Return-value will be -1 if command can't be read.
         int iDecodedCommand = -1;
@@ -274,7 +274,7 @@ public class INSTRUCTIONDECODER {
         return iDecodedCommand;
     }
 
-    public void executeCommand(int iDecodedCommand, PIC oPIC, int iDestinationBit, int iRegisterFileAddress, int iBitaddress, int iEightK, int iElevenK) {
+    public void executeCommand(int iDecodedCommand, Pic oPIC, int iDestinationBit, int iRegisterFileAddress, int iBitaddress, int iEightK, int iElevenK) {
         switch (iDecodedCommand) {
             case -1: {
                 System.out.println("Command doesn't exist.");

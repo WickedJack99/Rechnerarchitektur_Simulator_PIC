@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Model.Microcontroller.PIC;
+import Model.Microcontroller.Pic;
 
 public class ReadProgramFile {
 
@@ -208,7 +208,7 @@ public class ReadProgramFile {
      * @param k index of file in String-Array "files".
      * @param oPIC of the main-function.
      */
-    public void readFileAndWriteToEEPROM(PIC oPIC) {
+    public void readFileAndWriteToEEPROM(Pic oPIC) {
         if (oPCode.size() > 0) {
             //Integer-array which will contain oPCode as int-values.
             //Get an twodimensional array with int-values.
