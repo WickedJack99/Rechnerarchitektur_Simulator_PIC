@@ -758,6 +758,20 @@ public class Ram {
     //Bank0 PortB
     public synchronized void set_RB0_INT(boolean value) {
         int portB = get_PORTB();
+        boolean bOldRB0 = get_RB0_INT();
+        //If INTEDG is set, check if rising edge appeared
+        if (get_INTEDG()) {
+            //If rising edge appeared, set INT-Interrupt-Flag
+            if ((!bOldRB0) && value) {
+                set_INTF(true);
+            }
+        //If INTEDG is clear, check if falling edge appeared
+        } else {
+            //If falling edge appeared, set INT-Interrupt-Flag
+            if (bOldRB0 && (!value)) {
+                set_INTF(true);
+            }
+        }
         if (value) {
             portB |= 0b00000001;
         } else {

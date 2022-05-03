@@ -61,6 +61,7 @@ public class MyModel extends Thread {
                             }
                             //Check if interrupt was acknowledged
                             if (oPIC.interruptAcknowledged()) {
+                                qDataToView.add(oPIC);
                                 //Execute ISR
                                 oPIC.InterruptServiceRoutine();
                             } else {
@@ -113,11 +114,16 @@ public class MyModel extends Thread {
                         //Check if breakpoints are initialized
                         if (abBreakpoints != null) {
                             //Check if breakpoint is set
-                            int iProgC = oPIC.getRam().get_Programcounter();
-                            iProgC &= abBreakpoints.length;
-                            if (!abBreakpoints[iProgC]) {
-                                step();
-                                qDataToView.add(oPIC);
+                            if (!abBreakpoints[oPIC.getRam().get_Programcounter()]) {
+                                //Check if interrupt acknowledged 
+                                if (oPIC.interruptAcknowledged()) {
+                                    qDataToView.add(oPIC);
+                                    //Execute ISR
+                                    oPIC.InterruptServiceRoutine();
+                                } else {
+                                    step();
+                                    qDataToView.add(oPIC);
+                                }
                             }
                         } else {
                             System.out.println("Please load file!");
