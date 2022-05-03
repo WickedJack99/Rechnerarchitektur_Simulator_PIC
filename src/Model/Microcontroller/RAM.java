@@ -167,7 +167,14 @@ public class Ram {
                             bank1[2] = value;
                         }break;
                         case 3: {
-                            bank1[3] = value;
+                            if (bStatusAffected) {
+                                int iStatus_Lower = get_STATUS() & 0b111;
+                                int iSTATUS_Upper = value & 0b11111000;
+                                int iNewSTATUS = iSTATUS_Upper | iStatus_Lower;
+                                set_STATUS(iNewSTATUS);
+                            } else {
+                                set_STATUS(value);
+                            } 
                         }break;
                         case 4: {
                             bank1[4] = value;
