@@ -13,7 +13,7 @@ package Model.Microcontroller;
  * 
  * Page 13 datasheet parts of RAM.
  */
-public class RAM {
+public class Ram {
     //Bank0 of the PIC-RAM
     private int[] bank0;
 
@@ -32,7 +32,7 @@ public class RAM {
      * Constructor of RAM
      * Initializes two banks as two int arrays of size 128.
      */
-    public RAM() {
+    public Ram() {
         //Bank0 of the PIC-RAM
         bank0 = new int[128];
 
@@ -206,6 +206,7 @@ public class RAM {
      * @param value to set TMR0 to.
      */
     public synchronized void set_TMR0(int value) {
+        iPrescaledTMR0 = 0;
         value &= 255;
         bank0[1] = value;
     }
@@ -225,9 +226,9 @@ public class RAM {
             //Increment TMR0 by 1, set T0IF at overflow.
             if ((iValTMR0 + 1) > 255) {
                 set_T0IF(true);
-                set_TMR0((iValTMR0 + 1) & 255);
+                bank0[1] = (iValTMR0 + 1) & 255;
             } else {
-                set_TMR0(iValTMR0 + 1);
+                bank0[1] = (iValTMR0 + 1) & 255;
             }
             //Prescaler assigned to TMR0, increment TMR0 if prescaled TMR0 equals TMR0 prescaler-rate.
         } else {
@@ -238,9 +239,9 @@ public class RAM {
                 //Increment TMR0 by 1, set T0IF at overflow.
                 if ((iValTMR0 + 1) > 255) {
                     set_T0IF(true);
-                    set_TMR0((iValTMR0 + 1) & 255);
+                    bank0[1] = (iValTMR0 + 1) & 255;
                 } else {
-                    set_TMR0(iValTMR0 + 1);
+                    bank0[1] = (iValTMR0 + 1) & 255;
                 }
             }
         }

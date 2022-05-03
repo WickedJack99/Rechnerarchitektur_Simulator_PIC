@@ -10,7 +10,7 @@ import java.util.EmptyStackException;
 /**
  * Datasheet Page 18
  */
-public class STACK
+public class Stack
 {
     private int stackpointer;
     private int[] stack;
@@ -21,7 +21,7 @@ public class STACK
     /**
      * Constructor of STACK.
      */
-    public STACK() //
+    public Stack() //
     {
         stackpointer = 0;
         //Initialize stack with -1 to decide wether the stack is empty or not, because 0 could be a return address.

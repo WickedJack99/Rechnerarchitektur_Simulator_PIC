@@ -13,30 +13,30 @@ public class Pic {
      * Parts of PIC.
      * Objects are written with a large starting letter.
      */
-    private PROGRAMMEMORY ProgramMemory;
-    private RAM Ram;
-    private STACK Stack;
+    private ProgramMemory ProgramMemory;
+    private Ram Ram;
+    private Stack Stack;
     private int WRegister;
-    private TIME Runtimer;
+    private Time Runtimer;
     private Alu ArithmeticLogicUnit;
-    private Eeprom Eeprom;
+    private Eeprom oEeprom;
     private int iStateMachineWriteEeprom = 0;
 
     public Pic() {
         //Initialising objects of PIC.
-        ProgramMemory = new PROGRAMMEMORY();
-        Ram = new RAM();
-        Stack = new STACK();
-        Runtimer = new TIME(Ram);
+        ProgramMemory = new ProgramMemory();
+        Ram = new Ram();
+        Stack = new Stack();
+        Runtimer = new Time(Ram);
         WRegister = 0;
         ArithmeticLogicUnit = new Alu();
-        Eeprom = new Eeprom();
+        oEeprom = new Eeprom();
     }
 
     public synchronized void resetPIC() {
-        Ram = new RAM();
-        Stack = new STACK();
-        Runtimer = new TIME(Ram);
+        Ram = new Ram();
+        Stack = new Stack();
+        Runtimer = new Time(Ram);
         WRegister = 0;
     }
 
@@ -74,19 +74,19 @@ public class Pic {
         return WRegister;
     }
 
-    public synchronized RAM getRam() {
+    public synchronized Ram getRam() {
         return Ram;
     }
 
-    public synchronized PROGRAMMEMORY getEeprom() {
+    public synchronized ProgramMemory getEeprom() {
         return ProgramMemory;
     }
 
-    public synchronized STACK getStack() {
+    public synchronized Stack getStack() {
         return Stack;
     }
 
-    public synchronized TIME getRuntimer() {
+    public synchronized Time getRuntimer() {
         return Runtimer;
     }
 
@@ -359,8 +359,8 @@ public class Pic {
             iStateMachineWriteEeprom = 4;
         } else if ((iStateMachineWriteEeprom == 4) && (bitaddress == 7) && (registerFileAddress == 0x0B)) {
             if (Ram.get_WREN()) {
-                //TODO start thread
-                Eeprom.writeToFile();
+                EepromThread oEepromThread = new EepromThread(oEeprom, 1);
+                oEepromThread.run();
             }
         } else {
             iStateMachineWriteEeprom = 0;

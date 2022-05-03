@@ -7,19 +7,19 @@ package Model.Microcontroller;
  /**
   * ProgramMemory of the PIC (Programmspeicher)
   */
-public class PROGRAMMEMORY
+public class ProgramMemory
 {
     private int[][] aiiProgramMemory;
     private int iProgramMemoryLength = 1024;
 
     private int[] aiProgramLines;
 
-    public PROGRAMMEMORY()
+    public ProgramMemory()
     {
         aiiProgramMemory = new int[iProgramMemoryLength][2];
     }
 
-    public PROGRAMMEMORY(int iLength) {
+    public ProgramMemory(int iLength) {
         aiiProgramMemory = new int[iLength][2];
     }
 

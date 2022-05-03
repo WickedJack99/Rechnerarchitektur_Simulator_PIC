@@ -1,6 +1,6 @@
 package Model.Microcontroller;
 
-public class TIME {
+public class Time {
     private double dRuntime;
     private double dMaxWatchdog;
     private double dOldMaxWatchdog;
@@ -9,9 +9,9 @@ public class TIME {
 
     private boolean WDTE = false;
 
-    private RAM oRam;
+    private Ram oRam;
 
-    public TIME(RAM oRam) {
+    public Time(Ram oRam) {
         dWatchdogTimer = dMaxWatchdog = dOldMaxWatchdog = 18000;
         this.oRam = oRam;
     }
