@@ -34,6 +34,7 @@ public class Eeprom {
     }
 
     public boolean writeToFile() {
+        System.out.println("Eeprom is written");
         boolean bSuccess = false;
         try {
             try {
@@ -58,6 +59,7 @@ public class Eeprom {
     }
 
     public boolean readFromFile() {
+        System.out.println("Eeprom is read");
         boolean bSuccess = false;
         try {
             try {
