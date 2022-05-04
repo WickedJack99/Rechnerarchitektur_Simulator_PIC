@@ -827,6 +827,11 @@ public class Ram {
     }
 
     public synchronized void set_RB4(boolean value) {
+        boolean bOldRB4 = get_RB4();
+        //On change, set RBIF
+        if (bOldRB4 != value) {
+            set_RBIF(true);
+        }
         int portB = get_PORTB();
         if (value) {
             portB |= 0b00010000;
@@ -841,6 +846,11 @@ public class Ram {
     }
 
     public synchronized void set_RB5(boolean value) {
+        boolean bOldRB5 = get_RB5();
+        //On change, set RBIF
+        if (bOldRB5 != value) {
+            set_RBIF(true);
+        }
         int portB = get_PORTB();
         if (value) {
             portB |= 0b00100000;
@@ -855,6 +865,11 @@ public class Ram {
     }
 
     public synchronized void set_RB6(boolean value) {
+        boolean bOldRB6 = get_RB6();
+        //On change, set RBIF
+        if (bOldRB6 != value) {
+            set_RBIF(true);
+        }
         int portB = get_PORTB();
         if (value) {
             portB |= 0b01000000;
@@ -869,6 +884,11 @@ public class Ram {
     }
 
     public synchronized void set_RB7(boolean value) {
+        boolean bOldRB7 = get_RB7();
+        //On change, set RBIF
+        if (bOldRB7 != value) {
+            set_RBIF(true);
+        }
         int portB = get_PORTB();
         if (value) {
             portB |= 0b10000000;
