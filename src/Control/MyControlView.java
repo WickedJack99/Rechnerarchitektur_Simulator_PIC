@@ -141,6 +141,15 @@ public class MyControlView {
         abEnabled[8] = true;
         abEnabled[9] = true;
 
+        boolean[] abSelected = new boolean[5];
+
+        abSelected[0] = oPIC.getRam().get_RA0();
+        abSelected[1] = oPIC.getRam().get_RA1();
+        abSelected[2] = oPIC.getRam().get_RA2();
+        abSelected[3] = oPIC.getRam().get_RA3();
+        abSelected[4] = oPIC.getRam().get_RA4_T0CKI();
+
+        oMyView.getGUIPorts().checkPortsA(abSelected);
         oMyView.getGUIPorts().enableCheckboxesA(abEnabled);
     }
 
@@ -169,6 +178,18 @@ public class MyControlView {
         abEnabled[14] = true;
         abEnabled[15] = true;
 
+        boolean[] abSelected = new boolean[8];
+
+        abSelected[0] = oPIC.getRam().get_RB0_INT();
+        abSelected[1] = oPIC.getRam().get_RB1();
+        abSelected[2] = oPIC.getRam().get_RB2();
+        abSelected[3] = oPIC.getRam().get_RB3();
+        abSelected[4] = oPIC.getRam().get_RB4();
+        abSelected[5] = oPIC.getRam().get_RB5();
+        abSelected[6] = oPIC.getRam().get_RB6();
+        abSelected[7] = oPIC.getRam().get_RB7();
+
+        oMyView.getGUIPorts().checkPortsB(abSelected);
         oMyView.getGUIPorts().enableCheckboxesB(abEnabled);
     }
 

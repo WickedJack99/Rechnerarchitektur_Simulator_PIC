@@ -9,6 +9,12 @@ import Model.MyModelData;
 import Model.Microcontroller.Pic;
 import View.MyView;
 
+//LST 1,2,3,4,5,6,7,8,10,15,101 funktionieren
+//LST 9 und 11 funktionieren nicht, da WDT nicht richtig implementiert
+//LST 12 funktioniert nicht, da eeprom nicht komplett
+//LST 13 funktioniert nicht, da kein Lauflicht implementiert
+//LST 14 funktioniert nicht, da kein Leuchtband implementiert
+
 public class Main {
 
     public static void main(String[] args) {

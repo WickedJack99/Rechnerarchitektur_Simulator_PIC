@@ -215,6 +215,24 @@ public class GUIPorts extends JPanel {
             return null;
     }
 
+    public void checkPortsA(boolean[] bChecked) {
+        for (int i = 0; i < 5; i++) {
+            if (!oCheckboxes.get(i).isEnabled()) {
+                oCheckboxes.get(i).setSelected(bChecked[i]);
+            }
+        }
+    }
+
+    public void checkPortsB(boolean[] bChecked) {
+        int j = 0;
+        for (int i = 10; i < 18; i++) {
+            if (!oCheckboxes.get(i).isEnabled()) {
+                oCheckboxes.get(i).setSelected(bChecked[j]);
+            }
+            j++;
+        }
+    }
+
     public void enableCheckboxesA(boolean[] abEnabled) {
         for (int i = 0; i < 10; i++) {
             oCheckboxes.get(i).setEnabled(abEnabled[i]);
