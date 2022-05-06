@@ -25,7 +25,7 @@ public class Stack
     {
         stackpointer = 0;
         //Initialize stack with -1 to decide wether the stack is empty or not, because 0 could be a return address.
-        stack = new int[8];
+        stack = new int[]{-1, -1, -1, -1, -1, -1, -1, -1};
     }
 
     /**
