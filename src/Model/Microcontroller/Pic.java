@@ -687,6 +687,7 @@ public class Pic {
         //Increment TMR0 if internal instruction cycle assigned to TMR0.
         if (Ram.get_T0CS() == false) {
             Ram.increment_TMR0();
+            Ram.increment_TMR0();
         }
 
         Runtimer.incrementRuntime();
