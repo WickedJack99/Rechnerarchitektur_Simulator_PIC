@@ -34,7 +34,7 @@ public class Main {
         MyControlView oControlView = new MyControlView(oPIC, oView, qCommandsToModel);
 
         new MyControlModel(oView, qCommandsToModel, qDataToModel);
-
+        
         //Check if model sent a new pic-element through queue and update view.
         while (true) {
             while (!qDataToView.isEmpty()) {

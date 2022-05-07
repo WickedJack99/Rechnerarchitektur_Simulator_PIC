@@ -307,47 +307,6 @@ public class MyControlView {
             }
         }
     }
-    
-    public void startProgramView() {
-
-    }
-
-    public void stepProgramView() {
-
-    }
-
-    public void pauseProgramView() {
-
-    }
-
-    public void resetProgramView() {
-
-    }
-
-    public void controlWDTView(boolean bEnabled) {
-
-    }
-
-    public void setQuarzView(int iElement) {
-
-    }
-
-
-    public void loadFileToEEPROMView(ArrayList<String> oData) {
-
-    }
-
-    public void saveSimulatorStateView() {
-
-    }
-
-    public void loadSimulatorStateView() {
-
-    }
-
-    public void exitSimulatorView() {
-        
-    }
 
     public void setPIC(Pic oPic) {
         oPIC = oPic;
