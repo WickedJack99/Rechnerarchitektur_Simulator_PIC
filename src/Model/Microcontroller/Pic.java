@@ -1,9 +1,8 @@
-package Model.Microcontroller;
-
 /**
  * @author Aaron Moser
  * @date 23.06.2021
  */
+package Model.Microcontroller;
 
 /** 
  * Microcontrollerclass that contains all other partclasses
@@ -31,6 +30,11 @@ public class Pic {
         WRegister = 0;
         ArithmeticLogicUnit = new Alu();
         oEeprom = new Eeprom();
+
+        Ram.set_OPTION(0b11111111);
+        Ram.set_TRISA(0b11111);
+        Ram.set_TRISB(0b11111111);
+        Ram.set_STATUS(0b00011000);
     }
 
     public synchronized void resetPIC() {
@@ -38,6 +42,11 @@ public class Pic {
         Stack = new Stack();
         Runtimer = new Time(Ram);
         WRegister = 0;
+
+        Ram.set_OPTION(0b11111111);
+        Ram.set_TRISA(0b11111);
+        Ram.set_TRISB(0b11111111);
+        Ram.set_STATUS(0b00011000);
     }
 
     //Bitmasks to set or get bits (use OR for set and AND for get).

@@ -1,3 +1,6 @@
+/**
+ * @author Aaron Moser
+ */
 package Model;
 
 import java.util.concurrent.ConcurrentLinkedQueue;

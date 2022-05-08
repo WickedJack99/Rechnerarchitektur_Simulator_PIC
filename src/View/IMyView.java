@@ -1,3 +1,6 @@
+/**
+ * @author Aaron Moser
+ */
 package View;
 
 public interface IMyView {

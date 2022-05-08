@@ -1,3 +1,6 @@
+/**
+ * @author Aaron Moser
+ */
 package View;
 
 import java.awt.Dimension;
@@ -195,7 +198,7 @@ public class GUITestFileTable extends JScrollPane {
      * @param iLineToMark
      */
     public void markLine(int iLineToMark) {
-        if (oLineInformation.size() > iLineToMark) {
+        if (oLineInformation.size() > (iLineToMark * 2 + 1)) {
             if (iLineToMark > -1) {
                 oLineInformation.get(iLineToMark * 2).setForeground(getThemeColor()[3]);
                 oLineInformation.get(iLineToMark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[3]));
@@ -210,7 +213,7 @@ public class GUITestFileTable extends JScrollPane {
      * @param iLineToUnmark
      */
     public void unmarkLine(int iLineToUnmark) {
-        if (oLineInformation.size() > iLineToUnmark) {
+        if (oLineInformation.size() > (iLineToUnmark * 2 + 1)) {
             if (iLineToUnmark > -1) {
                 oLineInformation.get(iLineToUnmark * 2).setForeground(getThemeColor()[0]);
                 oLineInformation.get(iLineToUnmark * 2).setBorder(BorderFactory.createLineBorder(getThemeColor()[2]));

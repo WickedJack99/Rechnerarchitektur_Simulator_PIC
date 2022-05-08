@@ -1,6 +1,8 @@
+/**
+ * @author Aaron Moser
+ */
 package Control;
 
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JFrame;
@@ -149,6 +151,15 @@ public class MyControlView {
         abSelected[3] = oPIC.getRam().get_RA3();
         abSelected[4] = oPIC.getRam().get_RA4_T0CKI();
 
+        boolean[] abTrisSelected = new boolean[5];
+
+        abTrisSelected[0] = oPIC.getRam().get_TRISA0();
+        abTrisSelected[1] = oPIC.getRam().get_TRISA1();
+        abTrisSelected[2] = oPIC.getRam().get_TRISA2();
+        abTrisSelected[3] = oPIC.getRam().get_TRISA3();
+        abTrisSelected[4] = oPIC.getRam().get_TRISA4();
+
+        oMyView.getGUIPorts().checkTrisA(abTrisSelected);
         oMyView.getGUIPorts().checkPortsA(abSelected);
         oMyView.getGUIPorts().enableCheckboxesA(abEnabled);
     }
@@ -189,6 +200,18 @@ public class MyControlView {
         abSelected[6] = oPIC.getRam().get_RB6();
         abSelected[7] = oPIC.getRam().get_RB7();
 
+        boolean[] abTrisSelected = new boolean[8];
+
+        abTrisSelected[0] = oPIC.getRam().get_TRISB0();
+        abTrisSelected[1] = oPIC.getRam().get_TRISB1();
+        abTrisSelected[2] = oPIC.getRam().get_TRISB2();
+        abTrisSelected[3] = oPIC.getRam().get_TRISB3();
+        abTrisSelected[4] = oPIC.getRam().get_TRISB4();
+        abTrisSelected[5] = oPIC.getRam().get_TRISB5();
+        abTrisSelected[6] = oPIC.getRam().get_TRISB6();
+        abTrisSelected[7] = oPIC.getRam().get_TRISB7();
+
+        oMyView.getGUIPorts().checkTrisB(abTrisSelected);
         oMyView.getGUIPorts().checkPortsB(abSelected);
         oMyView.getGUIPorts().enableCheckboxesB(abEnabled);
     }

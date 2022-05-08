@@ -1,3 +1,6 @@
+/**
+ * @author Aaron Moser
+ */
 package View;
 
 import java.util.ArrayList;
@@ -229,6 +232,22 @@ public class GUIPorts extends JPanel {
             if (!oCheckboxes.get(i).isEnabled()) {
                 oCheckboxes.get(i).setSelected(bChecked[j]);
             }
+            j++;
+        }
+    }
+
+    public void checkTrisA(boolean[] bChecked) {
+        int j = 0;
+        for (int i = 5; i < 10; i++) {
+            oCheckboxes.get(i).setSelected(bChecked[j]);
+            j++;
+        }
+    }
+
+    public void checkTrisB(boolean[] bChecked) {
+        int j = 0;
+        for (int i = 18; i < 26; i++) {
+            oCheckboxes.get(i).setSelected(bChecked[j]);
             j++;
         }
     }

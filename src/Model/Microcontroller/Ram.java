@@ -1,9 +1,8 @@
-package Model.Microcontroller;
-
 /**
  * @author Aaron Moser
  * @date 23.06.2021
  */
+package Model.Microcontroller;
 
 /**
  * Random Access Memory of the PIC (Datenspeicher)

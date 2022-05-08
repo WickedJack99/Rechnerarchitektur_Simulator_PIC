@@ -1,3 +1,6 @@
+/**
+ * @author Aaron Moser
+ */
 package Model.Microcontroller;
 
 public class EepromThread extends Thread {

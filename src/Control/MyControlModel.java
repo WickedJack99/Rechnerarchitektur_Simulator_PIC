@@ -1,3 +1,6 @@
+/**
+ * @author Aaron Moser
+ */
 package Control;
 
 import Model.MyModelData;

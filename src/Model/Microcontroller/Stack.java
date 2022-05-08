@@ -1,11 +1,10 @@
-package Model.Microcontroller;
-
-import java.util.EmptyStackException;
-
 /**
  * @author Aaron Moser
  * @date 31.03.2021
  */
+package Model.Microcontroller;
+
+import java.util.EmptyStackException;
 
 /**
  * Datasheet Page 18

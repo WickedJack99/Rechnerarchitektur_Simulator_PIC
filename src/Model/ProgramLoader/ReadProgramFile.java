@@ -1,3 +1,6 @@
+/**
+ * @author Aaron Moser
+ */
 package Model.ProgramLoader;
 
 import java.io.BufferedReader;
