@@ -242,23 +242,23 @@ public class MyControlView {
     }
 
     public void setTestFileTable() {
-        if (oPIC.getEeprom().getProgramLines() != null) {
+        if (oPIC.getProgramMemory().getProgramLines() != null) {
             if (oPIC.getRam().get_LastProgramcounter() > -1) {
-                int[] aiProgList = oPIC.getEeprom().getProgramLines();
+                int[] aiProgList = oPIC.getProgramMemory().getProgramLines();
                 for (int i = 0; i < aiProgList.length; i++) {
                     oMyView.getGUITestFileTable().unmarkLine(aiProgList[i]);
                 }
 
                 int iProgC = oPIC.getRam().get_Programcounter();
 
-                oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getIndex(iProgC));
+                oMyView.getGUITestFileTable().markLine(oPIC.getProgramMemory().getIndex(iProgC));
                 
             } else {
-                int[] aiProgList = oPIC.getEeprom().getProgramLines();
+                int[] aiProgList = oPIC.getProgramMemory().getProgramLines();
                 for (int i = 0; i < aiProgList.length; i++) {
                     oMyView.getGUITestFileTable().unmarkLine(aiProgList[i]);
                 }
-                oMyView.getGUITestFileTable().markLine(oPIC.getEeprom().getProgramLine(0));
+                oMyView.getGUITestFileTable().markLine(oPIC.getProgramMemory().getProgramLine(0));
             }
         }
     }

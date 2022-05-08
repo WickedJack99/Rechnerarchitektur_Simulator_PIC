@@ -230,9 +230,9 @@ public class ReadProgramFile {
                 int iIndex = oPCodeAsInt[i][2];
 
                 //asCommands are written into EEPROM
-                oPIC.getEeprom().setElementXToValueY(memoryAdress, command);
+                oPIC.getProgramMemory().setElementXToValueY(memoryAdress, command);
 
-                oPIC.getEeprom().setElementXToIndexY(memoryAdress, iIndex);
+                oPIC.getProgramMemory().setElementXToIndexY(memoryAdress, iIndex);
             }
         } 
     }

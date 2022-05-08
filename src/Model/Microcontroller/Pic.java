@@ -12,41 +12,41 @@ public class Pic {
      * Parts of PIC.
      * Objects are written with a large starting letter.
      */
-    private ProgramMemory ProgramMemory;
-    private Ram Ram;
-    private Stack Stack;
-    private int WRegister;
-    private Time Runtimer;
-    private Alu ArithmeticLogicUnit;
+    private ProgramMemory oProgramMemory;
+    private Ram oRam;
+    private Stack oStack;
+    private int iWRegister;
+    private Time oRuntimer;
+    private Alu oArithmeticLogicUnit;
     private Eeprom oEeprom;
     private int iStateMachineWriteEeprom = 0;
 
     public Pic() {
         //Initialising objects of PIC.
-        ProgramMemory = new ProgramMemory();
-        Ram = new Ram();
-        Stack = new Stack();
-        Runtimer = new Time(Ram);
-        WRegister = 0;
-        ArithmeticLogicUnit = new Alu();
+        oProgramMemory = new ProgramMemory();
+        oRam = new Ram();
+        oStack = new Stack();
+        oRuntimer = new Time(oRam);
+        iWRegister = 0;
+        oArithmeticLogicUnit = new Alu();
         oEeprom = new Eeprom();
 
-        Ram.set_OPTION(0b11111111);
-        Ram.set_TRISA(0b11111);
-        Ram.set_TRISB(0b11111111);
-        Ram.set_STATUS(0b00011000);
+        oRam.set_OPTION(0b11111111);
+        oRam.set_TRISA(0b11111);
+        oRam.set_TRISB(0b11111111);
+        oRam.set_STATUS(0b00011000);
     }
 
-    public synchronized void resetPIC() {
-        Ram = new Ram();
-        Stack = new Stack();
-        Runtimer = new Time(Ram);
-        WRegister = 0;
+    public void resetPIC() {
+        oRam = new Ram();
+        oStack = new Stack();
+        oRuntimer = new Time(oRam);
+        iWRegister = 0;
 
-        Ram.set_OPTION(0b11111111);
-        Ram.set_TRISA(0b11111);
-        Ram.set_TRISB(0b11111111);
-        Ram.set_STATUS(0b00011000);
+        oRam.set_OPTION(0b11111111);
+        oRam.set_TRISA(0b11111);
+        oRam.set_TRISB(0b11111111);
+        oRam.set_STATUS(0b00011000);
     }
 
     //Bitmasks to set or get bits (use OR for set and AND for get).
@@ -75,28 +75,28 @@ public class Pic {
     int bitMaskClearBitArray[] = { bitMaskClearBit0, bitMaskClearBit1, bitMaskClearBit2, bitMaskClearBit3, bitMaskClearBit4, bitMaskClearBit5,
                                    bitMaskClearBit6, bitMaskClearBit7};
 
-    public synchronized void setWRegister(int value) {
-        WRegister = value;
+    public void setWRegister(int value) {
+        iWRegister = value;
     }
 
-    public synchronized int get_WRegister() {
-        return WRegister;
+    public int get_WRegister() {
+        return iWRegister;
     }
 
-    public synchronized Ram getRam() {
-        return Ram;
+    public Ram getRam() {
+        return oRam;
     }
 
-    public synchronized ProgramMemory getEeprom() {
-        return ProgramMemory;
+    public ProgramMemory getProgramMemory() {
+        return oProgramMemory;
     }
 
-    public synchronized Stack getStack() {
-        return Stack;
+    public Stack getStack() {
+        return oStack;
     }
 
-    public synchronized Time getRuntimer() {
-        return Runtimer;
+    public Time getRuntimer() {
+        return oRuntimer;
     }
 
     public boolean interruptAcknowledged() {
@@ -126,7 +126,7 @@ public class Pic {
 
     public void InterruptServiceRoutine() {
         this.getRam().set_GIE(false);
-        Stack.pushReturnAdressOnStack(this.getRam().get_Programcounter());
+        oStack.pushReturnAdressOnStack(this.getRam().get_Programcounter());
         this.getRam().set_Programcounter(0x0004);
     }
 
@@ -139,23 +139,23 @@ public class Pic {
      */
     public void ADDLW(int eightK) {
         int wRegValue = get_WRegister();
-        int result = ArithmeticLogicUnit.calcAddition(eightK, wRegValue, false);
+        int result = oArithmeticLogicUnit.calcAddition(eightK, wRegValue, false);
         result &= 255;
         setWRegister(result);
 
-        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
-        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
-        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
+        oRam.set_Carryflag(oArithmeticLogicUnit.getCarryFlag());
+        oRam.set_Digitcarryflag(oArithmeticLogicUnit.getDigitCarryFlag());
+        oRam.set_Zeroflag(oArithmeticLogicUnit.getZeroFlag());
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false)
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false)
+            oRam.increment_TMR0();
 
         //Each Instruction has to split Programmcounter to PCL and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b11111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -171,27 +171,27 @@ public class Pic {
 
         //If result is zero.
         if (result == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
         
         //If result is not zero.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         //Write result into 
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -206,14 +206,14 @@ public class Pic {
         //Get Value of 
         int wRegValue = get_WRegister();
         //Get Value of RAM-Bank-RP0Bit Address.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
         //Calculate result.
-        int result = ArithmeticLogicUnit.calcAddition(regFileAddrValue, wRegValue, false);
+        int result = oArithmeticLogicUnit.calcAddition(regFileAddrValue, wRegValue, false);
 
-        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
-        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
-        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
+        oRam.set_Carryflag(oArithmeticLogicUnit.getCarryFlag());
+        oRam.set_Digitcarryflag(oArithmeticLogicUnit.getDigitCarryFlag());
+        oRam.set_Zeroflag(oArithmeticLogicUnit.getZeroFlag());
 
         //If the destinationbit is 0, the result is written into the 
         if (destinationBit == 0) {
@@ -222,19 +222,19 @@ public class Pic {
 
         //If the destinationbit is 1, the result is written into the RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -249,19 +249,19 @@ public class Pic {
         //Get Value of 
         int wRegValue = get_WRegister();
         //Get Value of RAM-Bank-RP0Bit Address.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         
         //Calculate result.
         int result = wRegValue & regFileAddrValue;
 
         //If result is zero.
         if (result == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
         
         //If result is not zero.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         //If the destinationbit is 0, the result is written into the 
@@ -271,19 +271,19 @@ public class Pic {
 
         //If the destinationbit is 1, the result is written into the RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -295,25 +295,25 @@ public class Pic {
         //Get bitmask to clear bit in fileaddress.
         int bitMask = bitMaskClearBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
         //Result is bitMask AND value at fileaddress.
         //(For example bit 0: 11111110 & 11111111 = 11111110).
         int result = bitMask & regFileAddrValue;
 
         //Write result back into fileregister.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
+        oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -330,32 +330,32 @@ public class Pic {
         //Get bitmask to AND with fileaddress to get bit.
         int bitMask = bitMaskSetBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
         //If bit at bitaddress is 1, next instruction is executed.
         if ((bitMask & regFileAddrValue) == bitMask) {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1);
-            if (Ram.get_T0CS() == false) {
-                Ram.increment_TMR0();
+            oRam.inkrement_Programcounter(1);
+            if (oRam.get_T0CS() == false) {
+                oRam.increment_TMR0();
             }
         }
 
         //If bit at bitaddress is 0, next instruction will be replaced by a NOP.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1);
-            if (Ram.get_T0CS() == false) {
-                Ram.increment_TMR0();
+            oRam.inkrement_Programcounter(1);
+            if (oRam.get_T0CS() == false) {
+                oRam.increment_TMR0();
             }
             //Execute NOP.
             NOP();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -367,7 +367,7 @@ public class Pic {
         if ((iStateMachineWriteEeprom == 3) && (bitaddress == 1) && (registerFileAddress == 0x07)) {
             iStateMachineWriteEeprom = 4;
         } else if ((iStateMachineWriteEeprom == 4) && (bitaddress == 7) && (registerFileAddress == 0x0B)) {
-            if (Ram.get_WREN()) {
+            if (oRam.get_WREN()) {
                 EepromThread oEepromThread = new EepromThread(oEeprom, 1);
                 oEepromThread.run();
             }
@@ -377,24 +377,24 @@ public class Pic {
         //Get bitmask to OR with fileaddress to set bit.
         int bitMask = bitMaskSetBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
         //Result is bitMask OR file-register-value.
         int result = bitMask | regFileAddrValue;
 
         //Write result into file-register.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
+        oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -410,32 +410,32 @@ public class Pic {
         //Get bitmask to AND with fileaddress to get bit.
         int bitMask = bitMaskSetBitArray[bitaddress];
         //Get Value of RAM-Bank-RP0Bit Address.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
         //If bit at bitaddress is 0, next instruction is executed.
         if ((bitMask & regFileAddrValue) != bitMask) {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1);
-            if (Ram.get_T0CS() == false) {
-                Ram.increment_TMR0();
+            oRam.inkrement_Programcounter(1);
+            if (oRam.get_T0CS() == false) {
+                oRam.increment_TMR0();
             }
         }
 
         //If bit at bitaddress is 1, next instruction will be replaced by a NOP.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1);
-            if (Ram.get_T0CS() == false) {
-                Ram.increment_TMR0();
+            oRam.inkrement_Programcounter(1);
+            if (oRam.get_T0CS() == false) {
+                oRam.increment_TMR0();
             }
             //Execute NOP.
             NOP();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -450,20 +450,20 @@ public class Pic {
      */
     public void CALL(int elevenK) {
         //Push next instruction on STACK.
-        Stack.pushReturnAdressOnStack(Ram.get_Programcounter() + 1);
+        oStack.pushReturnAdressOnStack(oRam.get_Programcounter() + 1);
 
         //Set Programmcounter to new address.
-        Ram.set_Programcounter(elevenK + ((Ram.get_PCLATH() & 0b11000) << 8));
+        oRam.set_Programcounter(elevenK + ((oRam.get_PCLATH() & 0b11000) << 8));
 
         //Increment TMR0 if internal instruction cycle assigned to TMR0.
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b11111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b11111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -474,19 +474,19 @@ public class Pic {
      */
     public void CLRF(int registerFileAddress) {
         //Value at fileregisteraddress is set to zero.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), 0, true);
+        oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), 0, true);
         //Zeroflag is set.
-        Ram.set_Zeroflag(true);
+        oRam.set_Zeroflag(true);
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //Each Instruction has to split Programmcounter to PC and PCLATH because Ram can't see RAM.
-        Ram.set_PCL(Ram.get_Programcounter() & 0b0000011111111);
+        oRam.set_PCL(oRam.get_Programcounter() & 0b0000011111111);
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -499,14 +499,14 @@ public class Pic {
         //Set to zero.
         setWRegister(0);
         //Zeroflag is set.
-        Ram.set_Zeroflag(true);
+        oRam.set_Zeroflag(true);
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -518,22 +518,22 @@ public class Pic {
      * set.
      */
     public void CLRWDT() {
-        Ram.set_TimeOutFlag(true);
-        Ram.set_PowerDownFlag(true);
-        Ram.set_PS0(false);
-        Ram.set_PS1(false);
-        Ram.set_PS2(false);
+        oRam.set_TimeOutFlag(true);
+        oRam.set_PowerDownFlag(true);
+        oRam.set_PS0(false);
+        oRam.set_PS1(false);
+        oRam.set_PS2(false);
         //Programcounter will be incremented by 1.
 
-        Runtimer.resetWDT();
+        oRuntimer.resetWDT();
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -546,19 +546,19 @@ public class Pic {
      */
     public void COMF(int destinationBit, int registerFileAddress) {
         //Get value at registerFileAddress
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         
         //Inverts the value.
         int result = (~regFileAddrValue);
 
         //If result is zero, zeroflag is set true.
         if (result == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
 
         //If result is not zero, zeroflag is set false.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         result &= 255;
@@ -570,16 +570,16 @@ public class Pic {
 
         //If destinationbit is one, result will be written into fileRegister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -596,7 +596,7 @@ public class Pic {
      */
     public void DECFSZ(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         //Decrement value by one.
         regFileAddrValue--;
 
@@ -607,29 +607,29 @@ public class Pic {
 
         //If the destinationbit is 1, the decremented value is written bach into the fileregister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, false);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), regFileAddrValue, false);
         }
 
         //If the dekremented value doesn't equal zero, the next instruction is executed.
         if (regFileAddrValue != 0) {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1);
-            if (Ram.get_T0CS() == false) {
-                Ram.increment_TMR0();
+            oRam.inkrement_Programcounter(1);
+            if (oRam.get_T0CS() == false) {
+                oRam.increment_TMR0();
             }
         }
 
         //If the dekremented value equals zero, a NOP is executed and the other instruction will be dismissed.
         else {
             //Increment programcounter and TMR0 if assigned to TMR0.
-            Ram.inkrement_Programcounter(1);
-            if (Ram.get_T0CS() == false) {
-                Ram.increment_TMR0();
+            oRam.inkrement_Programcounter(1);
+            if (oRam.get_T0CS() == false) {
+                oRam.increment_TMR0();
             }
             NOP();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -641,18 +641,18 @@ public class Pic {
      */
     public void DECF(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         //Decrement value by one.
         regFileAddrValue--;
 
         //If dekremented value equals zero, zeroflag is set true.
         if (regFileAddrValue == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
 
         //If dekremented value doesn't equal zero, zeroflag is set false.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         //If value gets smaller than zero it is AND with 255 to become positive, because only values between 0 and 255 are allowed.
@@ -667,16 +667,16 @@ public class Pic {
 
         //If destinationbit doesn't equal zero, value is written into fileregister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), regFileAddrValue, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -691,15 +691,15 @@ public class Pic {
     public void GOTO(int elevenK) {
 
         //Set Programmcounter to new address.
-        Ram.set_Programcounter(elevenK + ((Ram.get_PCLATH() & 0b11000) << 8));
+        oRam.set_Programcounter(elevenK + ((oRam.get_PCLATH() & 0b11000) << 8));
 
         //Increment TMR0 if internal instruction cycle assigned to TMR0.
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
-            Ram.increment_TMR0();
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -712,18 +712,18 @@ public class Pic {
      */
     public void INCF(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         //Increment value by one.
         regFileAddrValue++;
 
         //If value becomes zero, zeroflag is set true.
         if (regFileAddrValue == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
 
         //If value doesn't become zero, zeroflag is set false.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         //If value becomes greater than 255, it will be set to a value between 0 and 255.
@@ -738,16 +738,16 @@ public class Pic {
 
         //If destinationbit is not 0, value will be written back to RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), regFileAddrValue, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -764,7 +764,7 @@ public class Pic {
      */
     public void INCFSZ(int destinationBit, int registerFileAddress) {
         //Get value of fileregisteraddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         //Increment value by one.
         regFileAddrValue++;
 
@@ -780,13 +780,13 @@ public class Pic {
 
         //If destinationbit is one, the value is written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), regFileAddrValue, false);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), regFileAddrValue, false);
         }
 
         ///Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
         //If value is zero, next instruction will not be executed and NOP is executed instead.
@@ -795,7 +795,7 @@ public class Pic {
             NOP();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -811,24 +811,24 @@ public class Pic {
 
         //If result is zero, zeroflag is set true.
         if (result == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
 
         //If result is not zero, zeroflag is set false.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         //Set to result.
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -841,16 +841,16 @@ public class Pic {
      */
     public void IORWF(int destinationBit, int registerFileAddress) {
         //Result is value OR fileregister-value.
-        int result = get_WRegister() | Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(),
+        int result = get_WRegister() | oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(),
                                                                                                    registerFileAddress);
         //If result is zero, zeroflag is set true.
         if (result == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
 
         //If result is not zero, zeroflag is set false.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
         
         //If destinationbit is zero, result is written into 
@@ -860,16 +860,16 @@ public class Pic {
 
         //If destinationbit is not zero, result is written into fileregister.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -889,12 +889,12 @@ public class Pic {
         setWRegister(eightK);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -911,28 +911,28 @@ public class Pic {
     public void MOVF(int destinationBit, int registerFileAddress) {
         //If destinationbit is zero, the value from fileregister is written to 
         if (destinationBit == 0) {
-            setWRegister(Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress));
+            setWRegister(oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress));
         }
 
         //If destinationbit is one, value will still be in fileregister.
 
         //If value in fileregister is zero, zeroflag is set true.
-        if (Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress) == 0) {
-            Ram.set_Zeroflag(true);
+        if (oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress) == 0) {
+            oRam.set_Zeroflag(true);
         }
 
         //If value in fileregister is not zero, zeroflag is set false.
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -941,24 +941,24 @@ public class Pic {
      * Move data from W register to file register
      */
     public void MOVWF(int registerFileAddress) {
-        if ((iStateMachineWriteEeprom == 0) && (WRegister == 0x55) && (registerFileAddress == 0x08)) {
+        if ((iStateMachineWriteEeprom == 0) && (iWRegister == 0x55) && (registerFileAddress == 0x08)) {
             iStateMachineWriteEeprom = 1;
-        } else if ((iStateMachineWriteEeprom == 2) && (WRegister == 0xAA) && (registerFileAddress == 0x08)) {
+        } else if ((iStateMachineWriteEeprom == 2) && (iWRegister == 0xAA) && (registerFileAddress == 0x08)) {
             iStateMachineWriteEeprom = 3;
         } else {
             iStateMachineWriteEeprom = 0;
         }
 
         //Data from is moved to fileregister.
-        Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), get_WRegister(), false);
+        oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), get_WRegister(), false);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -968,13 +968,13 @@ public class Pic {
      */
     public void NOP() {
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
+        oRam.inkrement_Programcounter(1);
 
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -989,19 +989,19 @@ public class Pic {
      */
     public void RETFIE() {
         //Set Global Interrupt Enable Bit true.
-        Ram.set_GIE(true);
+        oRam.set_GIE(true);
 
         //Pop address from STACK.
-        int returnAddress = Stack.popReturnAdressFromStack();
+        int returnAddress = oStack.popReturnAdressFromStack();
 
         //Write returnAddress into programcounter.
-        Ram.set_Programcounter(returnAddress);
+        oRam.set_Programcounter(returnAddress);
         //Increment TMR0 if assigned to TMR0.
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**OPTION
@@ -1011,13 +1011,13 @@ public class Pic {
         //Nothing happens, only programmcounter gets incremented by 1.
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
+        oRam.inkrement_Programcounter(1);
 
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
     
 
@@ -1035,16 +1035,16 @@ public class Pic {
         setWRegister(eightK);
 
         //Pop address from STACK.
-        int returnAddress = Stack.popReturnAdressFromStack();
+        int returnAddress = oStack.popReturnAdressFromStack();
 
         //Write returnAddress into programcounter.
-        Ram.set_Programcounter(returnAddress);
+        oRam.set_Programcounter(returnAddress);
         //Increment TMR0 if assigned to TMR0.
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1057,16 +1057,16 @@ public class Pic {
      */
     public void RETURN() {
         //Pop address from STACK.
-        int returnAddress = Stack.popReturnAdressFromStack();
+        int returnAddress = oStack.popReturnAdressFromStack();
 
         //Write returnAddress into programcounter.
-        Ram.set_Programcounter(returnAddress);
+        oRam.set_Programcounter(returnAddress);
         //Increment TMR0 if assigned to TMR0.
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1080,7 +1080,7 @@ public class Pic {
      */
     public void RLF(int destinationBit, int registerFileAddress) {
         //Get value at fileaddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         //Shift result to left by one bit.
         int result = regFileAddrValue << 1;
 
@@ -1092,7 +1092,7 @@ public class Pic {
         }
 
         //If carryflag is true, last bit is set 1.
-        if (Ram.get_Carryflag() == true) {
+        if (oRam.get_Carryflag() == true) {
             result |= 0b00000001;
         }
 
@@ -1110,19 +1110,19 @@ public class Pic {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Set value of carryflag.
-        Ram.set_Carryflag(set_Carryflag);
+        oRam.set_Carryflag(set_Carryflag);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1137,7 +1137,7 @@ public class Pic {
     public void RRF(int destinationBit, int registerFileAddress)
     {
         //Get value at fileaddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
         //Shift result to right by one bit.
         int result = (regFileAddrValue >> 1) & 255;
 
@@ -1149,7 +1149,7 @@ public class Pic {
         }
 
         //If carryflag is true, first bit is set 1.
-        if (Ram.get_Carryflag() == true) {
+        if (oRam.get_Carryflag() == true) {
             result |= 0b10000000;
         }
 
@@ -1159,7 +1159,7 @@ public class Pic {
         }
 
         //Set value of carryflag.
-        Ram.set_Carryflag(set_Carryflag);
+        oRam.set_Carryflag(set_Carryflag);
 
         //If destinationbit is zero, result will be written into 
         if (destinationBit == 0) {
@@ -1168,16 +1168,16 @@ public class Pic {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1196,12 +1196,12 @@ public class Pic {
         //Not implemented 
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1214,22 +1214,22 @@ public class Pic {
     public void SUBLW(int eightK) {
         int wRegValue = get_WRegister();
 
-        int result = ArithmeticLogicUnit.calcAddition(eightK, wRegValue, true);
+        int result = oArithmeticLogicUnit.calcAddition(eightK, wRegValue, true);
         result &= 255;
 
-        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
-        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
-        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
+        oRam.set_Carryflag(oArithmeticLogicUnit.getCarryFlag());
+        oRam.set_Digitcarryflag(oArithmeticLogicUnit.getDigitCarryFlag());
+        oRam.set_Zeroflag(oArithmeticLogicUnit.getZeroFlag());
 
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1245,14 +1245,14 @@ public class Pic {
         int wRegValue = get_WRegister();
 
         //Get value at fileaddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
-        int result = ArithmeticLogicUnit.calcAddition(regFileAddrValue, wRegValue, true);
+        int result = oArithmeticLogicUnit.calcAddition(regFileAddrValue, wRegValue, true);
         result &= 255;
 
-        Ram.set_Carryflag(ArithmeticLogicUnit.getCarryFlag());
-        Ram.set_Digitcarryflag(ArithmeticLogicUnit.getDigitCarryFlag());
-        Ram.set_Zeroflag(ArithmeticLogicUnit.getZeroFlag());
+        oRam.set_Carryflag(oArithmeticLogicUnit.getCarryFlag());
+        oRam.set_Digitcarryflag(oArithmeticLogicUnit.getDigitCarryFlag());
+        oRam.set_Zeroflag(oArithmeticLogicUnit.getZeroFlag());
 
         //If destinationbit is zero, result will be written into wregister
         if (destinationBit == 0) {
@@ -1261,16 +1261,16 @@ public class Pic {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1283,7 +1283,7 @@ public class Pic {
      */
     public void SWAPF(int destinationBit, int registerFileAddress) {
         //Get value at fileaddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
         int lowerNibble = regFileAddrValue & 0b00001111;
 
@@ -1298,16 +1298,16 @@ public class Pic {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, false);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, false);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1327,12 +1327,12 @@ public class Pic {
         //Nothing happens, only programcounter will be incremented by 1.
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1348,22 +1348,22 @@ public class Pic {
         int result = wRegValue ^ eightK;
 
         if (result == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
 
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         setWRegister(result);
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 
     /**
@@ -1378,16 +1378,16 @@ public class Pic {
         int wRegValue = get_WRegister();
 
         //Get value at fileaddress.
-        int regFileAddrValue = Ram.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(Ram.get_RP0Bit(), registerFileAddress);
+        int regFileAddrValue = oRam.get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(oRam.get_RP0Bit(), registerFileAddress);
 
         int result = wRegValue ^ regFileAddrValue;
 
         if (result == 0) {
-            Ram.set_Zeroflag(true);
+            oRam.set_Zeroflag(true);
         }
 
         else {
-            Ram.set_Zeroflag(false);
+            oRam.set_Zeroflag(false);
         }
 
         //If destinationbit is zero, result will be written into 
@@ -1397,15 +1397,15 @@ public class Pic {
 
         //If destinationbit is one, result will be written into RAM.
         else {
-            Ram.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, Ram.get_RP0Bit(), result, true);
+            oRam.set_Element_X_Of_Bank_Y_To_Z(registerFileAddress, oRam.get_RP0Bit(), result, true);
         }
 
         //Increment programcounter and TMR0 if assigned to TMR0.
-        Ram.inkrement_Programcounter(1);
-        if (Ram.get_T0CS() == false) {
-            Ram.increment_TMR0();
+        oRam.inkrement_Programcounter(1);
+        if (oRam.get_T0CS() == false) {
+            oRam.increment_TMR0();
         }
 
-        Runtimer.incrementRuntime();
+        oRuntimer.incrementRuntime();
     }
 }

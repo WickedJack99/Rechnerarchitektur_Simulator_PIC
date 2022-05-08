@@ -148,7 +148,7 @@ public class MyModel extends Thread {
     private void step() {
         InstructionDecoder oBitmask = new InstructionDecoder();
         //Makes one step through the eeprom.
-        oBitmask.decodeAndExecuteCommand(oPIC.getEeprom().getElement(oPIC.getRam().get_Programcounter()), oPIC);
+        oBitmask.decodeAndExecuteCommand(oPIC.getProgramMemory().getElement(oPIC.getRam().get_Programcounter()), oPIC);
         //Update view
         qDataToView.add(oPIC);
     }

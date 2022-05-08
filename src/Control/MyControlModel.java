@@ -147,8 +147,8 @@ public class MyControlModel implements ActionListener {
                 }
             }
         }
-        oPIC.getEeprom().setProgramLines(aiProgramLines);
-        abBreakpoints = new boolean[oPIC.getEeprom().getLengthProgramMemory()];
+        oPIC.getProgramMemory().setProgramLines(aiProgramLines);
+        abBreakpoints = new boolean[oPIC.getProgramMemory().getLengthProgramMemory()];
     }
 
     private void controlBreakpoints(ActionEvent e) {
