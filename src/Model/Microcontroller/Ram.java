@@ -553,11 +553,11 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_TimeOutFlag() {
+    public boolean get_TimeOutFlag() {
         return (get_STATUS() & 0b00001000) == 8;
     }
 
-    public synchronized void set_PowerDownFlag(boolean value) {
+    public void set_PowerDownFlag(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b00010000;
@@ -567,11 +567,11 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_PowerDownFlag() {
+    public boolean get_PowerDownFlag() {
         return (get_STATUS() & 0b00010000) == 16;
     }
 
-    public synchronized void set_RP0Bit(boolean value) {
+    public void set_RP0Bit(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b00100000;
@@ -581,11 +581,11 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_RP0Bit() {
+    public boolean get_RP0Bit() {
         return (get_STATUS() & 0b00100000) == 32;
     }
 
-    public synchronized void set_RP1Bit(boolean value) {
+    public void set_RP1Bit(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b01000000;
@@ -595,11 +595,11 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_RP1Bit() {
+    public boolean get_RP1Bit() {
         return (get_STATUS() & 0b01000000) == 64;
     }
 
-    public synchronized void set_Interruptflag(boolean value) {
+    public void set_Interruptflag(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b10000000;
@@ -609,15 +609,15 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Interruptflag() {
+    public boolean get_Interruptflag() {
         return (get_STATUS() & 0b10000000) == 128;
     }
 
-    public synchronized int get_Programcounter() {
+    public int get_Programcounter() {
         return iProgramcounter;
     }
 
-    public synchronized int get_LastProgramcounter() {
+    public int get_LastProgramcounter() {
         return lastProgramcounter;
     }
 
@@ -625,7 +625,7 @@ public class Ram {
      * 
      * @param value
      */
-    public synchronized void inkrement_Programcounter(int value) {        
+    public void inkrement_Programcounter(int value) {        
         lastProgramcounter = get_Programcounter();
         iProgramcounter += value;
         iProgramcounter &= 0x3FF;
@@ -636,7 +636,7 @@ public class Ram {
      * Decrements PC by value.
      * @param value to decrement PC by.
      */
-    public synchronized void dekrement_Programcounter(int value) {
+    public void dekrement_Programcounter(int value) {
         lastProgramcounter = get_Programcounter();
         iProgramcounter -= value;
         iProgramcounter &= 0x3FF;
@@ -648,7 +648,7 @@ public class Ram {
      * @param value to set PC to.
      * @returns true if set worked, else false if set didn't work.
      */
-    public synchronized void set_Programcounter(int value) {
+    public void set_Programcounter(int value) {
         lastProgramcounter = iProgramcounter;
         iProgramcounter = value;
         set_PCL(iProgramcounter & 0xFF);
@@ -659,7 +659,7 @@ public class Ram {
      * 
      * @param value
      */
-    public synchronized void set_RA0(boolean value) {
+    public void set_RA0(boolean value) {
         int portA = get_PORTA();
         if (value) {
             portA |= 0b00000001;
@@ -673,7 +673,7 @@ public class Ram {
      * 
      * @return
      */
-    public synchronized boolean get_RA0() {
+    public boolean get_RA0() {
         return (get_PORTA() & 0b00000001) == 1;
     }
 
@@ -681,7 +681,7 @@ public class Ram {
      * 
      * @param value
      */
-    public synchronized void set_RA1(boolean value) {
+    public void set_RA1(boolean value) {
         int portA = get_PORTA();
         if (value) {
             portA |= 0b00000010;
@@ -695,7 +695,7 @@ public class Ram {
      * 
      * @return
      */
-    public synchronized boolean get_RA1() {
+    public boolean get_RA1() {
         return (get_PORTA() & 0b00000010) == 2;
     }
 
@@ -703,7 +703,7 @@ public class Ram {
      * 
      * @param value
      */
-    public synchronized void set_RA2(boolean value) {
+    public void set_RA2(boolean value) {
         int portA = get_PORTA();
         if (value) {
             portA |= 0b00000100;
@@ -717,7 +717,7 @@ public class Ram {
      * 
      * @return
      */
-    public synchronized boolean get_RA2() {
+    public boolean get_RA2() {
         return (get_PORTA() & 0b00000100) == 4;
     }
 
@@ -725,7 +725,7 @@ public class Ram {
      * 
      * @param value
      */
-    public synchronized void set_RA3(boolean value) {
+    public void set_RA3(boolean value) {
         int portA = get_PORTA();
         if (value) {
             portA |= 0b00001000;
@@ -735,12 +735,12 @@ public class Ram {
         set_PORTA(portA);
     }
     
-    public synchronized boolean get_RA3() {
+    public boolean get_RA3() {
         return (get_PORTA() & 0b00001000) == 8;
     }
 
     //External Clockimpulse for Timer0
-    public synchronized void set_RA4_T0CKI(boolean value) {
+    public void set_RA4_T0CKI(boolean value) {
         int portA = get_PORTA();
         if (value) {
             portA |= 0b00010000;
@@ -750,12 +750,12 @@ public class Ram {
         set_PORTA(portA);
     }
     
-    public synchronized boolean get_RA4_T0CKI() {
+    public boolean get_RA4_T0CKI() {
         return (get_PORTA() & 0b00010000) == 16;
     }
 
     //Bank0 PortB
-    public synchronized void set_RB0_INT(boolean value) {
+    public void set_RB0_INT(boolean value) {
         int portB = get_PORTB();
         boolean bOldRB0 = get_RB0_INT();
         //If INTEDG is set, check if rising edge appeared
@@ -779,11 +779,11 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB0_INT() {
+    public boolean get_RB0_INT() {
         return (get_PORTB() & 0b00000001) == 1;
     }
 
-    public synchronized void set_RB1(boolean value) {
+    public void set_RB1(boolean value) {
         int portB = get_PORTB();
         if (value) {
             portB |= 0b00000010;
@@ -793,11 +793,11 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB1() {
+    public boolean get_RB1() {
         return (get_PORTB() & 0b00000010) == 2;
     }
 
-    public synchronized void set_RB2(boolean value) {
+    public void set_RB2(boolean value) {
         int portB = get_PORTB();
         if (value) {
             portB |= 0b00000100;
@@ -807,11 +807,11 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB2() {
+    public boolean get_RB2() {
         return (get_PORTB() & 0b00000100) == 4;
     }
 
-    public synchronized void set_RB3(boolean value) {
+    public void set_RB3(boolean value) {
         int portB = get_PORTB();
         if (value) {
             portB |= 0b00001000;
@@ -821,11 +821,11 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB3() {
+    public boolean get_RB3() {
         return (get_PORTB() & 0b00001000) == 8;
     }
 
-    public synchronized void set_RB4(boolean value) {
+    public void set_RB4(boolean value) {
         boolean bOldRB4 = get_RB4();
         //On change, set RBIF
         if (bOldRB4 != value) {
@@ -840,11 +840,11 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB4() {
+    public boolean get_RB4() {
         return (get_PORTB() & 0b00010000) == 16;
     }
 
-    public synchronized void set_RB5(boolean value) {
+    public void set_RB5(boolean value) {
         boolean bOldRB5 = get_RB5();
         //On change, set RBIF
         if (bOldRB5 != value) {
@@ -859,11 +859,11 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB5() {    
+    public boolean get_RB5() {    
         return (get_PORTB() & 0b00100000) == 32;
     }
 
-    public synchronized void set_RB6(boolean value) {
+    public void set_RB6(boolean value) {
         boolean bOldRB6 = get_RB6();
         //On change, set RBIF
         if (bOldRB6 != value) {
@@ -878,11 +878,11 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB6() {
+    public boolean get_RB6() {
         return (get_PORTB() & 0b01000000) == 64;
     }
 
-    public synchronized void set_RB7(boolean value) {
+    public void set_RB7(boolean value) {
         boolean bOldRB7 = get_RB7();
         //On change, set RBIF
         if (bOldRB7 != value) {
@@ -897,12 +897,12 @@ public class Ram {
         set_PORTB(portB);
     }
     
-    public synchronized boolean get_RB7() {
+    public boolean get_RB7() {
         return (get_PORTB() & 0b10000000) == 128;
     }
 
     //Bank0 INTCON
-    public synchronized void set_RBIF(boolean value) {
+    public void set_RBIF(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b00000001;
@@ -912,11 +912,11 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_RBIF() {    
+    public boolean get_RBIF() {    
         return (get_INTCON() & 0b00000001) == 1;
     }
 
-    public synchronized void set_INTF(boolean value) {
+    public void set_INTF(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b00000010;
@@ -926,11 +926,11 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_INTF() {    
+    public boolean get_INTF() {    
         return (get_INTCON() & 0b00000010) == 2;
     }
 
-    public synchronized void set_T0IF(boolean value) {
+    public void set_T0IF(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b00000100;
@@ -940,11 +940,11 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_T0IF() {
+    public boolean get_T0IF() {
         return (get_INTCON() & 0b00000100) == 4;
     }
 
-    public synchronized void set_RBIE(boolean value) {
+    public void set_RBIE(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b00001000;
@@ -954,11 +954,11 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_RBIE() {    
+    public boolean get_RBIE() {    
         return (get_INTCON() & 0b00001000) == 8;
     }
 
-    public synchronized void set_INTE(boolean value) {
+    public void set_INTE(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b00010000;
@@ -968,11 +968,11 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_INTE() {
+    public boolean get_INTE() {
         return (get_INTCON() & 0b00010000) == 16;
     }
 
-    public synchronized void set_T0IE(boolean value) {
+    public void set_T0IE(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b00100000;
@@ -982,11 +982,11 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_T0IE() {
+    public boolean get_T0IE() {
         return (get_INTCON() & 0b00100000) == 32;
     }
 
-    public synchronized void set_EEIE(boolean value) {
+    public void set_EEIE(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b01000000;
@@ -996,11 +996,11 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_EEIE() {
+    public boolean get_EEIE() {
         return (get_INTCON() & 0b01000000) == 64;
     }
 
-    public synchronized void set_GIE(boolean value) {
+    public void set_GIE(boolean value) {
         int intcon = get_INTCON();
         if (value) {
             intcon |= 0b10000000;
@@ -1010,12 +1010,12 @@ public class Ram {
         set_INTCON(intcon);
     }
     
-    public synchronized boolean get_GIE() {    
+    public boolean get_GIE() {    
         return (get_INTCON() & 0b10000000) == 128;
     }
 
     //Bank1 OPTION_REG
-    public synchronized void set_PS0(boolean value) {
+    public void set_PS0(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b00000001;
@@ -1025,11 +1025,11 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PS0() {    
+    public boolean get_PS0() {    
         return (get_OPTION() & 0b00000001) == 1;
     }
 
-    public synchronized void set_PS1(boolean value) {
+    public void set_PS1(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b00000010;
@@ -1039,11 +1039,11 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PS1() {    
+    public boolean get_PS1() {    
         return (get_OPTION() & 0b00000010) == 2;
     }
 
-    public synchronized void set_PS2(boolean value) {
+    public void set_PS2(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b00000100;
@@ -1053,11 +1053,11 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PS2() {    
+    public boolean get_PS2() {    
         return (get_OPTION() & 0b00000100) == 4;
     }
 
-    public synchronized int get_TMR0_PrescalerRate() {
+    public int get_TMR0_PrescalerRate() {
         int returnValue = 0;
         if (get_PSA()) {
             returnValue = 1;
@@ -1092,7 +1092,7 @@ public class Ram {
         return returnValue;
     }
 
-    public synchronized int get_WDT_PrescalerRate() {
+    public int get_WDT_PrescalerRate() {
         int returnValue = 0;
 
         switch (get_OPTION() & 0b00000111) {
@@ -1124,7 +1124,7 @@ public class Ram {
         return returnValue;
     }
 
-    public synchronized void set_PSA(boolean value) {
+    public void set_PSA(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b00001000;
@@ -1134,11 +1134,11 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_PSA() {
+    public boolean get_PSA() {
         return (get_OPTION() & 0b00001000) == 8;
     }
 
-    public synchronized void set_T0SE(boolean value) {
+    public void set_T0SE(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b00010000;
@@ -1148,11 +1148,11 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_T0SE() {
+    public boolean get_T0SE() {
         return (get_OPTION() & 0b00010000) == 16;
     }
 
-    public synchronized void set_T0CS(boolean value) {
+    public void set_T0CS(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b00100000;
@@ -1162,11 +1162,11 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_T0CS() {
+    public boolean get_T0CS() {
         return (get_OPTION() & 0b00100000) == 32;
     }
 
-    public synchronized void set_INTEDG(boolean value) {
+    public void set_INTEDG(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b01000000;
@@ -1176,11 +1176,11 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_INTEDG() {
+    public boolean get_INTEDG() {
         return (get_OPTION() & 0b01000000) == 64;
     }
 
-    public synchronized void set_RBPU(boolean value) {
+    public void set_RBPU(boolean value) {
         int option = get_OPTION();
         if (value) {
             option |= 0b10000000;
@@ -1190,12 +1190,12 @@ public class Ram {
         set_OPTION(option);
     }
     
-    public synchronized boolean get_RBPU() {
+    public boolean get_RBPU() {
         return (get_OPTION() & 0b10000000) == 128;
     }
 
     //Bank1 EECON1
-    public synchronized void set_RD(boolean value) {
+    public void set_RD(boolean value) {
         int eecon = get_EECON1();
         if (value) {
             eecon |= 0b00000001;
@@ -1205,11 +1205,11 @@ public class Ram {
         set_EECON1(eecon);
     }
     
-    public synchronized boolean get_RD() {
+    public boolean get_RD() {
         return (get_EECON1() & 0b00000001) == 1;
     }
 
-    public synchronized void set_WR(boolean value) {
+    public void set_WR(boolean value) {
         int eecon = get_EECON1();
         if (value) {
             eecon |= 0b00000010;
@@ -1219,11 +1219,11 @@ public class Ram {
         set_EECON1(eecon);
     }
     
-    public synchronized boolean get_WR() {
+    public boolean get_WR() {
         return (get_EECON1() & 0b00000010) == 2;
     }
 
-    public synchronized void set_WREN(boolean value) {
+    public void set_WREN(boolean value) {
         int eecon = get_EECON1();
         if (value) {
             eecon |= 0b00000100;
@@ -1233,11 +1233,11 @@ public class Ram {
         set_EECON1(eecon);
     }
     
-    public synchronized boolean get_WREN() {
+    public boolean get_WREN() {
         return (get_EECON1() & 0b00000100) == 4;
     }
 
-    public synchronized void set_WRERR(boolean value) {
+    public void set_WRERR(boolean value) {
         int eecon = get_EECON1();
         if (value) {
             eecon |= 0b00001000;
@@ -1247,11 +1247,11 @@ public class Ram {
         set_EECON1(eecon);
     }
     
-    public synchronized boolean get_WRERR() {
+    public boolean get_WRERR() {
         return (get_EECON1() & 0b00001000) == 8;
     }
 
-    public synchronized void set_EEIF(boolean value) {
+    public void set_EEIF(boolean value) {
         int eecon = get_EECON1();
         if (value) {
             eecon |= 0b00010000;
@@ -1261,12 +1261,12 @@ public class Ram {
         set_EECON1(eecon);
     }
     
-    public synchronized boolean get_EEIF() {
+    public boolean get_EEIF() {
         return (get_EECON1() & 0b00010000) == 16;   
     }
 
     //Bank1 TRISA
-    public synchronized void set_TRISA0(boolean value) {
+    public void set_TRISA0(boolean value) {
         int trisA = get_TRISA();
         if (value) {
             trisA |= 0b00000001;
@@ -1276,11 +1276,11 @@ public class Ram {
         set_TRISA(trisA);
     }
 
-    public synchronized boolean get_TRISA0() {
+    public boolean get_TRISA0() {
         return (get_TRISA() & 0b00000001) == 1;
     }
 
-    public synchronized void set_TRISA1(boolean value) {
+    public void set_TRISA1(boolean value) {
         int trisA = get_TRISA();
         if (value) {
             trisA |= 0b00000010;
@@ -1290,11 +1290,11 @@ public class Ram {
         set_TRISA(trisA);
     }
 
-    public synchronized boolean get_TRISA1() {
+    public boolean get_TRISA1() {
         return (get_TRISA() & 0b00000010) == 2;
     }
 
-    public synchronized void set_TRISA2(boolean value) {
+    public void set_TRISA2(boolean value) {
         int trisA = get_TRISA();
         if (value) {
             trisA |= 0b00000100;
@@ -1304,11 +1304,11 @@ public class Ram {
         set_TRISA(trisA);
     }
 
-    public synchronized boolean get_TRISA2() {
+    public boolean get_TRISA2() {
         return (get_TRISA() & 0b00000100) == 4;
     }
 
-    public synchronized void set_TRISA3(boolean value) {
+    public void set_TRISA3(boolean value) {
         int trisA = get_TRISA();
         if (value) {
             trisA |= 0b00001000;
@@ -1318,11 +1318,11 @@ public class Ram {
         set_TRISA(trisA);
     }
 
-    public synchronized boolean get_TRISA3() {
+    public boolean get_TRISA3() {
         return (get_TRISA() & 0b00001000) == 8;
     }
 
-    public synchronized void set_TRISA4(boolean value) {
+    public void set_TRISA4(boolean value) {
         int trisA = get_TRISA();
         if (value) {
             trisA |= 0b00010000;
@@ -1332,11 +1332,11 @@ public class Ram {
         set_TRISA(trisA);
     }
 
-    public synchronized boolean get_TRISA4() {
+    public boolean get_TRISA4() {
         return (get_TRISA() & 0b00010000) == 16;
     }
 
-    public synchronized void set_TRISB0(boolean value) {
+    public void set_TRISB0(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b00000001;
@@ -1346,11 +1346,11 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB0() {
+    public boolean get_TRISB0() {
         return (get_TRISB() & 0b00000001) == 1;
     }
 
-    public synchronized void set_TRISB1(boolean value) {
+    public void set_TRISB1(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b00000010;
@@ -1360,11 +1360,11 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB1() {
+    public boolean get_TRISB1() {
         return (get_TRISB() & 0b00000010) == 2;
     }
 
-    public synchronized void set_TRISB2(boolean value) {
+    public void set_TRISB2(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b00000100;
@@ -1374,11 +1374,11 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB2() {
+    public boolean get_TRISB2() {
         return (get_TRISB() & 0b00000100) == 4;
     }
 
-    public synchronized void set_TRISB3(boolean value) {
+    public void set_TRISB3(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b00001000;
@@ -1388,11 +1388,11 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB3() {
+    public boolean get_TRISB3() {
         return (get_TRISB() & 0b00001000) == 8;
     }
 
-    public synchronized void set_TRISB4(boolean value) {
+    public void set_TRISB4(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b00010000;
@@ -1402,11 +1402,11 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB4() {
+    public boolean get_TRISB4() {
         return (get_TRISB() & 0b00010000) == 16;
     }
 
-    public synchronized void set_TRISB5(boolean value) {
+    public void set_TRISB5(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b00100000;
@@ -1416,11 +1416,11 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB5() {
+    public boolean get_TRISB5() {
         return (get_TRISB() & 0b00100000) == 32;
     }
 
-    public synchronized void set_TRISB6(boolean value) {
+    public void set_TRISB6(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b01000000;
@@ -1430,11 +1430,11 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB6() {
+    public boolean get_TRISB6() {
         return (get_TRISB() & 0b01000000) == 64;
     }
 
-    public synchronized void set_TRISB7(boolean value) {
+    public void set_TRISB7(boolean value) {
         int trisB = get_TRISB();
         if (value) {
             trisB |= 0b10000000;
@@ -1444,15 +1444,15 @@ public class Ram {
         set_TRISB(trisB);
     }
 
-    public synchronized boolean get_TRISB7() {
+    public boolean get_TRISB7() {
         return (get_TRISB() & 0b10000000) == 128;
     }
 
-    public synchronized int[] get_Bank0() {
+    public int[] get_Bank0() {
         return bank0;
     }
 
-    public synchronized int[] get_Bank1() {
+    public int[] get_Bank1() {
         return bank1;
     }
 }
