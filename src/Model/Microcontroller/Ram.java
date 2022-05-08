@@ -45,7 +45,7 @@ public class Ram {
      * @return the value of the element at the adress of the bank.
      * @throws Exception
      */
-    public synchronized int get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(boolean rP0Bit, int adress) {
+    public int get_Value_Of_Bank_RP0_Bit_Of_Element_At_Adress(boolean rP0Bit, int adress) {
         int valueOfBankRP0BitOfElementAtAdress = 0;
 
         if (rP0Bit == false) {
@@ -74,7 +74,7 @@ public class Ram {
      * @param x shows if bank 0 or 1 will be set.
      * @param array an array which will represent bank x.
      */
-    public synchronized void set_Bank_X(boolean rp0Bit, int[] array) {
+    public void set_Bank_X(boolean rp0Bit, int[] array) {
         if (rp0Bit == false) {
             bank0 = array;
         }
@@ -90,7 +90,7 @@ public class Ram {
      * @param rp0Bit bank where the value will be changed. (y)
      * @param value that will be written into the element. (z)
      */
-    public synchronized void set_Element_X_Of_Bank_Y_To_Z(int element, boolean rp0Bit, int value, boolean bStatusAffected) {
+    public void set_Element_X_Of_Bank_Y_To_Z(int element, boolean rp0Bit, int value, boolean bStatusAffected) {
         if (element < 0 || element > 127) {
             System.out.println("Wrong input, value from 0 to 127 expected!");
         } else {
@@ -211,7 +211,7 @@ public class Ram {
      * Set TMR0 to value & 255.
      * @param value to set TMR0 to.
      */
-    public synchronized void set_TMR0(int value) {
+    public void set_TMR0(int value) {
         iPrescaledTMR0 = 0;
         value &= 255;
         bank0[1] = value;
@@ -220,7 +220,7 @@ public class Ram {
     /**
      * Increment TMR0 by 1 if PSA == 1 or by prescaler rate if PSA == 0.
      */
-    public synchronized void increment_TMR0() {
+    public void increment_TMR0() {
         int iValTMR0 = get_TMR0();
         int iValPrescaler;
 
@@ -253,25 +253,25 @@ public class Ram {
         }
     }
 
-    public synchronized int get_TMR0() {
+    public int get_TMR0() {
         return bank0[1];
     }
 
-    public synchronized void set_PCL(int value) {
+    public void set_PCL(int value) {
         bank0[2] = value;
         bank1[2] = value;
     }
 
-    public synchronized int get_PCL() {
+    public int get_PCL() {
         return bank0[2];
     }
 
-    public synchronized void set_STATUS(int value) {
+    public void set_STATUS(int value) {
         bank0[3] = value;
         bank1[3] = value;
     }
 
-    public synchronized int get_STATUS() {
+    public int get_STATUS() {
         return bank0[3];
     }
 
@@ -279,7 +279,7 @@ public class Ram {
      * Sets file-search-register to value.
      * @param value file-search-register is set to.
      */
-    public synchronized void set_FSR(int value) {
+    public void set_FSR(int value) {
         bank0[4] = value;
         bank1[4] = value;
     }
@@ -287,7 +287,7 @@ public class Ram {
     /**
      * @returns value of file search register.
      */
-    public synchronized int get_FSR() {
+    public int get_FSR() {
         return bank0[4];
     }
 
@@ -295,7 +295,7 @@ public class Ram {
      * Sets PORT A and checks whether TMR0 has to be incremented or not.
      * @param value
      */
-    public synchronized void set_PORTA(int value) {
+    public void set_PORTA(int value) {
         if (get_T0CS()) {
             //Check if PORT A RA4 was set/cleared
             boolean bActualRA4 = get_RA4_T0CKI();
@@ -319,7 +319,7 @@ public class Ram {
         bank0[5] = value;
     }
 
-    public synchronized void set_PORTA_Bit_X_To_Y(int x, int y) {
+    public void set_PORTA_Bit_X_To_Y(int x, int y) {
         
         //Increment TMR0 if RA4 was set/cleared
         if ((x == 4)) {
@@ -368,7 +368,7 @@ public class Ram {
     /**
      * @returns value of PORT A.
      */
-    public synchronized int get_PORTA() {
+    public int get_PORTA() {
         return bank0[5];
     }
 
@@ -376,7 +376,7 @@ public class Ram {
      * Sets PORT B to value.
      * @param value to set PORT B to.
      */
-    public synchronized void set_PORTB(int value) {
+    public void set_PORTB(int value) {
         bank0[6] = value;
     }
 
@@ -385,7 +385,7 @@ public class Ram {
      * @param x indicates the position of the bit which will be set/cleared.
      * @param y indicates whether the bit will be set/cleared.
      */
-    public synchronized void set_PORTB_Bit_X_To_Y(int x, int y) {
+    public void set_PORTB_Bit_X_To_Y(int x, int y) {
         //Clear bit x
         if (y == 0) {
             int[] array = new int[8];
@@ -410,7 +410,7 @@ public class Ram {
     /**
      * @returns value of PORT B.
      */
-    public synchronized int get_PORTB() {
+    public int get_PORTB() {
         return bank0[6];
     }
 
@@ -418,14 +418,14 @@ public class Ram {
      * Sets EEDATA to value.
      * @param value to set EEDATA to.
      */
-    public synchronized void set_EEDATA(int value) {
+    public void set_EEDATA(int value) {
         bank0[8] = value;
     }
 
     /**
      * @returns value of EEDATA.
      */
-    public synchronized int get_EEDATA() {
+    public int get_EEDATA() {
         return bank0[8];
     }
 
@@ -433,75 +433,75 @@ public class Ram {
      * Sets EEADR to value.
      * @param value to set EEADR to.
      */
-    public synchronized void set_EEADR(int value) {
+    public void set_EEADR(int value) {
         bank0[9] = value;
     }
 
-    public synchronized int get_EEADR() {
+    public int get_EEADR() {
         return bank0[9];
     }
 
-    public synchronized void set_PCLATH(int value) {
+    public void set_PCLATH(int value) {
         bank0[10] = value;
         bank1[10] = value;
     }
 
-    public synchronized int get_PCLATH() {
+    public int get_PCLATH() {
         return bank0[10];
     }
 
-    public synchronized void set_INTCON(int value) {
+    public void set_INTCON(int value) {
         bank0[11] = value;
         bank1[11] = value;
     }
 
-    public synchronized int get_INTCON() {
+    public int get_INTCON() {
         return bank0[11];
     }
 
     //Bank1 Registers
-    public synchronized void set_OPTION(int value) {
+    public void set_OPTION(int value) {
         bank1[1] = value;
     }
 
-    public synchronized int get_OPTION() {
+    public int get_OPTION() {
         return bank1[1];
     }
 
-    public synchronized void set_TRISA(int value) {
+    public void set_TRISA(int value) {
         bank1[5] = value;
     }
 
-    public synchronized int get_TRISA() {
+    public int get_TRISA() {
         return bank1[5];
     }
 
-    public synchronized void set_TRISB(int value) {
+    public void set_TRISB(int value) {
         bank1[6] = value;
     }
 
-    public synchronized int get_TRISB() {
+    public int get_TRISB() {
         return bank1[6];
     }
 
-    public synchronized void set_EECON1(int value) {
+    public void set_EECON1(int value) {
         bank1[7] = value;
     }
 
-    public synchronized int get_EECON1() {
+    public int get_EECON1() {
         return bank1[7];
     }
 
-    public synchronized void set_EECON2(int value) {
+    public void set_EECON2(int value) {
         bank1[8] = value;
     }
 
-    public synchronized int get_EECON2() {
+    public int get_EECON2() {
         return bank1[8];
     }
 
     //Bank0 & Bank1 Statusflags
-    public synchronized void set_Carryflag(boolean value) {
+    public void set_Carryflag(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b00000001;
@@ -511,11 +511,11 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Carryflag() {
+    public boolean get_Carryflag() {
         return (get_STATUS() & 0b00000001) == 1;
     }
 
-    public synchronized void set_Digitcarryflag(boolean value) {
+    public void set_Digitcarryflag(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b00000010;
@@ -525,11 +525,11 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Digitcarryflag() {
+    public boolean get_Digitcarryflag() {
         return (get_STATUS() & 0b00000010) == 2;
     }
 
-    public synchronized void set_Zeroflag(boolean value) {
+    public void set_Zeroflag(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b00000100;
@@ -539,11 +539,11 @@ public class Ram {
         set_STATUS(status);
     }
 
-    public synchronized boolean get_Zeroflag() {
+    public boolean get_Zeroflag() {
         return (get_STATUS() & 0b00000100) == 4;
     }
 
-    public synchronized void set_TimeOutFlag(boolean value) {
+    public void set_TimeOutFlag(boolean value) {
         int status = get_STATUS();
         if (value) {
             status |= 0b00001000;
